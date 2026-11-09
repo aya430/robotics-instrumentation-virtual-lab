@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joint-space trajectory planning: cubic, quintic and LSPB | Simulation | Robotics & Instrumentation Virtual Lab</title>
+<meta name="description" content="Each joint of a 2R arm moves from θ₀ to θ_f in t_f with a cubic (a₂ = 3Δ/t_f², a₃ = −2Δ/t_f³, 3.22), quintic (θ₀ + Δ(10τ³ − 15τ⁴ + 6τ⁵), 3.23) or LSPB profile (t_b = (θ₀ − θ_f + Vt_f)/V, 3.24). Position, velocity and acceleration are plotted from the same polynomials that animate the arm.">
+<link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/global.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+<link rel="stylesheet" href="../../css/simulation.css">
+<link rel="stylesheet" href="../../css/responsive.css">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script async id="MathJax-script" src="../../assets/vendor/tex-svg.js"></script>
+</head>
+<body data-root="../../" data-page="sim" data-sim="joint-trajectory">
+<a class="skip" href="#main">Skip to content</a>
+<div id="app-head"></div>
+<main id="main" class="wrap"><noscript><h1>Joint-space trajectory planning: cubic, quintic and LSPB</h1><p>This laboratory needs JavaScript to run its simulations. Please enable JavaScript.</p></noscript></main>
+<div id="app-foot"></div>
+<script src="../../js/config.js"></script>
+<script src="../../assets/vendor/three.min.js"></script>
+<script src="../../assets/vendor/OrbitControls.js"></script>
+<script src="../../assets/vendor/chart.umd.js"></script>
+<script src="../../assets/vendor/gsap.min.js"></script>
+<script src="../../js/equation-engine.js"></script>
+<script src="../../js/simulation-engine.js"></script>
+<script src="../../js/three-kit.js"></script>
+<script src="../../js/bundle-data.js"></script>
+<script src="../../js/bundle-sims.js"></script>
+
+<script src="../../js/navigation.js"></script>
+<script src="../../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+{
+  "unit": 4,
+  "title": "Industrial Automation, Embedded Systems and Machine Vision",
+  "questions": [
+    {
+      "topic": "u4t1",
+      "cat": "Multiple choice",
+      "q": "At which level of the automation pyramid do PLCs and robot controllers operate?",
+      "options": [
+        "Level 0",
+        "Level 1",
+        "Level 3",
+        "Level 4"
+      ],
+      "answer": 1,
+      "explain": "Level 1 – real-time control."
+    },
+    {
+      "topic": "u4t2",
+      "cat": "Conceptual",
+      "q": "Opening an interlocked cell door during automatic operation should cause:",
+      "options": [
+        "No change",
+        "A protective stop of the robot",
+        "An increase in speed",
+        "Only a warning lamp"
+      ],
+      "answer": 1,
+      "explain": "Safety interlocks stop hazardous motion."
+    },
+    {
+      "topic": "u4t3",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A PLC program has 4000 instructions of 0.05 µs; I/O update 0.5 ms; communication 0.3 ms. Find T_scan in ms.",
+      "answer": 1,
+      "unit": "ms",
+      "tol": 0.001,
+      "explain": "T_scan = 0.2 + 0.5 + 0.3 = 1.0 ms (Example 4.1)."
+    },
+    {
+      "topic": "u4t3",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "With a 3 ms input filter and 10 ms relay output, find the worst-case response time for T_scan = 1 ms.",
+      "answer": 15,
+      "unit": "ms",
+      "tol": 0.001,
+      "explain": "T_filter + 2T_scan + T_out = 15 ms (Eq. 4.2)."
+    },
+    {
+      "topic": "u4t3",
+      "cat": "Conceptual",
+      "q": "Why is the stop push-button wired normally closed?",
+      "options": [
+        "To save wire",
+        "So a broken wire stops the machine",
+        "So the PLC scans faster",
+        "To allow analogue reading"
+      ],
+      "answer": 1,
+      "explain": "Fail-safe design."
+    },
+    {
+      "topic": "u4t4",
+      "cat": "Multiple choice",
+      "q": "Cobots may work without fences mainly because they use:",
+      "options": [
+        "Hydraulic drives",
+        "Power and force limiting",
+        "Larger payloads",
+        "Faster speeds"
+      ],
+      "answer": 1,
+      "explain": "Table 4.3."
+    },
+    {
+      "topic": "u4t5",
+      "cat": "Multiple choice",
+      "q": "Which instruction moves the TCP along a straight line?",
+      "options": [
+        "MOVJ",
+        "MOVL",
+        "WAIT",
+        "SET DO"
+      ],
+      "answer": 1,
+      "explain": "Linear interpolation."
+    },
+    {
+      "topic": "u4t6",
+      "cat": "Conceptual",
+      "q": "In T1 mode, the TCP speed is limited to:",
+      "options": [
+        "50 mm/s",
+        "250 mm/s",
+        "1000 mm/s",
+        "no limit"
+      ],
+      "answer": 1,
+      "explain": "Section 4.6."
+    },
+    {
+      "topic": "u4t8",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "An LM35 (10 mV/°C) at 37.5 °C feeds a 12-bit ADC with V_ref = 3.3 V. Find D = round(v·4095/3.3).",
+      "answer": 465,
+      "unit": "",
+      "tol": 0.001,
+      "explain": "D = round(0.375 × 4095/3.3) = 465 (Example 4.2)."
+    },
+    {
+      "topic": "u4t9",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find R_B in kΩ for a 60 mA relay coil, h_FE = 100, overdrive 5, V_OH = 5 V, V_BE = 0.7 V.",
+      "answer": 1.433,
+      "unit": "kΩ",
+      "tol": 0.02,
+      "explain": "I_B = 3 mA; R_B = 4.3/0.003 = 1.43 kΩ (Example 4.3)."
+    },
+    {
+      "topic": "u4t10",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "f_clk = 72 MHz, PSC = 71, ARR = 999. Find the PWM frequency in Hz.",
+      "answer": 1000,
+      "unit": "Hz",
+      "tol": 0.001,
+      "explain": "f = 72e6/(72 × 1000) = 1 kHz (Example 4.4)."
+    },
+    {
+      "topic": "u4t10",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A 12 V supply is PWM-switched at 30 % duty. Find V_avg.",
+      "answer": 3.6,
+      "unit": "V",
+      "tol": 0.001,
+      "explain": "V_avg = DV_dc = 3.6 V (Eq. 4.4)."
+    },
+    {
+      "topic": "u4t11",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the UART throughput in bytes/s at 115 200 baud with 8N1 framing.",
+      "answer": 11520,
+      "unit": "bytes/s",
+      "tol": 0.001,
+      "explain": "115200/10 = 11 520 (Eq. 4.6)."
+    },
+    {
+      "topic": "u4t11",
+      "cat": "Multiple choice",
+      "q": "In CAN arbitration, which node wins?",
+      "options": [
+        "Highest identifier",
+        "Lowest identifier",
+        "First to start",
+        "Random"
+      ],
+      "answer": 1,
+      "explain": "Dominant 0 bits win; the lowest ID has the most leading zeros."
+    },
+    {
+      "topic": "u4t12",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A 1280-pixel camera views a 256 mm field. Find the spatial resolution in mm/px.",
+      "answer": 0.2,
+      "unit": "mm/px",
+      "tol": 0.001,
+      "explain": "r_s = W/N_px = 0.2 (Example 4.5)."
+    },
+    {
+      "topic": "u4t12",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A blob has μ₁₁ = 12, μ₂₀ = 20, μ₀₂ = 10.5. Find its orientation in degrees.",
+      "answer": 34.2,
+      "unit": "°",
+      "tol": 0.01,
+      "explain": "θ = ½ atan2(24, 9.5) = 34.2° (Example 4.6)."
+    },
+    {
+      "topic": "u4t12",
+      "cat": "Application",
+      "q": "Which lighting technique best reveals fine scratches on a flat metal part?",
+      "options": [
+        "Backlighting",
+        "Dark-field (low-angle)",
+        "Diffuse dome",
+        "Structured light"
+      ],
+      "answer": 1,
+      "explain": "Scratches scatter grazing light into the camera."
+    },
+    {
+      "topic": "u4t13",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Availability 0.9, performance 0.85 and quality 0.98. Find OEE in %.",
+      "answer": 74.97,
+      "unit": "%",
+      "tol": 0.01,
+      "explain": "OEE = 0.9 × 0.85 × 0.98 = 75 % (Eq. 4.15)."
+    },
+    {
+      "topic": "u4t14",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A conveyor moves at 0.3 m/s and the image-to-grasp latency is 0.2 s. Find the required target shift in mm.",
+      "answer": 60,
+      "unit": "mm",
+      "tol": 0.001,
+      "explain": "Δx = v_cΔt = 60 mm (Example 4.7)."
+    },
+    {
+      "topic": "u4t17",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A differential-drive robot (r = 0.05 m, b = 0.3 m) has ω_R = 12, ω_L = 8 rad/s. Find v.",
+      "answer": 0.5,
+      "unit": "m/s",
+      "tol": 0.001,
+      "explain": "v = r(ω_R + ω_L)/2 = 0.5 m/s (Eq. 4.17)."
+    }
+  ]
+}

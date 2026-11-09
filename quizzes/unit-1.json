@@ -1,0 +1,230 @@
+{
+  "unit": 1,
+  "title": "Fundamentals of Robotics, Sensors and Instrumentation",
+  "questions": [
+    {
+      "topic": "u1t1",
+      "cat": "Multiple choice",
+      "q": "According to ISO 8373, an industrial robot must be programmable in at least how many axes?",
+      "options": [
+        "One",
+        "Two",
+        "Three",
+        "Six"
+      ],
+      "answer": 2,
+      "explain": "The definition requires three or more programmable axes."
+    },
+    {
+      "topic": "u1t1",
+      "cat": "Conceptual",
+      "q": "A bottling line that produces one product at very high volume is an example of:",
+      "options": [
+        "Fixed (hard) automation",
+        "Programmable automation",
+        "Flexible automation",
+        "Collaborative automation"
+      ],
+      "answer": 0,
+      "explain": "Table 1.2: transfer and bottling lines are fixed automation."
+    },
+    {
+      "topic": "u1t2",
+      "cat": "Multiple choice",
+      "q": "In a six-axis articulated robot, which joints mainly orient the tool?",
+      "options": [
+        "Joints 1–3",
+        "Joints 4–6",
+        "Joints 1 and 6",
+        "Only joint 6"
+      ],
+      "answer": 1,
+      "explain": "The wrist (joints 4–6) orients the tool; joints 1–3 position the wrist centre."
+    },
+    {
+      "topic": "u1t3",
+      "cat": "Application",
+      "q": "Arc welding of a curved seam requires which motion-control class?",
+      "options": [
+        "Non-servo",
+        "Servo point-to-point",
+        "Servo continuous path",
+        "Bang-bang"
+      ],
+      "answer": 2,
+      "explain": "The torch path between points must be controlled."
+    },
+    {
+      "topic": "u1t4",
+      "cat": "Multiple choice",
+      "q": "Which configuration is selectively compliant in the horizontal plane and rigid vertically?",
+      "options": [
+        "Cartesian",
+        "Spherical",
+        "SCARA",
+        "Articulated"
+      ],
+      "answer": 2,
+      "explain": "SCARA = Selective Compliance Assembly Robot Arm."
+    },
+    {
+      "topic": "u1t5",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Use Grübler's formula to find the DOF of a planar four-bar linkage (all revolute joints).",
+      "answer": 1,
+      "unit": "DOF",
+      "tol": 0.001,
+      "explain": "DOF = 3(4 − 1 − 4) + 4 = 1."
+    },
+    {
+      "topic": "u1t6",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A cylindrical robot has r_min = 0.25 m, r_max = 0.75 m, vertical stroke 0.6 m and base rotation 300°. Compute the work volume.",
+      "answer": 0.785,
+      "unit": "m³",
+      "tol": 0.02,
+      "explain": "V = (Δθ/2)(r_max² − r_min²)h = 2.618 × 0.5 × 0.6 = 0.785 m³ (Example 1.4)."
+    },
+    {
+      "topic": "u1t6",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A planar 2R arm has l₁ = 0.5 m and l₂ = 0.3 m. What is its minimum reach?",
+      "answer": 0.2,
+      "unit": "m",
+      "tol": 0.02,
+      "explain": "|l₁ − l₂| = 0.2 m (Eq. 1.8)."
+    },
+    {
+      "topic": "u1t7",
+      "cat": "Conceptual",
+      "q": "Re-teaching which frame relocates an entire palletising program to a new pallet?",
+      "options": [
+        "Joint frame",
+        "Tool frame",
+        "User (work-object) frame",
+        "Base frame"
+      ],
+      "answer": 2,
+      "explain": "Points are taught relative to the user frame."
+    },
+    {
+      "topic": "u1t8",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A 1024-line incremental encoder is read with ×4 decoding. What is its resolution in degrees?",
+      "answer": 0.0879,
+      "unit": "°",
+      "tol": 0.02,
+      "explain": "360°/(4 × 1024) = 0.0879° (Eq. 1.32)."
+    },
+    {
+      "topic": "u1t8",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A linear potentiometer (R_p = 10 kΩ, V_s = 10 V) feeds a 50 kΩ recorder with the wiper at x = 0.6. Find the output voltage.",
+      "answer": 5.725,
+      "unit": "V",
+      "tol": 0.02,
+      "explain": "V_o = 10 × 0.6/(1 + 0.2 × 0.6 × 0.4) = 5.725 V (Example 1.15)."
+    },
+    {
+      "topic": "u1t8",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "An ultrasonic echo returns after 5.83 ms in air at 35 °C. What is the true distance?",
+      "answer": 1.028,
+      "unit": "m",
+      "tol": 0.02,
+      "explain": "v_s = 331.3 + 0.606 × 35 = 352.5 m/s; d = v_s t/2 = 1.028 m (Example 1.21)."
+    },
+    {
+      "topic": "u1t9",
+      "cat": "Conceptual",
+      "q": "In a load-cell weighing system, the Wheatstone bridge is the:",
+      "options": [
+        "Primary sensing element",
+        "Variable-conversion element",
+        "Data-presentation element",
+        "Measurand"
+      ],
+      "answer": 1,
+      "explain": "It converts the resistance change into a voltage."
+    },
+    {
+      "topic": "u1t10",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A thermometer with τ = 8 s at 25 °C is plunged into water at 100 °C. What does it read after 10 s?",
+      "answer": 78.5,
+      "unit": "°C",
+      "tol": 0.01,
+      "explain": "T = 25 + 75(1 − e^(−10/8)) = 78.5 °C (Example 1.12)."
+    },
+    {
+      "topic": "u1t10",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A voltmeter of 1 MΩ measures a source with V_Th = 6 V and R_Th = 50 kΩ. What does it read?",
+      "answer": 5.714,
+      "unit": "V",
+      "tol": 0.02,
+      "explain": "V_m = 6 × 1000/1050 = 5.714 V (Example 1.10)."
+    },
+    {
+      "topic": "u1t10",
+      "cat": "Multiple choice",
+      "q": "Eight readings have mean 101.125 °C in a 100.0 °C bath and s = 0.225 °C. The instrument is:",
+      "options": [
+        "Accurate and precise",
+        "Precise but not accurate",
+        "Accurate but not precise",
+        "Neither"
+      ],
+      "answer": 1,
+      "explain": "Small spread (precise) but 1.125 °C bias (not accurate) – Example 1.8."
+    },
+    {
+      "topic": "u1t11",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the resistance of a Pt100 RTD at 150 °C using the Callendar–Van Dusen equation (A = 3.9083e-3, B = −5.775e-7).",
+      "answer": 157.33,
+      "unit": "Ω",
+      "tol": 0.002,
+      "explain": "R = 100(1 + 0.58625 − 0.01299) = 157.33 Ω (Example 1.23)."
+    },
+    {
+      "topic": "u1t11",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A type K thermocouple reads 7.138 mV with the reference junction at 25 °C (E(25,0) = 1.000 mV, E(200,0) = 8.138 mV). What is the hot-junction temperature?",
+      "answer": 200,
+      "unit": "°C",
+      "tol": 0.005,
+      "explain": "E(T,0) = 7.138 + 1.000 = 8.138 mV → 200 °C (Example 1.25)."
+    },
+    {
+      "topic": "u1t12",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A mercury manometer (ρ = 13 546 kg/m³) shows h = 150 mm. Find Δp in kPa.",
+      "answer": 19.93,
+      "unit": "kPa",
+      "tol": 0.02,
+      "explain": "Δp = ρgh = 13546 × 9.81 × 0.15 = 19.93 kPa (Example 1.26)."
+    },
+    {
+      "topic": "u1t13",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A full bridge with V_ex = 10 V, G_F = 2.0 measures 857 µε. What is the output in mV?",
+      "answer": 17.14,
+      "unit": "mV",
+      "tol": 0.02,
+      "explain": "V_o = V_ex G_F ε = 10 × 2 × 857e-6 = 17.1 mV (Example 1.30)."
+    }
+  ]
+}

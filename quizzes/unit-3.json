@@ -1,0 +1,234 @@
+{
+  "unit": 3,
+  "title": "Robot Kinematics, Trajectory Planning and Control",
+  "questions": [
+    {
+      "topic": "u3t2",
+      "cat": "Multiple choice",
+      "q": "Which statement about a rotation matrix R is FALSE?",
+      "options": [
+        "R⁻¹ = Rᵀ",
+        "det R = +1",
+        "Its columns are orthonormal",
+        "Rotations always commute"
+      ],
+      "answer": 3,
+      "explain": "Composition of rotations is generally non-commutative."
+    },
+    {
+      "topic": "u3t2",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Rotate ᴮp = (1, 2, 0) by 30° about z. What is the x-coordinate of ᴬp?",
+      "answer": -0.134,
+      "unit": "m",
+      "tol": 0.01,
+      "explain": "x = 0.866 × 1 − 0.5 × 2 = −0.134 m (Example 3.1)."
+    },
+    {
+      "topic": "u3t3",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "{B} is rotated 90° about z with origin (3, 1, 0). Transform ᴮp = (1, 1, 0); give the x-coordinate of ᴬp.",
+      "answer": 2,
+      "unit": "m",
+      "tol": 0.001,
+      "explain": "ᴬp = (0 − 1 + 3, 1 + 0 + 1, 0) = (2, 2, 0) (Example 3.3)."
+    },
+    {
+      "topic": "u3t4",
+      "cat": "Multiple choice",
+      "q": "In the standard DH convention, the joint variable of a prismatic joint is:",
+      "options": [
+        "a_i",
+        "α_i",
+        "d_i",
+        "θ_i"
+      ],
+      "answer": 2,
+      "explain": "For prismatic joints d_i varies; θ_i is constant."
+    },
+    {
+      "topic": "u3t5",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A 2R arm has l₁ = 0.5 m, l₂ = 0.3 m, θ₁ = 30°, θ₂ = 45°. Find x.",
+      "answer": 0.5107,
+      "unit": "m",
+      "tol": 0.003,
+      "explain": "x = 0.5 cos30° + 0.3 cos75° = 0.5107 m (Example 3.4)."
+    },
+    {
+      "topic": "u3t5",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "For the same arm find y.",
+      "answer": 0.5398,
+      "unit": "m",
+      "tol": 0.003,
+      "explain": "y = 0.25 + 0.2898 = 0.5398 m."
+    },
+    {
+      "topic": "u3t5",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Articulated arm d₁ = 0.4, a₂ = 0.5, a₃ = 0.4 m, θ = (30°, 45°, −60°). Find z.",
+      "answer": 0.65,
+      "unit": "m",
+      "tol": 0.003,
+      "explain": "z = d₁ + a₂s₂ + a₃s₂₃ = 0.4 + 0.3536 − 0.1035 = 0.650 m (Example 3.5)."
+    },
+    {
+      "topic": "u3t6",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "For l₁ = 0.5, l₂ = 0.3 m and target (0.5, 0.4) m, find c₂ = cos θ₂.",
+      "answer": 0.2333,
+      "unit": "",
+      "tol": 0.005,
+      "explain": "c₂ = (0.41 − 0.34)/0.3 = 0.2333 (Example 3.6)."
+    },
+    {
+      "topic": "u3t6",
+      "cat": "Conceptual",
+      "q": "If the computed c₂ of a 2R arm is 1.4, the target is:",
+      "options": [
+        "Reachable with two solutions",
+        "Reachable with one solution",
+        "Unreachable",
+        "A singular point inside the workspace"
+      ],
+      "answer": 2,
+      "explain": "|c₂| > 1 means no real θ₂ exists."
+    },
+    {
+      "topic": "u3t8",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find det J of a 2R arm with l₁ = 0.5 m, l₂ = 0.3 m at θ₂ = 45°.",
+      "answer": 0.1061,
+      "unit": "m²",
+      "tol": 0.005,
+      "explain": "det J = l₁l₂ sin θ₂ = 0.1061 (Example 3.7)."
+    },
+    {
+      "topic": "u3t9",
+      "cat": "Multiple choice",
+      "q": "A wrist singularity of a six-axis arm with spherical wrist occurs when:",
+      "options": [
+        "θ₁ = 0",
+        "θ₅ = 0 (axes 4 and 6 aligned)",
+        "θ₂ = 90°",
+        "The TCP is at the base"
+      ],
+      "answer": 1,
+      "explain": "Aligned axes 4 and 6 lose one rotational DOF."
+    },
+    {
+      "topic": "u3t10",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the outer radius of the dexterous workspace of a planar 3R arm with L = (0.4, 0.3, 0.1) m.",
+      "answer": 0.6,
+      "unit": "m",
+      "tol": 0.001,
+      "explain": "r_max,dex = L₁ + L₂ − L₃ = 0.6 m (Eq. 3.21)."
+    },
+    {
+      "topic": "u3t11",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A joint moves 10° → 70° in 3 s with a cubic polynomial. Find a₂ in °/s².",
+      "answer": 20,
+      "unit": "°/s²",
+      "tol": 0.001,
+      "explain": "a₂ = 3Δ/t_f² = 180/9 = 20 (Eq. 3.22)."
+    },
+    {
+      "topic": "u3t11",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "An LSPB move of 60° in 3 s uses V = 25°/s. Find the blend time t_b.",
+      "answer": 0.6,
+      "unit": "s",
+      "tol": 0.001,
+      "explain": "t_b = (θ₀ − θ_f + Vt_f)/V = (−60 + 75)/25 = 0.6 s (Example 3.9)."
+    },
+    {
+      "topic": "u3t13",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the minimum time for Δ = 90° with V_max = 60°/s and a_max = 120°/s².",
+      "answer": 2,
+      "unit": "s",
+      "tol": 0.001,
+      "explain": "Δ > V²/a = 30°, so t_f = 90/60 + 60/120 = 2.0 s (Eq. 3.26)."
+    },
+    {
+      "topic": "u3t12",
+      "cat": "Application",
+      "q": "Which interpolation should be used to follow a straight sealing bead?",
+      "options": [
+        "Joint interpolation (MOVJ)",
+        "Linear Cartesian interpolation (MOVL)",
+        "Non-servo end-stop motion",
+        "Random waypoints"
+      ],
+      "answer": 1,
+      "explain": "Only Cartesian interpolation controls the tool path."
+    },
+    {
+      "topic": "u3t14",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "2R arm (Example 3.7) at (30°, 45°) presses with F = (0, −20) N. Find τ₁ = (JᵀF)₁.",
+      "answer": -10.21,
+      "unit": "N·m",
+      "tol": 0.01,
+      "explain": "τ₁ = 0.5107 × (−20) = −10.21 N·m (Example 3.10)."
+    },
+    {
+      "topic": "u3t16",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A uniform link (m = 2 kg, l = 0.5 m) is horizontal. Find the holding torque.",
+      "answer": 4.905,
+      "unit": "N·m",
+      "tol": 0.005,
+      "explain": "τ = mg(l/2) = 2 × 9.81 × 0.25 = 4.905 N·m (Example 3.11)."
+    },
+    {
+      "topic": "u3t16",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Same link accelerating upward at 2 rad/s² from horizontal: find τ.",
+      "answer": 5.24,
+      "unit": "N·m",
+      "tol": 0.01,
+      "explain": "τ = I_Oθ̈ + mgl_c = 0.1667 × 2 + 4.905 = 5.24 N·m."
+    },
+    {
+      "topic": "u3t17",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A joint with J_eff = 3 × 10⁻⁴ kg·m² needs ω_n = 50 rad/s. Find K_p.",
+      "answer": 0.75,
+      "unit": "N·m/rad",
+      "tol": 0.005,
+      "explain": "K_p = Jω_n² = 0.75 (Example 3.13)."
+    },
+    {
+      "topic": "u3t18",
+      "cat": "Conceptual",
+      "q": "In Jacobian-transpose task-space control without gravity compensation, the steady-state result is:",
+      "options": [
+        "Exact positioning",
+        "A static position error",
+        "Unbounded oscillation",
+        "Joint-limit violation always"
+      ],
+      "answer": 1,
+      "explain": "The virtual spring must balance gravity, leaving an error."
+    }
+  ]
+}

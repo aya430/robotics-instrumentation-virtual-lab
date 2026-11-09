@@ -1,0 +1,228 @@
+{
+  "unit": 2,
+  "title": "Actuators, Robot Mechanisms and Measurement Systems",
+  "questions": [
+    {
+      "topic": "u2t1",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A pneumatic cylinder has bore 50 mm, supply 6 bar gauge and efficiency 0.9. Find the extend force.",
+      "answer": 1060,
+      "unit": "N",
+      "tol": 0.02,
+      "explain": "F = ηpA = 0.9 × 6e5 × 1.963e-3 = 1060 N (Example 2.1)."
+    },
+    {
+      "topic": "u2t1",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A hydraulic cylinder of 80 mm bore is supplied with 20 L/min. Find the piston speed.",
+      "answer": 0.0663,
+      "unit": "m/s",
+      "tol": 0.02,
+      "explain": "v = Q/A = 3.333e-4/5.027e-3 = 0.066 m/s (Example 2.2)."
+    },
+    {
+      "topic": "u2t1",
+      "cat": "Application",
+      "q": "Which actuator family is best for a 50 kN press stroke in a compact space?",
+      "options": [
+        "Pneumatic",
+        "Hydraulic",
+        "Stepper motor",
+        "Solenoid"
+      ],
+      "answer": 1,
+      "explain": "Hydraulics have the highest force density."
+    },
+    {
+      "topic": "u2t2",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A DC motor (V_a = 24 V, R_a = 1.2 Ω, K_t = K_b = 0.05) drives 0.2 N·m. Find the steady speed in rad/s.",
+      "answer": 384,
+      "unit": "rad/s",
+      "tol": 0.02,
+      "explain": "i_a = 4 A, E_b = 19.2 V, ω = 384 rad/s (Example 2.3)."
+    },
+    {
+      "topic": "u2t2",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the mechanical time constant of that motor with J = 2 × 10⁻⁵ kg·m² (in ms).",
+      "answer": 9.6,
+      "unit": "ms",
+      "tol": 0.02,
+      "explain": "τ_m = JR_a/(K_tK_b) = 2e-5 × 1.2/0.0025 = 9.6 ms (Example 2.4)."
+    },
+    {
+      "topic": "u2t3",
+      "cat": "Conceptual",
+      "q": "In a PID position servo with constant load torque, which term removes the steady-state error?",
+      "options": [
+        "Proportional",
+        "Integral",
+        "Derivative",
+        "Feed-forward of velocity"
+      ],
+      "answer": 1,
+      "explain": "Integral action accumulates error until it is zero."
+    },
+    {
+      "topic": "u2t3",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "What angle does an RC servo take for a 1.6 ms pulse?",
+      "answer": 108,
+      "unit": "°",
+      "tol": 0.02,
+      "explain": "θ = 180 × (1.6 − 1)/1 = 108° (Eq. 2.12)."
+    },
+    {
+      "topic": "u2t4",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A 3-phase VR stepper has 8 rotor teeth. Find the full-step angle.",
+      "answer": 15,
+      "unit": "°",
+      "tol": 0.02,
+      "explain": "θ_s = 360/(3 × 8) = 15° (Eq. 2.15)."
+    },
+    {
+      "topic": "u2t4",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A 200-step/rev stepper is pulsed at 1 kHz. Find its speed in rpm.",
+      "answer": 300,
+      "unit": "rpm",
+      "tol": 0.02,
+      "explain": "n = 60f/S = 60 × 1000/200 = 300 rpm (Example 2.5)."
+    },
+    {
+      "topic": "u2t5",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "An 8-pole BLDC motor runs at 3000 rpm. Find the electrical frequency.",
+      "answer": 200,
+      "unit": "Hz",
+      "tol": 0.02,
+      "explain": "f_e = pn/60 = 4 × 3000/60 = 200 Hz (Example 2.6)."
+    },
+    {
+      "topic": "u2t6",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A solenoid has N = 1000, I = 0.5 A, A = 1 cm², g = 2 mm. Find the ideal force.",
+      "answer": 3.93,
+      "unit": "N",
+      "tol": 0.03,
+      "explain": "F = (NI)²μ₀A/(2g²) = 3.9 N (Example 2.7)."
+    },
+    {
+      "topic": "u2t7",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A harmonic drive has 200 flexspline teeth and 202 circular-spline teeth. Find the ratio.",
+      "answer": 100,
+      "unit": ":1",
+      "tol": 0.001,
+      "explain": "n = N_f/(N_c − N_f) = 100 (Eq. 2.22)."
+    },
+    {
+      "topic": "u2t8",
+      "cat": "Multiple choice",
+      "q": "Compared with a serial arm, a parallel (Delta) robot typically has:",
+      "options": [
+        "Larger workspace and lower stiffness",
+        "Smaller workspace and higher stiffness",
+        "Easier forward kinematics",
+        "Motors on every moving link"
+      ],
+      "answer": 1,
+      "explain": "Closed chains give stiffness and speed over a small workspace."
+    },
+    {
+      "topic": "u2t9",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the per-finger gripping force for a 2 kg part, μ = 0.3, a = 5 m/s², two fingers, S = 2.",
+      "answer": 98.7,
+      "unit": "N",
+      "tol": 0.02,
+      "explain": "F_g = 2 × 2 × (9.81 + 5)/(2 × 0.3) = 98.7 N (Example 2.10)."
+    },
+    {
+      "topic": "u2t10",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A shunt must give 50 mV at 100 A. Find its resistance in mΩ.",
+      "answer": 0.5,
+      "unit": "mΩ",
+      "tol": 0.02,
+      "explain": "R_sh = 0.05/100 = 0.5 mΩ (Example 2.11)."
+    },
+    {
+      "topic": "u2t12",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "An in-amp with R = 25 kΩ and R₃/R₂ = 1 must have a gain of 1000. Find R_G in Ω.",
+      "answer": 50.05,
+      "unit": "Ω",
+      "tol": 0.02,
+      "explain": "R_G = 2R/(G − 1) = 50 000/999 = 50.05 Ω (Example 2.12)."
+    },
+    {
+      "topic": "u2t13",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the cut-off frequency of an RC low-pass with R = 10 kΩ and C = 100 nF.",
+      "answer": 159.2,
+      "unit": "Hz",
+      "tol": 0.02,
+      "explain": "f_c = 1/(2πRC) = 159 Hz (Example 2.13)."
+    },
+    {
+      "topic": "u2t14",
+      "cat": "Conceptual",
+      "q": "A cable shield for low-frequency analogue signals should normally be grounded:",
+      "options": [
+        "At both ends",
+        "At the receiving end only",
+        "At the sensor end only",
+        "Not at all"
+      ],
+      "answer": 1,
+      "explain": "Grounding at one end prevents ground-loop current in the shield."
+    },
+    {
+      "topic": "u2t15",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "A 12-bit ADC spans 0–5 V. Find the quantisation step in mV.",
+      "answer": 1.221,
+      "unit": "mV",
+      "tol": 0.02,
+      "explain": "Q = 5/4096 = 1.22 mV (Example 2.14)."
+    },
+    {
+      "topic": "u2t15",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "An 8-bit R–2R DAC (V_ref = 5 V) receives 10110100. Find the output voltage.",
+      "answer": 3.516,
+      "unit": "V",
+      "tol": 0.02,
+      "explain": "D = 180; v_o = 5 × 180/256 = 3.516 V (Example 2.16)."
+    },
+    {
+      "topic": "u2t16",
+      "cat": "Numerical",
+      "type": "num",
+      "q": "Find the data rate of a DAQ with 8 channels × 10 kS/s × 16 bits in Mbit/s.",
+      "answer": 1.28,
+      "unit": "Mbit/s",
+      "tol": 0.02,
+      "explain": "R_b = nf_sN = 1.28 Mbit/s (Example 2.17)."
+    }
+  ]
+}

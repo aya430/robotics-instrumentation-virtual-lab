@@ -1,0 +1,28 @@
+/* ---------- Quiz ---------- */
+.quiz { max-width: 860px; }
+.qcard { background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius-m); padding: 16px 18px; margin: 0 0 14px; }
+.qcard .qh { display: flex; justify-content: space-between; gap: 10px; font-size: .8rem; color: var(--ink-3); margin-bottom: 6px; }
+.qcard .qt { font-family: var(--font-read); font-size: 1.04rem; margin-bottom: 10px; }
+.qcard label.opt { display: flex; gap: 10px; align-items: flex-start; padding: 7px 10px; border: 1px solid var(--rule); border-radius: var(--radius-s); margin: 6px 0; cursor: pointer; }
+.qcard label.opt:hover { border-color: var(--ink-3); }
+.qcard label.opt.correct { border-color: var(--ok); background: rgba(47,158,91,.1); }
+.qcard label.opt.wrong { border-color: var(--bad); background: rgba(214,69,69,.1); }
+.qcard input[type=number] { font: inherit; padding: 6px 8px; border: 1px solid var(--rule); border-radius: var(--radius-s); width: 180px; background: var(--paper); color: var(--ink); }
+.qcard .fb { display: none; margin-top: 10px; padding: 10px 12px; border-radius: var(--radius-s); font-size: .94rem; background: var(--paper-2); }
+.qcard.done .fb { display: block; }
+.qcard .fb b.ok { color: var(--ok); } .qcard .fb b.bad { color: var(--bad); }
+.scorebar { position: sticky; bottom: 0; background: var(--navy); color: #fff; padding: 12px 18px; border-radius: var(--radius-m) var(--radius-m) 0 0; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.scorebar .score { font-size: 1.2rem; font-weight: 800; color: var(--amber); }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+.tabs button { font: inherit; padding: 8px 14px; border-radius: var(--radius-m); border: 1px solid var(--rule); background: var(--card); color: var(--ink); cursor: pointer; font-weight: 600; }
+.tabs button[aria-selected="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* ---------- Experiment page ---------- */
+.exp-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.exp-section { margin-bottom: 26px; max-width: var(--measure); font-family: var(--font-read); font-size: 1.04rem; line-height: 1.65; }
+.exp-section.wide { max-width: none; font-family: var(--font-ui); font-size: 1rem; }
+.exp-section h2 { font-family: var(--font-ui); font-size: 1.3rem; border-top: 1px solid var(--rule); padding-top: 12px; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+@media print { .site-head, .sim-toolbar, .topic-side, .site-foot { display: none; } .sim { break-inside: avoid; } }
+@media (max-width: 520px) { body { font-size: 15px; } .theory { font-size: 1rem; } .btn { padding: 8px 12px; } }
