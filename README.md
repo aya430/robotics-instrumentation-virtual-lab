@@ -40,9 +40,13 @@ Opening `index.html` directly from disk (`file://`) also works in Chrome, Edge a
 
 All internal links are relative (each page carries `data-root`), so the site works under a project sub-path. A `.nojekyll` file is included so GitHub serves every file unchanged; `404.html` returns visitors to the home page.
 
-## Institutional branding
+## Course and instructor details
 
-Edit `js/config.js` (course title, course code, department, institution, instructor, academic year, optional logo path). No logos are bundled. The course code is currently `B24EES502` as printed in the lecture notes; the slide decks print `M26TJ511X` and the syllabus document `M26TJS01XX` – set whichever is current.
+Edit `js/config.js` (course title, instructor name, e-mail, photo, LinkedIn URL, academic year, optional logo path). The site shows no course code and no school or university details. The instructor photo is `assets/img/instructor.jpg`.
+
+## Lecture slides (flipbook)
+
+`notes.html` shows the four unit slide decks as a page-turning flipbook (unit tabs, page turn, page number and slider, thumbnails, zoom, full screen, keyboard and swipe; deep links such as `notes.html#unit-2/p14`). Pages are pre-rendered images in `notes/unit-N/pNNN.webp`; the PDFs themselves are not published. When rendering, the institution name and course code were removed from every slide footer, and the title and closing slides were replaced with neutral versions (no logo, campus photo, school or university). The slides are marked *for study purposes only*. To update after editing the slides, re-run `python3 tools/make_notes.py` (needs poppler `pdftoppm` and Pillow) with the four PDFs named `u1.pdf`…`u4.pdf` in the working folder, then `node tools/build.js`.
 
 ## Editing content
 

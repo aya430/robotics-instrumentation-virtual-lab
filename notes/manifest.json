@@ -1,0 +1,18 @@
+{
+ "1": {
+  "title": "Unit I: Fundamentals of Robotics, Sensors and Instrumentation",
+  "pages": 109
+ },
+ "2": {
+  "title": "Unit II: Actuators, Robot Mechanisms and Measurement Systems",
+  "pages": 70
+ },
+ "3": {
+  "title": "Unit III: Robot Kinematics, Trajectory Planning and Control",
+  "pages": 65
+ },
+ "4": {
+  "title": "Unit IV: Industrial Automation, Embedded Systems and Machine Vision",
+  "pages": 74
+ }
+}

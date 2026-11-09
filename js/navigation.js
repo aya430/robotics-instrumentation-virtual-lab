@@ -18,6 +18,7 @@
     ['u2', 'Unit II', 'units/unit-2/index.html'],
     ['u3', 'Unit III', 'units/unit-3/index.html'],
     ['u4', 'Unit IV', 'units/unit-4/index.html'],
+    ['notes', 'Lecture Slides', 'notes.html'],
     ['sims', 'All Simulations', 'simulations.html'],
     ['exps', 'Virtual Experiments', 'experiments.html'],
     ['practice', 'Practice Questions', 'practice.html'],
@@ -48,10 +49,10 @@
 
   const foot = document.getElementById('app-foot');
   if (foot) {
-    const inst = [cfg.courseCode, cfg.department, cfg.institution].filter(Boolean).join(', ');
+    const inst = '';
     foot.outerHTML = `<footer class="site-foot"><div class="wrap cols">
-      <div><b>Robotics &amp; Instrumentation — Interactive Virtual Learning Laboratory</b><br>${inst || ''}${cfg.instructor ? '<br>Course instructor: ' + cfg.instructor : ''}${cfg.academicYear ? '<br>' + cfg.academicYear : ''}</div>
-      <div>Built with HTML5, Canvas, SVG, Three.js, Chart.js, MathJax and GSAP.<br>Runs entirely in the browser; no login or server needed.<br><a href="${R}about.html">About this laboratory</a> · <a href="${R}docs/SYLLABUS_CONTENT_MAPPING.md">Syllabus mapping</a></div>
+      <div><b>Robotics &amp; Instrumentation — Interactive Virtual Learning Laboratory</b>${cfg.instructor ? '<br>Course instructor: ' + window.RIL_INSTRUCTOR_HTML() : ''}${cfg.instructorEmail ? '<br>Contact: <a href="mailto:' + cfg.instructorEmail + '">' + cfg.instructorEmail + '</a>' : ''}${cfg.academicYear ? '<br>' + cfg.academicYear : ''}</div>
+      <div>Built with HTML5, Canvas, SVG, Three.js, Chart.js, MathJax and GSAP.<br>Runs entirely in the browser; no login or server needed.<br><a href="${R}notes.html">Lecture slides</a> · <a href="${R}about.html">About this laboratory</a> · <a href="${R}docs/SYLLABUS_CONTENT_MAPPING.md">Syllabus mapping</a></div>
     </div></footer>`;
   }
 })();

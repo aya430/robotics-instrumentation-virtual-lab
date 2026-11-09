@@ -7,7 +7,6 @@
   RIL.quiz = RIL.quiz || {};
   RIL.experiments = RIL.experiments || [];
   RIL.course = {
-    credits: '3 credits (L-T-P 3-0-0), 42 classes per semester; assessment IA 50% and SEE 50%.',
     overview: [
       'Familiarize students with the fundamental concepts, components, configurations, and applications of robotics and automation.',
       'Develop an understanding of sensors, transducers, measurement systems, actuators, and robot mechanisms.',
@@ -51,6 +50,8 @@
       'Industrial Robotics: Theories for Implementation, IIT (ISM) Dhanbad – Prof. Arun Dayal Udai.'
     ]
   };
+  /* unit slide decks rendered as page images in notes/unit-N/pNNN.webp (tools: notes-build/make.py) */
+  RIL.notes = [{"n": 1, "title": "Unit I: Fundamentals of Robotics, Sensors and Instrumentation", "pages": 109}, {"n": 2, "title": "Unit II: Actuators, Robot Mechanisms and Measurement Systems", "pages": 70}, {"n": 3, "title": "Unit III: Robot Kinematics, Trajectory Planning and Control", "pages": 65}, {"n": 4, "title": "Unit IV: Industrial Automation, Embedded Systems and Machine Vision", "pages": 74}];
   RIL.aboutHtml = `
   <section><h2>Purpose</h2><p>This laboratory turns the four-unit Robotics and Instrumentation syllabus into working models. Each topic module follows the course notes for its definitions, notation, derivations and worked examples, and pairs them with a simulation whose numbers are computed from the same equations.</p></section>
   <section><h2>Sources</h2><p>Academic content follows the course lecture notes (Units I–IV), the unit slide decks and the course syllabus. Equation numbers such as (3.11) refer to the notes. Where the notes do not cover a detail that a simulation needs, the extra explanation is marked <span class="badge supp">Supplementary</span> and shown in a purple box.</p></section>

@@ -60,6 +60,7 @@ ${s('js/three-kit.js')}
 ${s('js/bundle-data.js')}
 ${s('js/bundle-sims.js')}
 ${quiz ? s('js/quiz-engine.js') : ''}
+${page === 'notes' ? s('js/flipbook.js') : ''}
 ${s('js/navigation.js')}
 ${s('js/app.js')}
 </body>
@@ -74,6 +75,7 @@ add('syllabus.html', { root: '', title: 'Course Syllabus | ' + SITE, desc: 'Four
 add('simulations.html', { root: '', title: 'All Simulations | ' + SITE, desc: 'Catalogue of interactive robotics and instrumentation simulations.', page: 'sims', math: false });
 add('experiments.html', { root: '', title: 'Virtual Experiments | ' + SITE, desc: 'Virtual experiments mapped to the syllabus.', page: 'exps', math: false });
 add('practice.html', { root: '', title: 'Practice Questions | ' + SITE, desc: 'Unit-wise practice quizzes with immediate feedback.', page: 'practice', quiz: true });
+add('notes.html', { root: '', title: 'Lecture Slides | ' + SITE, desc: 'Unit-wise lecture slides as a page-turning flipbook, for study purposes only.', page: 'notes', math: false });
 add('about.html', { root: '', title: 'About | ' + SITE, desc: 'About the Robotics & Instrumentation virtual laboratory.', page: 'about', math: false });
 units.forEach(u => {
   add(`units/unit-${u.n}/index.html`, { root: '../../', title: `Unit ${u.roman}: ${u.title} | ${SITE}`, desc: u.syllabus, page: 'unit', attrs: `data-unit="${u.n}"`, heading: `Unit ${u.roman}: ${u.title}`, math: false });

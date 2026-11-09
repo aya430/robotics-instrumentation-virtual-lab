@@ -19,6 +19,22 @@
 
   function unitSims(u) { const s = new Set(); u.topics.forEach(t => (t.sims || []).forEach(x => s.add(x))); return [...s]; }
 
+  /* instructor card (photo, name, LinkedIn, e-mail) */
+  function instructorCard() {
+    const c = window.RIL_CONFIG || {}; if (!c.instructor) return '';
+    return `<div class="inst-card">${c.instructorPhoto ? `<img src="${R}${c.instructorPhoto}" alt="${esc(c.instructor)}" width="120" height="120" loading="lazy">` : ''}
+      <div><span class="eyebrow">Course instructor</span><h3>${window.RIL_INSTRUCTOR_HTML()}</h3><p class="muted">${esc(c.courseTitle)}</p>
+      ${c.instructorEmail ? `<p><a class="mail" href="mailto:${c.instructorEmail}">${esc(c.instructorEmail)}</a></p>` : ''}
+      ${c.instructorLinkedIn ? `<p><a class="btn ghost sm" href="${c.instructorLinkedIn}" target="_blank" rel="noopener noreferrer">LinkedIn profile</a></p>` : ''}</div></div>`;
+  }
+  const notesUrl = n => `${R}notes.html#unit-${n}`;
+  function slidesSection() {
+    const N = RIL.notes || []; if (!N.length) return '';
+    return `<section class="home-section"><h2>Lecture slides</h2>
+      <p class="muted" style="max-width:70ch">The unit slide decks as a page-turning flipbook. <b>For study purposes only.</b></p>
+      <div class="slides-grid">${N.map(d => { const u = units.find(x => x.n === d.n) || {}; return `<a class="slide-card" href="${notesUrl(d.n)}"><img src="${R}notes/unit-${d.n}/p001.webp" alt="" loading="lazy" width="320" height="180"><span><b>Unit ${u.roman || d.n}</b> ${esc(d.title.replace(/^Unit [IVX]+:\s*/, ''))}<small>${d.pages} pages</small></span></a>`; }).join('')}</div></section>`;
+  }
+
   /* ---------------- HOME ---------------- */
   function renderHome() {
     const hero = document.createElement('section'); hero.className = 'hero';
@@ -29,7 +45,7 @@
         <p class="tagline">Visualize | Simulate | Experiment | Understand</p>
         <p class="lead">Every topic of the four-unit syllabus is taught here through working models: move a joint and the forward-kinematics numbers change, raise the ADC resolution and the quantisation staircase shrinks, retune a PID gain and the response graph redraws. ${totalTopics} topic modules, ${totalSims} simulations and ${(RIL.experiments || []).length} virtual experiments.</p>
         <div class="actions"><a class="btn amber" href="${R}units/unit-1/index.html">Start with Unit I</a><a class="btn ghost" href="${R}simulations.html">Browse all simulations</a><a class="btn ghost" href="${R}experiments.html">Virtual experiments</a></div>
-        <p class="inst-line">${esc([RIL_CONFIG.courseCode, RIL_CONFIG.department, RIL_CONFIG.institution].filter(Boolean).join(', '))}</p>
+        <p class="inst-line">Course: ${esc(RIL_CONFIG.courseTitle)}${RIL_CONFIG.instructor ? ' · Instructor: ' + window.RIL_INSTRUCTOR_HTML() : ''}</p>
       </div>
       <div class="hero-stage" id="hero-stage" aria-label="Live 6-DOF robot with forward kinematics readout"><div class="hero-readout" id="hero-ro"></div></div>
     </div>`;
@@ -48,7 +64,9 @@
         <div><h4>Working model</h4><p>Each simulation computes its outputs from the stated equations; the numbers on screen are the model's numbers.</p></div>
         <div><h4>Virtual experiment</h4><p>Record observations into a table, export them as CSV and compare with the theory.</p></div>
         <div><h4>Check yourself</h4><p>Unit quizzes with numerical problems give feedback and explanations only after you submit.</p></div>
-      </div></section>`;
+      </div></section>
+      ${slidesSection()}
+      <section class="home-section">${instructorCard()}</section>`;
     heroRobot();
   }
   function heroRobot() {
@@ -85,7 +103,7 @@
       <ol class="topic-list">${u.topics.map(t => `<li class="topic-item"><span class="n">${t.n}</span><div><h3><a href="${topicUrl(n, t)}">${esc(t.title)}</a></h3><p>${t.blurb || ''}</p><div class="sims">${(t.sims || []).map(id => RIL.sims[id] ? `<a href="${simUrl(id)}" class="badge ${RIL.sims[id].kind === '3d' ? 'd3' : 'd2'}" style="text-decoration:none">${esc(RIL.sims[id].title)}</a>` : '').join('')}</div></div><a class="btn ghost go" href="${topicUrl(n, t)}">Open topic</a></li>`).join('')}</ol>
       <h2 style="margin-top:36px">Virtual experiments for this unit</h2>
       <div class="catalog">${exps.map(e => expCard(e)).join('')}</div>
-      <p style="margin-top:24px"><a class="btn" href="${R}practice.html#unit-${n}">Practice questions for Unit ${u.roman}</a></p>`;
+      <p style="margin-top:24px"><a class="btn" href="${R}practice.html#unit-${n}">Practice questions for Unit ${u.roman}</a> <a class="btn ghost" href="${notesUrl(n)}">Lecture slides for Unit ${u.roman}</a></p>`;
   }
 
   /* ---------------- TOPIC ---------------- */
@@ -204,7 +222,7 @@
   function renderSyllabus() {
     const C = RIL.course || {};
     main.innerHTML = `<div class="crumbs"><a href="${R}index.html">Home</a> / Course syllabus</div>
-      <header class="page-head"><h1>Course syllabus</h1><p>${esc(RIL_CONFIG.courseTitle)}${RIL_CONFIG.courseCode ? ' (' + esc(RIL_CONFIG.courseCode) + ')' : ''}. ${C.credits || ''}</p></header>
+      <header class="page-head"><h1>Course syllabus</h1><p>${esc(RIL_CONFIG.courseTitle)}.</p></header>
       <div class="theory">
       <section><h2>Course overview</h2><ol>${(C.overview || []).map(x => `<li>${x}</li>`).join('')}</ol></section>
       <section><h2>Course objectives</h2><ol>${(C.objectives || []).map(x => `<li>${x}</li>`).join('')}</ol></section>
@@ -233,10 +251,11 @@
   function renderAbout() {
     main.innerHTML = `<div class="crumbs"><a href="${R}index.html">Home</a> / About</div>
       <header class="page-head"><h1>About this laboratory</h1><p>An interactive companion to the course notes for ${esc(RIL_CONFIG.courseTitle)}.</p></header>
+      ${instructorCard()}
       <div class="theory">${RIL.aboutHtml || ''}</div>`;
   }
 
-  const routes = { home: renderHome, unit: renderUnit, topic: renderTopic, sims: renderSims, sim: renderSim, exps: renderExps, exp: renderExp, syllabus: renderSyllabus, practice: renderPractice, about: renderAbout };
+  const routes = { home: renderHome, unit: renderUnit, topic: renderTopic, sims: renderSims, sim: renderSim, exps: renderExps, exp: renderExp, syllabus: renderSyllabus, practice: renderPractice, about: renderAbout, notes: () => RIL.flipbook && RIL.flipbook(main) };
   try { (routes[page] || (() => { }))(); } catch (err) { console.error(err); main.insertAdjacentHTML('afterbegin', '<div class="callout">This page failed to render: ' + esc(err.message) + '</div>'); }
   if (window.gsap && page !== 'home' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.from('.page-head', { opacity: 0, y: 8, duration: .35, ease: 'power1.out' });
   typeset();

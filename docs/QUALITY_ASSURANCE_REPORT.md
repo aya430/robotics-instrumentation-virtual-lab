@@ -48,6 +48,7 @@ All tests ran in a Linux container with Node.js and Playwright's **headless Chro
 - **Accessibility:** keyboard focus and ARIA labels exist on controls, but no screen-reader audit or WCAG contrast audit was performed.
 - **GitHub Pages:** links are relative and a `.nojekyll` file is included, but the site was served from a local static server, not from an actual GitHub Pages deployment.
 - **MathJax:** bundled offline (`tex-svg.js`); only extensions included in that bundle work. Adding new TeX that needs other extensions (e.g. `\boldsymbol`, `\cancel`) will fail offline.
-- **Course code:** the notes show `B24EES502`; other supplied files show different codes. Set the correct one in `js/config.js`.
+- **Course code:** intentionally not shown on the site; only the course name is displayed.
 - No user accounts, no server-side storage: quiz scores and observation tables live only in the browser session (CSV export provided).
-- No institutional logos or images are bundled; `assets/` contains only third-party libraries with their licences.
+- No institutional logos are bundled. `assets/img/instructor.jpg` is the instructor photo supplied by the instructor; everything else in `assets/` is third-party libraries with their licences.
+- **Lecture slides flipbook:** 318 slide images (17 MB WebP) generated from the supplied unit PDFs. Institution name/course code removed from footers and title/closing slides replaced; slide body content was not otherwise edited or reviewed slide by slide for institution mentions beyond a text search of the PDFs (which found them only in footers, title and closing slides). Images can still be saved by a determined user; the "study purposes only" notice is a notice, not copy protection.

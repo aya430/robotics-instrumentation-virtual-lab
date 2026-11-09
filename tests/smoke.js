@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const ROOT = path.resolve(__dirname, '..');
 const filter = process.argv[2] || '';
 const pages = JSON.parse(fs.readFileSync(path.join(__dirname, 'pages.json'), 'utf8')).filter(p => p.includes(filter));
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.md': 'text/markdown', '.png': 'image/png' };
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.json': 'application/json', '.md': 'text/markdown', '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg' };
 const srv = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]); if (p.endsWith('/')) p += 'index.html';
   const f = path.join(ROOT, p);
