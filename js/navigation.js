@@ -22,6 +22,7 @@
     ['sims', 'All Simulations', 'simulations.html'],
     ['exps', 'Virtual Experiments', 'experiments.html'],
     ['practice', 'Practice Questions', 'practice.html'],
+    ['humanoid', 'Humanoid Robot', 'humanoid-robot.html'],
     ['about', 'About', 'about.html']
   ];
   const cur = page === 'home' ? 'home' : (page === 'unit' || page === 'topic') ? 'u' + unitN : page === 'sim' || page === 'sims' ? 'sims' : page === 'exp' || page === 'exps' ? 'exps' : page;

@@ -65,6 +65,9 @@
         <div><h4>Virtual experiment</h4><p>Record observations into a table, export them as CSV and compare with the theory.</p></div>
         <div><h4>Check yourself</h4><p>Unit quizzes with numerical problems give feedback and explanations only after you submit.</p></div>
       </div></section>
+      <section class="home-section"><h2>Humanoid Robot – BAIRWABOT Virtual Lab</h2>
+        <p class="muted" style="max-width:70ch">A 3D 46-DOF humanoid with 30 modules on gait, inverse kinematics, balance (CoM and ZMP), perception and human-robot interaction, including voice commands in English and Hindi.</p>
+        <div class="actions" style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn amber" href="${R}humanoid-robot.html">Explore the humanoid robot</a><a class="btn ghost" href="${R}bairwabot/index.html">Open the lab full screen</a></div></section>
       ${slidesSection()}
       <section class="home-section">${instructorCard()}</section>`;
     heroRobot();
@@ -255,7 +258,26 @@
       <div class="theory">${RIL.aboutHtml || ''}</div>`;
   }
 
-  const routes = { home: renderHome, unit: renderUnit, topic: renderTopic, sims: renderSims, sim: renderSim, exps: renderExps, exp: renderExp, syllabus: renderSyllabus, practice: renderPractice, about: renderAbout, notes: () => RIL.flipbook && RIL.flipbook(main) };
+  /* ---------------- HUMANOID ROBOT (BAIRWABOT lab, self-contained in bairwabot/) ---------------- */
+  function renderHumanoid() {
+    const lab = R + 'bairwabot/index.html';
+    main.innerHTML = `<div class="crumbs"><a href="${R}index.html">Home</a> / Humanoid Robot</div>
+      <header class="page-head"><h1>Humanoid Robot – BAIRWABOT Virtual Lab</h1><p>An interactive 3D learning environment for humanoid robotics, artificial intelligence, motion planning and human-robot interaction. Concept and educational direction: ${window.RIL_INSTRUCTOR_HTML() || 'Dr Bansilal Bairwa'}</p>
+      <div class="actions" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px"><a class="btn amber" href="${lab}">Open the lab full screen</a><a class="btn ghost" href="#humanoid-lab">Use it on this page</a></div></header>
+      <section class="home-section"><h2>What the lab contains</h2><div class="how-grid">
+        <div><h4>46-DOF humanoid</h4><p>A 1.72 m humanoid with named joints and limits: neck, torso, two 8-DOF arms, five-finger hands and two 6-DOF legs, with an expressive face.</p></div>
+        <div><h4>Motion and balance</h4><p>Walk, jog, run, turn and side-step gaits, stair footstep planning, damped-least-squares arm IK, CoM, CoP/ZMP, support polygon and foot pressure.</p></div>
+        <div><h4>30 modules</h4><p>Each module has a working simulation, 15 sections of learning content and quiz questions (150 in all), plus FK/IK lab, DOF and body-structure explorers.</p></div>
+        <div><h4>Talk to the robot</h4><p>Text-to-speech and voice commands in English and Hindi. Where speech recognition is unavailable, commands can be typed or clicked.</p></div>
+      </div></section>
+      <section class="home-section" id="humanoid-lab"><h2>Live lab</h2>
+        <p class="muted" style="max-width:70ch">Drag to rotate, scroll to zoom, right-drag to pan. Voice commands need microphone permission; for the best experience <a href="${lab}">open the lab full screen</a>.</p>
+        <iframe src="${lab}" title="BAIRWABOT – Humanoid Robotics Virtual Lab" loading="lazy" allow="microphone; autoplay; fullscreen" allowfullscreen style="width:100%;height:min(90vh,860px);border:0;border-radius:12px;background:#070c18;box-shadow:0 6px 30px rgba(0,0,0,.25)"></iframe>
+        <p class="muted" style="font-size:.9rem;margin-top:10px">Values marked MODEL are computed from the animated kinematic model; values marked SIM are illustrative. Object recognition and detection confidences are simulated, and locomotion is kinematic rather than a full physics simulation.</p>
+      </section>`;
+  }
+
+  const routes = { home: renderHome, unit: renderUnit, topic: renderTopic, sims: renderSims, sim: renderSim, exps: renderExps, exp: renderExp, syllabus: renderSyllabus, practice: renderPractice, about: renderAbout, humanoid: renderHumanoid, notes: () => RIL.flipbook && RIL.flipbook(main) };
   try { (routes[page] || (() => { }))(); } catch (err) { console.error(err); main.insertAdjacentHTML('afterbegin', '<div class="callout">This page failed to render: ' + esc(err.message) + '</div>'); }
   if (window.gsap && page !== 'home' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.from('.page-head', { opacity: 0, y: 8, duration: .35, ease: 'power1.out' });
   typeset();

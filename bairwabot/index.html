@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BAIRWABOT – Humanoid Robotics Virtual Lab</title>
+<meta name="description" content="BAIRWABOT – an interactive 3D learning environment for humanoid robotics, artificial intelligence, motion planning and human-robot interaction. 30 modules, 46-DOF humanoid, voice interaction.">
+<meta name="theme-color" content="#070c18">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='10' y='12' width='44' height='38' rx='12' fill='%23e2e8f0'/%3E%3Crect x='16' y='20' width='32' height='20' rx='7' fill='%23081022'/%3E%3Ccircle cx='26' cy='30' r='4' fill='%2322d3ee'/%3E%3Ccircle cx='38' cy='30' r='4' fill='%2322d3ee'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/bairwabot.css">
+</head>
+<body>
+<div id="bairwabot-lab">
+
+<div id="loader" role="dialog" aria-live="polite">
+  <div class="ldBox">
+    <svg class="ldLogo" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="44" height="38" rx="12" fill="#e2e8f0"/><rect x="16" y="20" width="32" height="20" rx="7" fill="#081022"/><circle cx="26" cy="30" r="4" fill="#22d3ee"/><circle cx="38" cy="30" r="4" fill="#22d3ee"/><rect x="29" y="4" width="6" height="8" rx="2" fill="#22d3ee"/></svg>
+    <h1 id="loadTitle">INITIALIZING BAIRWABOT...</h1>
+    <div id="loadBar"><i></i></div>
+    <p id="loadMsg">Starting…</p>
+    <button id="enterBtn" class="btn pri big" hidden>Enter the Lab</button>
+    <noscript><p>JavaScript is required to run the BAIRWABOT virtual lab.</p></noscript>
+  </div>
+</div>
+
+<header class="top">
+  <button id="burger" class="iconBtn" aria-label="Open module menu">☰</button>
+  <div class="brand">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="12" width="44" height="38" rx="12" fill="#e2e8f0"/><rect x="16" y="20" width="32" height="20" rx="7" fill="#081022"/><circle cx="26" cy="30" r="4" fill="#22d3ee"/><circle cx="38" cy="30" r="4" fill="#22d3ee"/><rect x="29" y="4" width="6" height="8" rx="2" fill="#22d3ee"/></svg>
+    <div><h1>BAIRWABOT <span>– HUMANOID ROBOTICS VIRTUAL LAB</span></h1><p>An Interactive 3D Learning Environment for Humanoid Robotics, Artificial Intelligence, Motion Planning and Human-Robot Interaction.</p></div>
+  </div>
+  <div class="chips">
+    <span id="chipSpeak" class="chip" title="Speaking indicator">🔊 Speaking</span>
+    <span id="chipMic" class="chip mic" title="Microphone indicator">🎤 Listening</span>
+    <label class="lang">Language <select id="langSel" aria-label="Speech language"><option value="en">English</option><option value="hi">हिन्दी (Hindi)</option></select></label>
+  </div>
+</header>
+
+<div class="app">
+  <nav id="nav" aria-label="Modules"></nav>
+  <div class="scrim" onclick="document.body.classList.remove('navOpen')"></div>
+
+  <main class="stage">
+    <div id="viewport">
+      <canvas id="c3d" aria-label="3D view of BAIRWABOT"></canvas>
+      <canvas id="c2d" aria-label="2D engineering view"></canvas>
+      <div id="labels"></div>
+      <div class="hud tl"><b id="hudTitle">Introduction</b><span>State: <em id="hudState">Idle</em></span><span id="hudPhase" style="display:none"></span></div>
+      <div class="hud tr">
+        <button data-view="front">Front</button><button data-view="side">Side</button><button data-view="rear">Rear</button><button data-view="iso">3/4</button><button data-view="top">Top</button><button data-view="head">Face</button><button data-view="orbit">360°</button><button id="tgFollow" class="on" title="Camera follows the robot">Follow</button>
+      </div>
+      <div id="sensorCard"></div>
+      <div id="subtitle" aria-live="polite"></div>
+    </div>
+    <div class="controls" role="toolbar" aria-label="Animation controls">
+      <div class="grp">
+        <button id="btnPlay" title="Play / restart module">▶ Play</button>
+        <button id="btnPause" title="Pause (space)">❚❚ Pause</button>
+        <button id="btnStop" title="Stop">■ Stop</button>
+        <button id="btnReset" title="Reset module">↺ Reset</button>
+        <button id="btnSlow" title="Slow motion (0.25×)">🐢 Slow</button>
+        <label class="spd">Speed <input id="spd" type="range" min="0.25" max="2" step="0.05" value="1"><b id="spdV">1.00×</b></label>
+      </div>
+      <div class="grp">
+        <button id="btn2d" title="2D engineering view">2D</button><button id="btn3d" class="on" title="3D view">3D</button>
+        <button id="tgWire" title="Wireframe mode">Wireframe</button>
+        <button id="tgComp" title="Highlight joint components">Joints</button>
+        <button id="tgSkel" title="Skeleton / bone visualisation">Skeleton</button>
+        <button id="tgBal" title="CoM, CoP and support polygon">Balance</button>
+        <button id="tgXray" title="Translucent shell">X-ray</button>
+        <button id="btnMute" title="Mute speech">Mute</button>
+      </div>
+    </div>
+  </main>
+
+  <aside id="panel">
+    <div class="tabs" role="tablist">
+      <button data-tab="learn" class="on">Learn</button><button data-tab="data">Live Data</button><button data-tab="talk">Talk</button><button data-tab="ctrl">Control</button><button data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tabpane on" id="tab-learn"></div>
+    <div class="tabpane" id="tab-data"></div>
+    <div class="tabpane" id="tab-talk"></div>
+    <div class="tabpane" id="tab-ctrl"></div>
+    <div class="tabpane" id="tab-quiz"></div>
+  </aside>
+</div>
+
+<footer class="foot">
+  <div>
+    <h3>BAIRWABOT – HUMANOID ROBOTICS VIRTUAL LAB</h3>
+    <p>Developed for Educational and Research Purposes.</p>
+    <p class="attr">Concept and Educational Direction: <b>Dr. Bansilal Bairwa</b></p>
+  </div>
+  <div>
+    <h4>Designed for learning</h4>
+    <ul><li>Humanoid Robotics</li><li>Robot Mechanics</li><li>Kinematics and Dynamics</li><li>Artificial Intelligence</li><li>Machine Learning</li><li>Computer Vision</li><li>Human-Robot Interaction</li><li>Autonomous Navigation</li></ul>
+  </div>
+  <div class="small">
+    <p>Values marked <span class="sim">SIM</span> are simulated or illustrative; values marked <span class="mdl">MODEL</span> are computed from the animated kinematic model. Neither is a measurement from a physical robot.</p>
+    <p>3D rendering: three.js (MIT licence). Speech: browser Web Speech API.</p>
+  </div>
+</footer>
+
+</div>
+<script src="js/vendor/three.bundle.js"></script>
+<script src="js/config.js"></script>
+<script src="js/robot.js"></script>
+<script src="js/motion.js"></script>
+<script src="js/world.js"></script>
+<script src="js/content-a.js"></script>
+<script src="js/content-b.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

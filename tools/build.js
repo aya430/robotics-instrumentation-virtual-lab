@@ -76,6 +76,7 @@ add('simulations.html', { root: '', title: 'All Simulations | ' + SITE, desc: 'C
 add('experiments.html', { root: '', title: 'Virtual Experiments | ' + SITE, desc: 'Virtual experiments mapped to the syllabus.', page: 'exps', math: false });
 add('practice.html', { root: '', title: 'Practice Questions | ' + SITE, desc: 'Unit-wise practice quizzes with immediate feedback.', page: 'practice', quiz: true });
 add('notes.html', { root: '', title: 'Lecture Slides | ' + SITE, desc: 'Unit-wise lecture slides as a page-turning flipbook, for study purposes only.', page: 'notes', math: false });
+add('humanoid-robot.html', { root: '', title: 'Humanoid Robot – BAIRWABOT Virtual Lab | ' + SITE, desc: 'BAIRWABOT: interactive 3D humanoid robotics virtual lab with a 46-DOF humanoid, 30 modules, gait, IK, balance (CoM/ZMP), voice interaction and quizzes.', page: 'humanoid', math: false });
 add('about.html', { root: '', title: 'About | ' + SITE, desc: 'About the Robotics & Instrumentation virtual laboratory.', page: 'about', math: false });
 units.forEach(u => {
   add(`units/unit-${u.n}/index.html`, { root: '../../', title: `Unit ${u.roman}: ${u.title} | ${SITE}`, desc: u.syllabus, page: 'unit', attrs: `data-unit="${u.n}"`, heading: `Unit ${u.roman}: ${u.title}`, math: false });

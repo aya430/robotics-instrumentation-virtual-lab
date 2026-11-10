@@ -15,6 +15,10 @@ An interactive, browser-based laboratory for the four-unit course **Robotics and
 
 The site is fully static: no server, database, login or build step is needed to *view* it. All libraries are bundled in `assets/vendor/`, so it also runs offline (web fonts fall back to system fonts).
 
+## Humanoid Robot – BAIRWABOT Virtual Lab
+
+`humanoid-robot.html` (menu: **Humanoid Robot**) introduces and embeds the BAIRWABOT lab, a 3D 46-DOF humanoid with 30 modules (gait, IK, CoM/ZMP balance, perception, voice interaction in English and Hindi, 150 quiz questions). The lab itself is the self-contained folder `bairwabot/` (open `bairwabot/index.html` for full screen); see `bairwabot/README.md` for its details. It does not depend on the rest of the site.
+
 ## Run it locally
 
 Any static web server works, for example:
