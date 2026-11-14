@@ -13,10 +13,10 @@
     const k = K(), T3 = THREE, sc = S.three.scene, tb = k.ROBOTS.sixR.table;
     const cell = { S, q: HOME.slice(), queue: [], cur: null, held: null, parts: [], log: [], err: '', speed: 1, open: 1, line: 0 };
     cell.rob = new k.DHRobot(sc, tb, { radius: 0.04, frames: false }); cell.rob.update(cell.q);
-    const ped = k.cyl(0.13, 0.04, 0x22355c); ped.position.z = 0.02; sc.add(ped);
+    const ped = k.cyl(0.13, 0.04, 0x57606a); ped.position.z = 0.02; sc.add(ped);
     cell.box = (w, d, h, color, x, y, z, pick) => { const m = k.box(w, d, h, color); m.position.set(x, y, z); if (pick) m.traverse(q => (q.userData.pick = pick)); sc.add(m); return m; };
     cell.part = (x, y, z, color = 0xc98a3a, size = [0.06, 0.06, 0.06], name = 'part') => { const m = k.box(...size, color); m.material = m.material.clone(); m.position.set(x, y, z); m.userData.size = size; m.userData.name = name; sc.add(m); cell.parts.push(m); return m; };
-    cell.conveyor = (x0, x1, y, h = 0.1, w = 0.18, pick = 'conveyor') => { const len = x1 - x0; const bed = cell.box(len, w, h, 0x2a3b5e, (x0 + x1) / 2, y, h / 2, pick); const belt = k.box(len, w * 0.92, 0.008, 0x1a1f2b); belt.position.set((x0 + x1) / 2, y, h + 0.004); sc.add(belt); const marks = []; for (let i = 0; i < Math.floor(len / 0.1); i++) { const mk = k.box(0.01, w * 0.9, 0.009, 0x5a6f96); mk.position.set(x0 + i * 0.1, y, h + 0.005); sc.add(mk); marks.push(mk); } return { x0, x1, y, h, marks, objs: [bed, belt, ...marks], run: true, v: 0.12, step(dt) { if (!this.run) return; marks.forEach(m => { m.position.x += this.v * dt; if (m.position.x > x1) m.position.x -= len; }); } }; };
+    cell.conveyor = (x0, x1, y, h = 0.1, w = 0.18, pick = 'conveyor') => { const len = x1 - x0; const bed = cell.box(len, w, h, 0x8c959f, (x0 + x1) / 2, y, h / 2, pick); const belt = k.box(len, w * 0.92, 0.008, 0x3d444d); belt.position.set((x0 + x1) / 2, y, h + 0.004); sc.add(belt); const marks = []; for (let i = 0; i < Math.floor(len / 0.1); i++) { const mk = k.box(0.01, w * 0.9, 0.009, 0x8c959f); mk.position.set(x0 + i * 0.1, y, h + 0.005); sc.add(mk); marks.push(mk); } return { x0, x1, y, h, marks, objs: [bed, belt, ...marks], run: true, v: 0.12, step(dt) { if (!this.run) return; marks.forEach(m => { m.position.x += this.v * dt; if (m.position.x > x1) m.position.x -= len; }); } }; };
     cell.ik = (p, yaw = 0, seed) => {
       const tgt = { p: [p[0], p[1], p[2] + TOOL], R: Rdown(yaw) }; const base = Math.atan2(p[1], p[0]);
       const seeds = [seed, [base, 40 * D2R, -90 * D2R, 0, -40 * D2R, base - yaw], [base, 20 * D2R, -70 * D2R, 0, -50 * D2R, base - yaw]].filter(Boolean);
@@ -68,13 +68,13 @@
     setup(S) {
       const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.2, x1: 0.75, y0: 0.4, y1: 0.75, z: 0.1 }] }); const k = K();
       c.rob.group.traverse(o => (o.userData.pick = 'robot'));
-      S.conv = c.conveyor(-0.9, 0.85, -0.55); c.box(0.55, 0.35, 0.1, 0x3b4f75, 0.47, 0.57, 0.05, 'table');
-      S.eye = c.box(0.04, 0.04, 0.12, 0x4cc2ff, 0.6, -0.68, 0.16, 'sensor'); S.beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.26, 6), new THREE.MeshBasicMaterial({ color: 0xff4040 })); S.beam.position.set(0.6, -0.55, 0.15); THREE && (S.beam.rotation.x = 0); S.three.scene.add(S.beam);
+      S.conv = c.conveyor(-0.9, 0.85, -0.55); c.box(0.55, 0.35, 0.1, 0x6e7781, 0.47, 0.57, 0.05, 'table');
+      S.eye = c.box(0.04, 0.04, 0.12, 0x1f9bd7, 0.6, -0.68, 0.16, 'sensor'); S.beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.26, 6), new THREE.MeshBasicMaterial({ color: 0xff4040 })); S.beam.position.set(0.6, -0.55, 0.15); THREE && (S.beam.rotation.x = 0); S.three.scene.add(S.beam);
       const f = c.fence(-0.85, 1.0, -0.95, 0.95); f.panel(1.0, -0.95, 1.0, 0.95, 'fence'); f.panel(-0.85, 0.95, 1.0, 0.95, 'fence'); f.panel(-0.85, -0.95, -0.85, -0.7, 'fence'); f.panel(-0.85, -0.4, -0.85, 0.95, 'fence'); f.panel(-0.85, -0.95, 0.3, -0.95, 'fence');
-      S.door = f.panel(0.3, -0.95, 1.0, -0.95, 'door'); S.door.material = S.door.material.clone(); S.door.material.color.set(0x6fe39b); S.door.material.opacity = 0.15;
+      S.door = f.panel(0.3, -0.95, 1.0, -0.95, 'door'); S.door.material = S.door.material.clone(); S.door.material.color.set(0x2da44e); S.door.material.opacity = 0.15;
       S.lc = [-0.7, -0.4].map(y => c.box(0.03, 0.03, 0.4, 0xc4a4ff, -0.85, y, 0.2, 'curtain')); S.lcBeams = []; for (let i = 0; i < 6; i++) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.002, 0.002, 0.3, 4), new THREE.MeshBasicMaterial({ color: 0xc4a4ff, transparent: true, opacity: 0.6 })); b.position.set(-0.85, -0.55, 0.06 + i * 0.06); S.three.scene.add(b); S.lcBeams.push(b); }
-      c.box(0.3, 0.2, 0.7, 0x1d2b48, -0.5, 1.2, 0.35, 'panel'); const est = c.box(0.05, 0.02, 0.05, 0xe5484d, -0.5, 1.095, 0.6, 'panel');
-      S.tower = [0xe5484d, 0xf2a516, 0x30a46c].map((col, i) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.06, 16), new THREE.MeshStandardMaterial({ color: col, emissive: 0x000000 })); m.rotation.x = PI / 2; m.position.set(1.15, -1.1, 0.95 - i * 0.065); m.userData.pick = 'tower'; S.three.scene.add(m); return m; }); c.box(0.02, 0.02, 0.8, 0x8fa3c4, 1.15, -1.1, 0.4, 'tower');
+      c.box(0.3, 0.2, 0.7, 0xd0d7de, -0.5, 1.2, 0.35, 'panel'); const est = c.box(0.05, 0.02, 0.05, 0xe5484d, -0.5, 1.095, 0.6, 'panel');
+      S.tower = [0xe5484d, 0xf2a516, 0x30a46c].map((col, i) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.06, 16), new THREE.MeshStandardMaterial({ color: col, emissive: 0x000000 })); m.rotation.x = PI / 2; m.position.set(1.15, -1.1, 0.95 - i * 0.065); m.userData.pick = 'tower'; S.three.scene.add(m); return m; }); c.box(0.02, 0.02, 0.8, 0x8c959f, 1.15, -1.1, 0.4, 'tower');
       const L = S.three.label.bind(S.three); S.lbls = [L('Robot', [0, 0, 1.05]), L('Infeed conveyor', [-0.6, -0.55, 0.2]), L('Photo-eye DI1', S.eye, '', [0, 0, 0.12]), L('Door (interlock DI2)', [0.65, -0.95, 0.95]), L('Light curtain DI3', [-0.85, -0.55, 0.5]), L('Control panel / PLC', [-0.5, 1.2, 0.8]), L('Outfeed table', [0.47, 0.57, 0.18]), L('Signal tower', [1.15, -1.1, 1.05])];
       S.three.onPick(n => { S.sel = n; });
       S.n = 0; S.safe = true; S.doorOpen = false; S.lcBroken = false; S.stopReq = false;
@@ -90,15 +90,15 @@
       dyn(c); c.update(dt);
     },
     draw(S) {
-      const c = S.cell; c.render(); S.door.material.color.set(S.doorOpen ? 0xe5484d : 0x6fe39b); S.door.position.z = S.doorOpen ? 0.95 : 0.45;
-      S.lcBeams.forEach(b => (b.material.color.set(S.lcBroken ? 0xe5484d : 0xc4a4ff))); S.beam.material.color.set(S.DI1 ? 0x6fe39b : 0xff4040);
+      const c = S.cell; c.render(); S.door.material.color.set(S.doorOpen ? 0xe5484d : 0x2da44e); S.door.position.z = S.doorOpen ? 0.95 : 0.45;
+      S.lcBeams.forEach(b => (b.material.color.set(S.lcBroken ? 0xe5484d : 0xc4a4ff))); S.beam.material.color.set(S.DI1 ? 0x2da44e : 0xff4040);
       const state = !S.safe ? 'PROTECTIVE STOP (reset required)' : S.stopReq ? 'cycle stop requested' : c.busy() ? 'automatic – running' : 'automatic – waiting for part';
       S.tower.forEach((m, i) => m.material.emissive.set(i === 0 ? (!S.safe ? 0xaa0000 : 0) : i === 1 ? (S.safe && !c.busy() ? 0x885500 : 0) : (S.safe && c.busy() ? 0x007733 : 0)));
       S.lbls.forEach(l => (l.visible = S.p.labels));
       S.set('state', state, S.safe ? 'ok' : 'bad'); S.set('step', c.cur ? (c.cur.label || '—') : 'idle'); S.set('n', S.n); S.set('sel', S.sel ? WC[S.sel][0] : '— (click a component)');
       const io = [['DI1', 'Part present (photo-eye)', S.DI1], ['DI2', 'Door closed (interlock)', !S.doorOpen], ['DI3', 'Light curtain clear', !S.lcBroken], ['DI4', 'Gripper closed', !!c.held], ['DO1', 'Gripper close command', c.open < 0.5], ['DO2', 'Conveyor run', S.conv.run], ['DO3', 'Tower green (auto running)', S.safe && c.busy()], ['DO4', 'Robot servo power (safety relay)', S.safe]];
-      RIL.setHTML(S.panel('io'), RIL.ui.kv(io.map(r => [r[0], r[1], `<b style="color:${r[2] ? '#6fe39b' : '#8fa3c4'}">${r[2] ? 'ON' : 'OFF'}</b>`]), ['Signal', 'Meaning', 'State']), S, 'io');
-      RIL.setHTML(S.panel('info'), S.sel ? `<b style="color:#fff">${WC[S.sel][0]}</b><p style="margin:.3em 0 0">${WC[S.sel][1]}</p>` : '<p style="margin:0">Click a component in the 3D view.</p>', S, 'inf');
+      RIL.setHTML(S.panel('io'), RIL.ui.kv(io.map(r => [r[0], r[1], `<b style="color:${r[2] ? '#1a9b4b' : '#57606a'}">${r[2] ? 'ON' : 'OFF'}</b>`]), ['Signal', 'Meaning', 'State']), S, 'io');
+      RIL.setHTML(S.panel('info'), S.sel ? `<b style="color:#1f2328">${WC[S.sel][0]}</b><p style="margin:.3em 0 0">${WC[S.sel][1]}</p>` : '<p style="margin:0">Click a component in the 3D view.</p>', S, 'inf');
     }
   });
 
@@ -111,12 +111,12 @@
     controls: [{ id: 'app', type: 'select', label: 'Application', string: true, value: 'pal', options: [['pal', 'Palletising from a conveyor'], ['weld', 'Spot welding along a seam'], ['tend', 'Machine tending (CNC load/unload)'], ['paint', 'Painting (continuous path)']] }, { id: 'ovr', label: 'Speed override', min: 10, max: 200, step: 5, value: 100, unit: '%' }],
     readouts: [{ id: 'app', label: 'Task' }, { id: 'step', label: 'Current motion' }, { id: 'motion', label: 'Motion type' }, { id: 'ct', label: 'Last cycle time', unit: 's' }, { id: 'n', label: 'Cycles completed' }],
     panels: [{ id: 't', title: 'Industrial robot types and industrial versus collaborative robots (Section 4.4, Table 4.3)', wide: true }],
-    setup(S) { S.cell = makeCell(S, { surfaces: [{ x0: 0.25, x1: 0.75, y0: 0.3, y1: 0.8, z: 0.08 }] }); S.extra = []; S.sparks = K().points([[0, 0, -1]], 0xffd07a, 0.03, 0.9); S.three.scene.add(S.sparks); S.spray = K().points([[0, 0, -1]], 0x4cc2ff, 0.02, 0.6); S.three.scene.add(S.spray); },
+    setup(S) { S.cell = makeCell(S, { surfaces: [{ x0: 0.25, x1: 0.75, y0: 0.3, y1: 0.8, z: 0.08 }] }); S.extra = []; S.sparks = K().points([[0, 0, -1]], 0xffd07a, 0.03, 0.9); S.three.scene.add(S.sparks); S.spray = K().points([[0, 0, -1]], 0x1f9bd7, 0.02, 0.6); S.three.scene.add(S.spray); },
     reset(S) { const c = S.cell, sc = S.three.scene; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => sc.remove(m)); c.parts = []; S.extra.forEach(m => sc.remove(m)); S.extra = []; S.n = 0; S.tc = 0; S.t0 = S.t; S.welds = [];
       const add = m => { S.extra.push(m); return m; }; const k = K(); const box = (w, d, h, col, x, y, z) => { const m = add(k.box(w, d, h, col)); m.position.set(x, y, z); sc.add(m); return m; };
       S.conv = null; if (S.p.app === 'pal') { S.conv = c.conveyor(-0.8, 0.7, -0.5); S.extra.push(...S.conv.objs); box(0.5, 0.5, 0.08, 0x8a6a3a, 0.5, 0.55, 0.04); }
-      if (S.p.app === 'weld') { const pan = box(0.5, 0.02, 0.3, 0x9fb3d1, 0.55, 0.2, 0.25); box(0.06, 0.4, 0.2, 0x3b4f75, 0.55, 0.25, 0.1); S.weldPts = [0, 1, 2, 3, 4, 5].map(i => [0.35 + i * 0.08, 0.18, 0.32]); }
-      if (S.p.app === 'tend') { box(0.4, 0.4, 0.45, 0x3b4f75, 0.1, 0.65, 0.225); S.mDoor = box(0.3, 0.02, 0.2, 0x6fe39b, 0.1, 0.44, 0.35); box(0.3, 0.3, 0.08, 0x2a3b5e, 0.55, -0.35, 0.04); for (let i = 0; i < 3; i++) c.part(0.47 + i * 0.08, -0.35, 0.11, 0x9fb3d1, [0.05, 0.05, 0.06]); }
+      if (S.p.app === 'weld') { const pan = box(0.5, 0.02, 0.3, 0xa8b1bb, 0.55, 0.2, 0.25); box(0.06, 0.4, 0.2, 0x6e7781, 0.55, 0.25, 0.1); S.weldPts = [0, 1, 2, 3, 4, 5].map(i => [0.35 + i * 0.08, 0.18, 0.32]); }
+      if (S.p.app === 'tend') { box(0.4, 0.4, 0.45, 0x6e7781, 0.1, 0.65, 0.225); S.mDoor = box(0.3, 0.02, 0.2, 0x2da44e, 0.1, 0.44, 0.35); box(0.3, 0.3, 0.08, 0x8c959f, 0.55, -0.35, 0.04); for (let i = 0; i < 3; i++) c.part(0.47 + i * 0.08, -0.35, 0.11, 0xa8b1bb, [0.05, 0.05, 0.06]); }
       if (S.p.app === 'paint') { box(0.02, 0.6, 0.45, 0xd6dde8, 0.7, 0, 0.32); }
     },
     onControl(S, id) { if (id === 'app') S.reset(); },
@@ -170,10 +170,10 @@ LOOP:
     panels: [{ id: 'ed', title: 'Program editor', wide: true }],
     stepFrames: 30,
     setup(S) {
-      S.cell = makeCell(S, { surfaces: [{ x0: 0.15, x1: 0.55, y0: 0.3, y1: 0.6, z: 0.1 }, { x0: 0.4, x1: 0.7, y0: -0.4, y1: -0.1, z: 0.1 }] }); S.cell.box(0.3, 0.3, 0.1, 0x3b4f75, 0.55, -0.25, 0.05); S.cell.box(0.4, 0.3, 0.1, 0x3b4f75, 0.35, 0.45, 0.05);
-      Object.entries(POINTS).forEach(([n, p]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), new THREE.MeshBasicMaterial({ color: 0x6fe39b })); m.position.set(...p); S.three.scene.add(m); S.three.label(n, p, 'dim', [0, 0, 0.05]); });
+      S.cell = makeCell(S, { surfaces: [{ x0: 0.15, x1: 0.55, y0: 0.3, y1: 0.6, z: 0.1 }, { x0: 0.4, x1: 0.7, y0: -0.4, y1: -0.1, z: 0.1 }] }); S.cell.box(0.3, 0.3, 0.1, 0x6e7781, 0.55, -0.25, 0.05); S.cell.box(0.4, 0.3, 0.1, 0x6e7781, 0.35, 0.45, 0.05);
+      Object.entries(POINTS).forEach(([n, p]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), new THREE.MeshBasicMaterial({ color: 0x2da44e })); m.position.set(...p); S.three.scene.add(m); S.three.label(n, p, 'dim', [0, 0, 0.05]); });
       S.trace = []; S.line = K().polyline([[0, 0, 0]], 0xf2a516); S.three.scene.add(S.line);
-      const ed = S.panel('ed'); ed.innerHTML = `<div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px"><div><textarea spellcheck="false" style="width:100%;height:290px;background:#0a1528;color:#dbe5f5;border:1px solid #3a5384;border-radius:6px;font:12.5px/1.45 ui-monospace,Consolas,monospace;padding:8px"></textarea></div><div><div class="lines" style="font:12px/1.45 ui-monospace,Consolas,monospace;max-height:290px;overflow:auto"></div></div></div><p style="margin:.4em 0 0;color:#8fa3c4">Points (base frame, mm): ${Object.entries(POINTS).map(([n, p]) => `${n} = (${p.map(v => Math.round(v * 1000)).join(', ')})`).join('; ')}; HOME = joint zero pose. Instructions: MOVJ, MOVL, + OFFSET(dx,dy,dz), V=mm/s, SET/RESET/PULSE DO[n], WAIT DI[n]=ON, WAIT seconds, SPEED %, label:, GOTO label, END.</p>`;
+      const ed = S.panel('ed'); ed.innerHTML = `<div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px"><div><textarea spellcheck="false" style="width:100%;height:290px;background:#ffffff;color:#1f2328;border:1px solid #d0d7de;border-radius:6px;font:12.5px/1.45 ui-monospace,Consolas,monospace;padding:8px"></textarea></div><div><div class="lines" style="font:12px/1.45 ui-monospace,Consolas,monospace;max-height:290px;overflow:auto"></div></div></div><p style="margin:.4em 0 0;color:#57606a">Points (base frame, mm): ${Object.entries(POINTS).map(([n, p]) => `${n} = (${p.map(v => Math.round(v * 1000)).join(', ')})`).join('; ')}; HOME = joint zero pose. Instructions: MOVJ, MOVL, + OFFSET(dx,dy,dz), V=mm/s, SET/RESET/PULSE DO[n], WAIT DI[n]=ON, WAIT seconds, SPEED %, label:, GOTO label, END.</p>`;
       S.ta = ed.querySelector('textarea'); S.ta.value = DEFPROG; S.linesEl = ed.querySelector('.lines'); S.ta.addEventListener('keydown', e => e.stopPropagation());
       this.load(S);
     },
@@ -204,7 +204,7 @@ LOOP:
     draw(S) {
       const c = S.cell; c.render(); if (!S.prog) return; const ins = S.curIns; const p = c.tcp();
       S.set('line', ins ? ins.line + 1 : '—'); S.set('instr', ins ? ins.s : '—'); S.set('tcp', p.map(v => Math.round(v * 1000)).join(', ')); S.set('io', `DO1 ${S.DO[1] ? 'ON' : 'OFF'}, DI1 ${c.parts.some(m => Math.hypot(m.position.x - POINTS.P1[0], m.position.y - POINTS.P1[1]) < 0.03) ? 'ON' : 'OFF'}`); S.set('err', c.err || S.msg || S.waiting || (S.pc >= S.prog.length ? 'program ended' : 'running'), (c.err || /error|not found/.test(S.msg)) ? 'bad' : '');
-      const cl = ins ? ins.line : -1; if (S._cl !== cl || S.renderLines) { S._cl = cl; S.renderLines = false; S.linesEl.innerHTML = S.src.map((l, i) => `<div style="padding:0 6px;border-radius:3px;${i === cl ? 'background:#f2a516;color:#0e1d38;font-weight:700' : 'color:#9fb3d1'}">${String(i + 1).padStart(2, ' ')}  ${l.replace(/&/g, '&amp;').replace(/</g, '&lt;') || '&nbsp;'}</div>`).join(''); }
+      const cl = ins ? ins.line : -1; if (S._cl !== cl || S.renderLines) { S._cl = cl; S.renderLines = false; S.linesEl.innerHTML = S.src.map((l, i) => `<div style="padding:0 6px;border-radius:3px;${i === cl ? 'background:#fff1d6;color:#7a4b00;font-weight:700' : 'color:#57606a'}">${String(i + 1).padStart(2, ' ')}  ${l.replace(/&/g, '&amp;').replace(/</g, '&lt;') || '&nbsp;'}</div>`).join(''); }
     }
   });
 
@@ -218,7 +218,7 @@ LOOP:
     readouts: [{ id: 'mode', label: 'Mode / state' }, { id: 'q', label: 'Joint angles θ₁…θ₆', unit: '°' }, { id: 'p', label: 'TCP (x, y, z)', unit: 'mm' }, { id: 'v', label: 'TCP speed', unit: 'mm/s' }, { id: 'pts', label: 'Taught points' }],
     panels: [{ id: 'tp', title: 'Teach pendant', wide: true }],
     setup(S) {
-      S.cell = makeCell(S); S.cell.box(0.3, 0.3, 0.1, 0x3b4f75, 0.55, 0, 0.05); S.cell.part(0.55, 0, 0.13);
+      S.cell = makeCell(S); S.cell.box(0.3, 0.3, 0.1, 0x6e7781, 0.55, 0, 0.05); S.cell.part(0.55, 0, 0.13);
       S.pts = []; S.jog = null; S.mode = 'T1'; S.frame = 'joint'; S.ovr = 25; S.en = false; S.estop = false; S.inc = false; S.lastP = S.cell.tcp(); S.vtcp = 0;
       const pnl = S.panel('tp'); const key = (id, l) => `<button type="button" data-jog="${id}" style="min-width:58px">${l}</button>`;
       pnl.innerHTML = `<div class="pendant" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
@@ -229,9 +229,9 @@ LOOP:
         <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-inc> Incremental step (1° / 1 mm per press)</label></div>
         <div><div data-keys style="display:grid;grid-template-columns:auto auto auto;gap:6px;align-items:center"></div></div>
         <div><div class="ctl-btns" style="flex-wrap:wrap"><button type="button" data-a="rec">Record point</button><button type="button" data-a="grip">Gripper open/close</button><button type="button" data-a="home">Home</button><button type="button" data-a="run">Run program</button><button type="button" data-a="clr">Clear points</button></div>
-        <button type="button" data-a="estop" style="margin-top:10px;background:#c62828;color:#fff;border:3px solid #ffd07a;border-radius:50%;width:84px;height:84px;font-weight:800">E-STOP</button> <button type="button" data-a="reset">Reset</button>
-        <div data-list style="margin-top:8px;font:12px ui-monospace,monospace;color:#9fb3d1"></div></div></div>`;
-      const keys = pnl.querySelector('[data-keys]'); S.drawKeys = () => { const labs = S.frame === 'joint' ? ['J1', 'J2', 'J3', 'J4', 'J5', 'J6'] : S.frame === 'world' ? ['X', 'Y', 'Z', 'Rz (yaw)', '—', '—'] : ['Tool x', 'Tool y', 'Tool z', 'Rz (yaw)', '—', '—']; keys.innerHTML = labs.map((l, i) => l === '—' ? '' : `${key(i + '-', '− ' + l)}<span style="text-align:center;color:#8fa3c4;font-size:12px">${l}</span>${key(i + '+', '+ ' + l)}`).join(''); bindJog(); };
+        <button type="button" data-a="estop" style="margin-top:10px;background:#c62828;color:#fff;border:3px solid #b07d00;border-radius:50%;width:84px;height:84px;font-weight:800">E-STOP</button> <button type="button" data-a="reset">Reset</button>
+        <div data-list style="margin-top:8px;font:12px ui-monospace,monospace;color:#57606a"></div></div></div>`;
+      const keys = pnl.querySelector('[data-keys]'); S.drawKeys = () => { const labs = S.frame === 'joint' ? ['J1', 'J2', 'J3', 'J4', 'J5', 'J6'] : S.frame === 'world' ? ['X', 'Y', 'Z', 'Rz (yaw)', '—', '—'] : ['Tool x', 'Tool y', 'Tool z', 'Rz (yaw)', '—', '—']; keys.innerHTML = labs.map((l, i) => l === '—' ? '' : `${key(i + '-', '− ' + l)}<span style="text-align:center;color:#57606a;font-size:12px">${l}</span>${key(i + '+', '+ ' + l)}`).join(''); bindJog(); };
       const bindJog = () => keys.querySelectorAll('[data-jog]').forEach(b => { const [ax, sg] = [+b.dataset.jog[0], b.dataset.jog[1] === '+' ? 1 : -1]; b.onpointerdown = e => { e.preventDefault(); if (S.inc) { S.jog = { ax, sg, once: true }; } else S.jog = { ax, sg }; S.play && S.play(); }; b.onpointerup = b.onpointerleave = () => { if (!S.inc) S.jog = null; }; });
       const sync = () => { pnl.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === S.mode)); pnl.querySelectorAll('[data-frame]').forEach(b => b.setAttribute('aria-pressed', b.dataset.frame === S.frame)); pnl.querySelector('[data-list]').innerHTML = S.pts.map((p, i) => `P${i + 1}: (${p.p.map(v => Math.round(v * 1000)).join(', ')}) grip ${p.g < 0.5 ? 'closed' : 'open'}`).join('<br>') || 'No points taught yet.'; };
       S.sync = sync;
@@ -274,10 +274,10 @@ LOOP:
     controls: [{ id: 'v', label: 'Conveyor speed', min: 0.02, max: 0.15, step: 0.005, value: 0.06, unit: 'm/s' }, { id: 'lat', label: 'Image-to-grasp latency', min: 0, max: 3, step: 0.05, value: 1.6, unit: 's' }, { id: 'track', type: 'toggle', label: 'Conveyor tracking compensation', value: true }],
     readouts: [{ id: 'ph', label: 'Phase' }, { id: 'px', label: 'Detected centroid (u, v)', unit: 'px' }, { id: 'ang', label: 'Detected orientation', unit: '°' }, { id: 'rb', label: 'Robot target (x, y)', unit: 'mm' }, { id: 'shift', label: 'Conveyor shift v_c·Δt', unit: 'mm' }, { id: 'n', label: 'Picked / missed' }],
     setup(S) {
-      const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.1, x1: 0.5, y0: 0.35, y1: 0.75, z: 0.1 }] }); S.conv = c.conveyor(-0.9, 0.9, -0.45, 0.1, 0.24); c.box(0.4, 0.4, 0.1, 0x3b4f75, 0.3, 0.55, 0.05);
-      const cam = c.box(0.08, 0.08, 0.06, 0x1d2b48, -0.3, -0.45, 0.85); const pole = c.box(0.02, 0.02, 0.8, 0x8fa3c4, -0.3, -0.75, 0.4); S.three.label('camera {C}', [-0.3, -0.45, 0.95], '');
-      const fp = new THREE.Mesh(new THREE.PlaneGeometry(0.256, 0.205), new THREE.MeshBasicMaterial({ color: 0x4cc2ff, transparent: true, opacity: 0.18 })); fp.position.set(-0.3, -0.45, 0.106); S.three.scene.add(fp);
-      S.fov = K().polyline([[-0.3, -0.45, 0.82], [-0.428, -0.55, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.428, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.55, 0.106]], 0x4cc2ff); S.three.scene.add(S.fov);
+      const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.1, x1: 0.5, y0: 0.35, y1: 0.75, z: 0.1 }] }); S.conv = c.conveyor(-0.9, 0.9, -0.45, 0.1, 0.24); c.box(0.4, 0.4, 0.1, 0x6e7781, 0.3, 0.55, 0.05);
+      const cam = c.box(0.08, 0.08, 0.06, 0xd0d7de, -0.3, -0.45, 0.85); const pole = c.box(0.02, 0.02, 0.8, 0x8c959f, -0.3, -0.75, 0.4); S.three.label('camera {C}', [-0.3, -0.45, 0.95], '');
+      const fp = new THREE.Mesh(new THREE.PlaneGeometry(0.256, 0.205), new THREE.MeshBasicMaterial({ color: 0x1f9bd7, transparent: true, opacity: 0.18 })); fp.position.set(-0.3, -0.45, 0.106); S.three.scene.add(fp);
+      S.fov = K().polyline([[-0.3, -0.45, 0.82], [-0.428, -0.55, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.428, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.55, 0.106]], 0x1f9bd7); S.three.scene.add(S.fov);
       S.n = 0; S.miss = 0; S.spawn = 0; S.det = null;
     },
     reset(S) { const c = S.cell; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => S.three.scene.remove(m)); c.parts = []; S.n = 0; S.miss = 0; S.det = null; S.spawn = 0; },
@@ -305,8 +305,8 @@ LOOP:
     camera: { position: [1.6, -1.9, 1.4], target: [0.4, 0.05, 0.15] },
     controls: [{ id: 'err', label: 'Robot positioning error (lateral)', min: 0, max: 4, step: 0.1, value: 0.8, unit: 'mm' }, { id: 'chamf', label: 'Chamfer width', min: 0.2, max: 3, step: 0.1, value: 1.5, unit: 'mm' }, { id: 'rcc', type: 'toggle', label: 'Remote-centre-compliance (RCC) wrist', value: true }],
     readouts: [{ id: 'st', label: 'Assembly step' }, { id: 'F', label: 'Lateral contact force (last insertion)', unit: 'N' }, { id: 'res', label: 'Last insertion result' }, { id: 'n', label: 'Assemblies completed / retries' }],
-    setup(S) { const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.3, x1: 0.7, y0: -0.15, y1: 0.15, z: 0.1 }, { x0: 0.1, x1: 0.5, y0: -0.6, y1: -0.3, z: 0.1 }] }); c.box(0.4, 0.3, 0.1, 0x3b4f75, 0.5, 0, 0.05); c.box(0.4, 0.3, 0.1, 0x2a3b5e, 0.3, -0.45, 0.05); S.three.label('fixture', [0.5, 0.12, 0.15], 'dim'); S.three.label('feeder tray', [0.3, -0.6, 0.15], 'dim'); S.n = 0; S.retry = 0; S.F = 0; S.res = '—'; },
-    reset(S) { const c = S.cell; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => S.three.scene.remove(m)); c.parts = []; S.F = S.F || 0; S.res = S.res || '—'; S.parts = { base: c.part(0.2, -0.45, 0.115, 0x6f86ad, [0.12, 0.08, 0.03], 'base'), p1: c.part(0.33, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), p2: c.part(0.38, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), cov: c.part(0.3, -0.52, 0.11, 0x4cc2ff, [0.12, 0.08, 0.02], 'cover') }; S.seq = null; },
+    setup(S) { const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.3, x1: 0.7, y0: -0.15, y1: 0.15, z: 0.1 }, { x0: 0.1, x1: 0.5, y0: -0.6, y1: -0.3, z: 0.1 }] }); c.box(0.4, 0.3, 0.1, 0x6e7781, 0.5, 0, 0.05); c.box(0.4, 0.3, 0.1, 0x8c959f, 0.3, -0.45, 0.05); S.three.label('fixture', [0.5, 0.12, 0.15], 'dim'); S.three.label('feeder tray', [0.3, -0.6, 0.15], 'dim'); S.n = 0; S.retry = 0; S.F = 0; S.res = '—'; },
+    reset(S) { const c = S.cell; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => S.three.scene.remove(m)); c.parts = []; S.F = S.F || 0; S.res = S.res || '—'; S.parts = { base: c.part(0.2, -0.45, 0.115, 0x6f86ad, [0.12, 0.08, 0.03], 'base'), p1: c.part(0.33, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), p2: c.part(0.38, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), cov: c.part(0.3, -0.52, 0.11, 0x1f9bd7, [0.12, 0.08, 0.02], 'cover') }; S.seq = null; },
     insert(S) { const e = S.p.err * (0.5 + Math.random()), ch = S.p.chamf, k = S.p.rcc ? 4 : 25; const ok = e <= ch; S.F = ok ? k * e : k * ch * 3; S.res = ok ? `inserted (misalignment ${M.fmt(e, 2)} mm absorbed by chamfer${S.p.rcc ? ' and RCC' : ''})` : `jammed (misalignment ${M.fmt(e, 2)} mm > chamfer) — retry`; if (!ok) S.retry++; return ok; },
     plan(S) {
       const c = S.cell, P = S.parts; const fx = [0.5, 0, 0.115];
@@ -327,7 +327,7 @@ LOOP:
     controls: [{ id: 'rate', label: 'Carton arrival rate', min: 2, max: 20, step: 0.5, value: 8, unit: 'per min' }, { id: 'ovr', label: 'Robot speed override', min: 30, max: 200, step: 5, value: 100, unit: '%' }, { id: 'vout', label: 'Outfeed conveyor speed', min: 0.05, max: 0.3, step: 0.01, value: 0.15, unit: 'm/s' }],
     readouts: [{ id: 'q', label: 'Cartons waiting on infeed' }, { id: 'tr', label: 'Cartons transferred' }, { id: 'pal', label: 'Cartons on pallet' }, { id: 'th', label: 'Throughput (measured)', unit: 'per min' }, { id: 'ct', label: 'Robot transfer cycle time', unit: 's' }, { id: 'agv', label: 'AGV' }],
     setup(S) {
-      const c = S.cell = makeCell(S); S.inC = c.conveyor(-1.0, 0.75, -0.5, 0.1, 0.2); const k = K(); S.outBed = c.box(0.2, 1.4, 0.1, 0x2a3b5e, 0.55, 0.65, 0.05); S.pallet = c.box(0.4, 0.4, 0.06, 0x8a6a3a, 0.55, 1.6, 0.03); S.agv = c.box(0.5, 0.5, 0.12, 0xf2a516, 0.55, 2.6, 0.06);
+      const c = S.cell = makeCell(S); S.inC = c.conveyor(-1.0, 0.75, -0.5, 0.1, 0.2); const k = K(); S.outBed = c.box(0.2, 1.4, 0.1, 0x8c959f, 0.55, 0.65, 0.05); S.pallet = c.box(0.4, 0.4, 0.06, 0x8a6a3a, 0.55, 1.6, 0.03); S.agv = c.box(0.5, 0.5, 0.12, 0xf2a516, 0.55, 2.6, 0.06);
       S.three.label('infeed', [-0.7, -0.5, 0.2], 'dim'); S.three.label('outfeed', [0.55, 0.6, 0.2], 'dim'); S.three.label('pallet / AGV', [0.55, 1.6, 0.25], 'dim');
       S.tr = 0; S.onPal = 0; S.spawn = 0; S.t0 = 0; S.agvState = 'waiting'; S.lastCycle = 0; S.cycStart = 0;
     },

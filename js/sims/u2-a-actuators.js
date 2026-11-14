@@ -46,11 +46,11 @@
       // energy pulses
       for (let k = 0; k < 6; k++) { const f = ((S.t * 0.8 + k / 6) % 1); if (flow) D.circle(S, 16 + f * (x0 - 16), cy + 44, 3, col); }
       if (p.tech === 'elec') {
-        D.rect(S, x0, cy - 8, Lc, 16, '#3b4f75', '#8fa3c4', 1, 3); for (let k = 0; k < Lc; k += 8) D.line(S, x0 + k + ((S.x || 0) * 3000 % 8), cy - 8, x0 + k + 4 + ((S.x || 0) * 3000 % 8), cy + 8, '#8fa3c4', 1);
-        D.rect(S, x0 + 10 + x * sc, cy - 26, 60, 52, '#6f86ad', '#c9d6ec', 1.5, 4); D.text(S, 'nut / carriage', x0 + 40 + x * sc, cy + 42, { size: 10, align: 'center', color: C.muted });
+        D.rect(S, x0, cy - 8, Lc, 16, '#6e7781', '#57606a', 1, 3); for (let k = 0; k < Lc; k += 8) D.line(S, x0 + k + ((S.x || 0) * 3000 % 8), cy - 8, x0 + k + 4 + ((S.x || 0) * 3000 % 8), cy + 8, '#57606a', 1);
+        D.rect(S, x0 + 10 + x * sc, cy - 26, 60, 52, '#6e7781', '#8c959f', 1.5, 4); D.text(S, 'nut / carriage', x0 + 40 + x * sc, cy + 42, { size: 10, align: 'center', color: C.muted });
       } else {
-        D.rect(S, x0, cy - 34, Lc * 0.85, 68, '#13264a', '#c9d6ec', 2, 4);
-        const px = x0 + 8 + x * sc; D.rect(S, x0 + 2, cy - 32, px - x0 - 2, 64, p.tech === 'hyd' ? 'rgba(242,165,22,.35)' : 'rgba(76,194,255,.25)'); D.rect(S, px, cy - 32, 12, 64, '#8aa0c6', '#fff', 1); D.rect(S, px + 12, cy - 7, Lc * 0.85 - (px - x0) + 20, 14, '#c9d6ec');
+        D.rect(S, x0, cy - 34, Lc * 0.85, 68, '#eef1f4', '#8c959f', 2, 4);
+        const px = x0 + 8 + x * sc; D.rect(S, x0 + 2, cy - 32, px - x0 - 2, 64, p.tech === 'hyd' ? 'rgba(199,119,0,.35)' : 'rgba(11,127,193,.25)'); D.rect(S, px, cy - 32, 12, 64, '#9aa4af', '#24292f', 1); D.rect(S, px + 12, cy - 7, Lc * 0.85 - (px - x0) + 20, 14, '#8c959f');
         D.text(S, 'A (cap end)', x0 + 6, cy - 40, { size: 10, color: C.muted }); D.text(S, 'A − a (rod end)', x0 + Lc * 0.85 - 4, cy - 40, { size: 10, color: C.muted, align: 'right' });
       }
       const rodEnd = p.tech === 'elec' ? x0 + 70 + x * sc : x0 + Lc * 0.85 + 32 + x * sc;
@@ -95,14 +95,14 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, [ia, w, th] = S.x; const cx = W * 0.3, cy = H * 0.5, R = Math.min(W * 0.22, H * 0.4);
       // stator
-      const g = S.ctx; D.circle(S, cx, cy, R, '#22355c', '#8fa3c4', 2);
+      const g = S.ctx; D.circle(S, cx, cy, R, '#c9d1d9', '#57606a', 2);
       g.fillStyle = '#c0392b'; g.beginPath(); g.arc(cx, cy, R * 0.92, PI * 0.72, PI * 1.28); g.arc(cx, cy, R * 0.72, PI * 1.28, PI * 0.72, true); g.fill(); D.text(S, 'N', cx - R * 0.83, cy + 5, { size: 15, weight: 800, align: 'center' });
       g.fillStyle = '#2f6fd6'; g.beginPath(); g.arc(cx, cy, R * 0.92, -PI * 0.28, PI * 0.28); g.arc(cx, cy, R * 0.72, PI * 0.28, -PI * 0.28, true); g.fill(); D.text(S, 'S', cx + R * 0.83, cy + 5, { size: 15, weight: 800, align: 'center' });
-      for (let k = -2; k <= 2; k++) D.arrow(S, cx - R * 0.68, cy + k * R * 0.15, cx + R * 0.66, cy + k * R * 0.15, 'rgba(255,255,255,.12)', 1, 6);
+      for (let k = -2; k <= 2; k++) D.arrow(S, cx - R * 0.68, cy + k * R * 0.15, cx + R * 0.66, cy + k * R * 0.15, 'rgba(36,41,47,.12)', 1, 6);
       // rotor with conductors; current direction fixed in space by commutator
-      D.circle(S, cx, cy, R * 0.62, '#3b4f75', '#c9d6ec', 1.5);
-      const nc = 12; for (let k = 0; k < nc; k++) { const a = th + k * 2 * PI / nc; const px = cx + Math.cos(a) * R * 0.52, py = cy + Math.sin(a) * R * 0.52; const side = Math.cos(a) > 0 ? 1 : -1; const s = Math.abs(ia) < 0.05 ? 0 : side * Math.sign(ia); D.circle(S, px, py, 7, s > 0 ? C.amber : s < 0 ? C.cyan : '#6f86ad', '#fff', 1); if (s > 0) D.circle(S, px, py, 2, '#0e1d38'); else if (s < 0) { D.line(S, px - 3, py - 3, px + 3, py + 3, '#0e1d38', 1.5); D.line(S, px - 3, py + 3, px + 3, py - 3, '#0e1d38', 1.5); } }
-      D.circle(S, cx, cy, R * 0.18, '#b87333', '#fff', 1); for (let k = 0; k < 8; k++) { const a = th + k * PI / 4; D.line(S, cx, cy, cx + Math.cos(a) * R * 0.18, cy + Math.sin(a) * R * 0.18, '#3b2a1a', 1.5); }
+      D.circle(S, cx, cy, R * 0.62, '#6e7781', '#8c959f', 1.5);
+      const nc = 12; for (let k = 0; k < nc; k++) { const a = th + k * 2 * PI / nc; const px = cx + Math.cos(a) * R * 0.52, py = cy + Math.sin(a) * R * 0.52; const side = Math.cos(a) > 0 ? 1 : -1; const s = Math.abs(ia) < 0.05 ? 0 : side * Math.sign(ia); D.circle(S, px, py, 7, s > 0 ? C.amber : s < 0 ? C.cyan : '#6e7781', '#24292f', 1); if (s > 0) D.circle(S, px, py, 2, '#2b3440'); else if (s < 0) { D.line(S, px - 3, py - 3, px + 3, py + 3, '#2b3440', 1.5); D.line(S, px - 3, py + 3, px + 3, py - 3, '#2b3440', 1.5); } }
+      D.circle(S, cx, cy, R * 0.18, '#b87333', '#24292f', 1); for (let k = 0; k < 8; k++) { const a = th + k * PI / 4; D.line(S, cx, cy, cx + Math.cos(a) * R * 0.18, cy + Math.sin(a) * R * 0.18, '#f3e6d6', 1.5); }
       D.rect(S, cx - 6, cy - R * 0.18 - 14, 12, 12, '#333'); D.rect(S, cx - 6, cy + R * 0.18 + 2, 12, 12, '#333');
       if (Math.abs(ia) > 0.05) { D.arrow(S, cx + R * 0.35, cy - R * 0.7, cx - R * 0.35, cy - R * 0.7, C.green, 2.5); D.text(S, `T = K_t i_a = ${M.fmt(p.K * ia, 3)} N·m`, cx, cy - R - 10, { size: 11, align: 'center', color: C.green }); }
       D.text(S, '● current out of page   ✕ into page;  F = BIl on each conductor', cx, cy + R + 20, { size: 10.5, align: 'center', color: C.muted });
@@ -147,23 +147,23 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, r = this.refRad(S);
       const bx = 30, by = 40, bw = Math.min(W * 0.55, 440), bh = H - 90;
-      D.rect(S, bx, by, bw, bh, 'rgba(19,38,74,.6)', '#8fa3c4', 2, 10); D.text(S, 'servo housing', bx + 10, by + 16, { size: 10.5, color: C.muted });
+      D.rect(S, bx, by, bw, bh, 'rgba(255,255,255,.9)', '#57606a', 2, 10); D.text(S, 'servo housing', bx + 10, by + 16, { size: 10.5, color: C.muted });
       // motor
-      D.rect(S, bx + 20, by + bh * 0.55, bw * 0.3, bh * 0.32, '#1d2b48', C.cyan, 1.5, 6); D.text(S, 'DC motor', bx + 20 + bw * 0.15, by + bh * 0.55 + bh * 0.16 + 4, { size: 11, align: 'center', color: C.cyan });
+      D.rect(S, bx + 20, by + bh * 0.55, bw * 0.3, bh * 0.32, '#f6f8fa', C.cyan, 1.5, 6); D.text(S, 'DC motor', bx + 20 + bw * 0.15, by + bh * 0.55 + bh * 0.16 + 4, { size: 11, align: 'center', color: C.cyan });
       // gear train
-      const gear = (x, y, rr, teeth, ang, col) => { const g = S.ctx; g.fillStyle = col; g.beginPath(); for (let k = 0; k < teeth * 2; k++) { const a = ang + k * PI / teeth, rad = k % 2 ? rr : rr * 0.84; g.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } g.closePath(); g.fill(); D.circle(S, x, y, rr * 0.2, '#0e1d38'); D.line(S, x, y, x + Math.cos(ang) * rr * 0.7, y + Math.sin(ang) * rr * 0.7, '#0e1d38', 2); };
+      const gear = (x, y, rr, teeth, ang, col) => { const g = S.ctx; g.fillStyle = col; g.beginPath(); for (let k = 0; k < teeth * 2; k++) { const a = ang + k * PI / teeth, rad = k % 2 ? rr : rr * 0.84; g.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } g.closePath(); g.fill(); D.circle(S, x, y, rr * 0.2, '#2b3440'); D.line(S, x, y, x + Math.cos(ang) * rr * 0.7, y + Math.sin(ang) * rr * 0.7, '#2b3440', 2); };
       const gy = by + bh * 0.4, n = p.n; const st = Math.pow(n, 1 / 3);
       gear(bx + 30 + bw * 0.3, gy, 12, 8, S.motorAng, '#c9a26b'); gear(bx + 30 + bw * 0.3 + 34, gy, 26, 16, -S.motorAng / st, '#b98f58'); gear(bx + 30 + bw * 0.3 + 72, gy - 10, 18, 12, S.motorAng / st / st, '#c9a26b'); gear(bx + bw - 70, gy, 40, 24, -S.th, '#d4b07a');
       D.text(S, `gear train n = ${n}:1`, bx + bw * 0.55, gy + 52, { size: 10.5, align: 'center', color: C.amber });
       // pot + control board
-      D.rect(S, bx + bw - 100, by + bh * 0.65, 60, 40, '#2a1f3d', C.violet, 1.5, 4); D.text(S, 'feedback pot', bx + bw - 70, by + bh * 0.65 + 56, { size: 10, align: 'center', color: C.violet }); D.line(S, bx + bw - 70, by + bh * 0.65 + 20, bx + bw - 70 + Math.cos(-S.th) * 16, by + bh * 0.65 + 20 + Math.sin(-S.th) * 16, C.violet, 2);
-      D.rect(S, bx + 20, by + 26, bw * 0.35, 46, '#10301e', C.green, 1.5, 4); D.text(S, 'control circuit (PID)', bx + 20 + bw * 0.175, by + 46, { size: 10.5, align: 'center', color: C.green }); D.text(S, `e = ${M.fmt((r - S.th) * R2D, 1)}°`, bx + 20 + bw * 0.175, by + 62, { size: 10.5, align: 'center' });
+      D.rect(S, bx + bw - 100, by + bh * 0.65, 60, 40, '#ece4fb', C.violet, 1.5, 4); D.text(S, 'feedback pot', bx + bw - 70, by + bh * 0.65 + 56, { size: 10, align: 'center', color: C.violet }); D.line(S, bx + bw - 70, by + bh * 0.65 + 20, bx + bw - 70 + Math.cos(-S.th) * 16, by + bh * 0.65 + 20 + Math.sin(-S.th) * 16, C.violet, 2);
+      D.rect(S, bx + 20, by + 26, bw * 0.35, 46, '#dcf3e3', C.green, 1.5, 4); D.text(S, 'control circuit (PID)', bx + 20 + bw * 0.175, by + 46, { size: 10.5, align: 'center', color: C.green }); D.text(S, `e = ${M.fmt((r - S.th) * R2D, 1)}°`, bx + 20 + bw * 0.175, by + 62, { size: 10.5, align: 'center' });
       D.arrow(S, bx + bw - 100, by + bh * 0.65 + 10, bx + 20 + bw * 0.35, by + 60, C.violet, 1.5, 7); D.arrow(S, bx + 40, by + 72, bx + 40, by + bh * 0.55, C.green, 1.5, 7);
       // output shaft horn
       const ox = Math.min(W - 110, bx + bw + 100), oy = H * 0.45, L = 70;
-      D.circle(S, ox, oy, L + 12, null, '#3a5384', 1); for (let a = 0; a <= 180; a += 30) { const aa = PI - a * D2R; D.line(S, ox + Math.cos(aa) * (L + 6), oy - Math.sin(aa) * (L + 6), ox + Math.cos(aa) * (L + 14), oy - Math.sin(aa) * (L + 14), C.muted, 1); D.text(S, a + '°', ox + Math.cos(aa) * (L + 28), oy - Math.sin(aa) * (L + 28) + 4, { size: 9, align: 'center', color: C.muted }); }
-      const ra = PI - r; D.line(S, ox, oy, ox + Math.cos(ra) * L, oy - Math.sin(ra) * L, 'rgba(111,227,155,.7)', 2, [5, 4]);
-      const ta = PI - S.th; D.link(S, ox, oy, ox + Math.cos(ta) * L, oy - Math.sin(ta) * L, 12, '#e9eef7', '#8fa3c4'); D.circle(S, ox, oy, 9, C.amber);
+      D.circle(S, ox, oy, L + 12, null, '#8c959f', 1); for (let a = 0; a <= 180; a += 30) { const aa = PI - a * D2R; D.line(S, ox + Math.cos(aa) * (L + 6), oy - Math.sin(aa) * (L + 6), ox + Math.cos(aa) * (L + 14), oy - Math.sin(aa) * (L + 14), C.muted, 1); D.text(S, a + '°', ox + Math.cos(aa) * (L + 28), oy - Math.sin(aa) * (L + 28) + 4, { size: 9, align: 'center', color: C.muted }); }
+      const ra = PI - r; D.line(S, ox, oy, ox + Math.cos(ra) * L, oy - Math.sin(ra) * L, 'rgba(26,155,75,.7)', 2, [5, 4]);
+      const ta = PI - S.th; D.link(S, ox, oy, ox + Math.cos(ta) * L, oy - Math.sin(ta) * L, 12, '#c9d1d9', '#57606a'); D.circle(S, ox, oy, 9, C.amber);
       D.text(S, 'output shaft', ox, oy + 32, { size: 10.5, align: 'center', color: C.muted });
       if (p.src === 'pwm') { const px = ox - 80, py = H - 34; D.text(S, `RC pulse ${p.tp.toFixed(3)} ms every 20 ms → θ = 180°(t_p − 1)/1 = ${M.fmt(M.act.rcServoAngle(p.tp), 1)}°`, 16, H - 10, { size: 11, color: C.amber }); D.poly(S, [[px, py], [px + 10, py], [px + 10, py - 14], [px + 10 + p.tp * 20, py - 14], [px + 10 + p.tp * 20, py], [px + 160, py]], null, C.amber, 2, false); }
       S.set('ref', r * R2D); S.set('th', S.th * R2D); S.set('e', (r - S.th) * R2D); S.set('u', S.u || 0); S.set('mp', S.mp); S.set('jeq', 2e-3 + p.n * p.n * 2e-6);
@@ -206,13 +206,13 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, m = +p.m, Nr = +p.Nr, cx = W * 0.32, cy = H * 0.5, R = Math.min(W * 0.24, H * 0.42); const on = this.pattern(S, S.k), names = 'ABCD';
-      D.circle(S, cx, cy, R, '#22355c', '#8fa3c4', 2);
-      for (let k = 0; k < 2 * m; k++) { const a = -k * PI / m, j = k % m, act = on[j]; const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(a); D.rect(S, cx * 0 + R * 0.55, -R * 0.12, R * 0.4, R * 0.24, act ? (k < m ? C.amber : '#c98a10') : '#3b4f75', '#c9d6ec', 1, 3); g.restore();
+      D.circle(S, cx, cy, R, '#c9d1d9', '#57606a', 2);
+      for (let k = 0; k < 2 * m; k++) { const a = -k * PI / m, j = k % m, act = on[j]; const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(a); D.rect(S, cx * 0 + R * 0.55, -R * 0.12, R * 0.4, R * 0.24, act ? (k < m ? C.amber : '#c98a10') : '#6e7781', '#8c959f', 1, 3); g.restore();
         const lx = cx + Math.cos(a) * R * 1.12, ly = cy + Math.sin(a) * R * 1.12; D.text(S, names[j] + (k >= m ? '′' : ''), lx, ly + 4, { size: 12, weight: 700, align: 'center', color: act ? C.amber : C.muted }); }
       // rotor with Nr teeth
-      const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(-S.th); g.fillStyle = '#9fb3d1'; g.beginPath();
+      const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(-S.th); g.fillStyle = '#a8b1bb'; g.beginPath();
       for (let k = 0; k < Nr; k++) { const a0 = k * 2 * PI / Nr, hw = Math.min(0.3, PI / Nr * 0.55); g.lineTo(Math.cos(a0 - hw) * R * 0.53, Math.sin(a0 - hw) * R * 0.53); g.lineTo(Math.cos(a0 + hw) * R * 0.53, Math.sin(a0 + hw) * R * 0.53); g.lineTo(Math.cos(a0 + PI / Nr) * R * 0.3, Math.sin(a0 + PI / Nr) * R * 0.3); }
-      g.closePath(); g.fill(); g.fillStyle = C.red; g.beginPath(); g.arc(R * 0.42, 0, 5, 0, 2 * PI); g.fill(); g.restore(); D.circle(S, cx, cy, 6, '#0e1d38', '#fff', 1);
+      g.closePath(); g.fill(); g.fillStyle = C.red; g.beginPath(); g.arc(R * 0.42, 0, 5, 0, 2 * PI); g.fill(); g.restore(); D.circle(S, cx, cy, 6, '#2b3440', '#24292f', 1);
       const ts = this.stepAngle(S), Sx = 360 / ts, target = S.k * ts * (p.seq === 'half' ? 1 : 1);
       // table of sequence
       const tx = Math.min(W - 230, cx + R + 50), ty = 30; D.text(S, `${p.seq} sequence`, tx, ty, { size: 12, weight: 700 });
@@ -259,13 +259,13 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, cx = W * 0.3, cy = H * 0.52, R = Math.min(W * 0.22, H * 0.4), st = SIX[S.sec || 0], eAng = S.th * p.p;
-      D.circle(S, cx, cy, R, '#22355c', '#8fa3c4', 2);
+      D.circle(S, cx, cy, R, '#c9d1d9', '#57606a', 2);
       const phCol = { A: C.red, B: C.green, C: C.cyan };
-      ['A', 'B', 'C'].forEach((ph, i) => { [0, 1].forEach(o => { const a = -(i * 2 * PI / 3 + o * PI); const x = cx + Math.cos(a) * R * 0.78, y = cy + Math.sin(a) * R * 0.78; const act = ph === st.hi || ph === st.lo; const g = S.ctx; g.save(); g.translate(x, y); g.rotate(a); D.rect(S, -R * 0.12, -R * 0.13, R * 0.26, R * 0.26, act ? phCol[ph] : '#3b4f75', '#c9d6ec', 1, 3); g.restore(); D.text(S, ph + (o ? '′' : ''), cx + Math.cos(a) * R * 1.08, cy + Math.sin(a) * R * 1.08 + 4, { size: 12, weight: 700, align: 'center', color: act ? phCol[ph] : C.muted }); }); });
+      ['A', 'B', 'C'].forEach((ph, i) => { [0, 1].forEach(o => { const a = -(i * 2 * PI / 3 + o * PI); const x = cx + Math.cos(a) * R * 0.78, y = cy + Math.sin(a) * R * 0.78; const act = ph === st.hi || ph === st.lo; const g = S.ctx; g.save(); g.translate(x, y); g.rotate(a); D.rect(S, -R * 0.12, -R * 0.13, R * 0.26, R * 0.26, act ? phCol[ph] : '#6e7781', '#8c959f', 1, 3); g.restore(); D.text(S, ph + (o ? '′' : ''), cx + Math.cos(a) * R * 1.08, cy + Math.sin(a) * R * 1.08 + 4, { size: 12, weight: 700, align: 'center', color: act ? phCol[ph] : C.muted }); }); });
       // rotor magnet (drawn as one pole pair; electrical angle = p × mechanical)
       const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(-S.th); g.fillStyle = '#c0392b'; g.beginPath(); g.arc(0, 0, R * 0.5, -PI / 2, PI / 2); g.fill(); g.fillStyle = '#2f6fd6'; g.beginPath(); g.arc(0, 0, R * 0.5, PI / 2, 3 * PI / 2); g.fill(); g.restore();
       D.text(S, 'N', cx + Math.cos(-S.th) * R * 0.3, cy + Math.sin(-S.th) * R * 0.3 + 5, { size: 13, weight: 800, align: 'center' });
-      [0, 1, 2].forEach(i => { const a = -(i * 2 * PI / 3 + PI / 6); const H1 = SIX[this.sector(eAng + PI / 6)].h; D.circle(S, cx + Math.cos(a) * R * 0.6, cy + Math.sin(a) * R * 0.6, 6, H1[i] ? C.amber : '#33415e', '#fff', 1); D.text(S, 'H' + (i + 1), cx + Math.cos(a) * R * 0.6 + 8, cy + Math.sin(a) * R * 0.6 - 6, { size: 10, color: C.amber }); });
+      [0, 1, 2].forEach(i => { const a = -(i * 2 * PI / 3 + PI / 6); const H1 = SIX[this.sector(eAng + PI / 6)].h; D.circle(S, cx + Math.cos(a) * R * 0.6, cy + Math.sin(a) * R * 0.6, 6, H1[i] ? C.amber : '#d0d7de', '#24292f', 1); D.text(S, 'H' + (i + 1), cx + Math.cos(a) * R * 0.6 + 8, cy + Math.sin(a) * R * 0.6 - 6, { size: 10, color: C.amber }); });
       const tx = Math.min(W - 250, cx + R + 50); D.text(S, 'Commutation table (120° Hall)', tx, 28, { size: 12, weight: 700 });
       SIX.forEach((r, i) => D.text(S, `${r.h.join('')}  →  ${r.hi}+  ${r.lo}−   (${['A', 'B', 'C'].find(x => x !== r.hi && x !== r.lo)} floating)`, tx, 48 + i * 17, { size: 11.5, color: i === S.sec ? C.amber : C.muted, weight: i === S.sec ? 700 : 500 }));
       D.text(S, '3-phase inverter drives the pair selected by the Hall code; slow motion ×1/4', 16, H - 12, { size: 11, color: C.muted });
@@ -307,19 +307,19 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, cy = H * 0.5;
       if (p.mode === 'sol') {
-        const x0 = Math.max(250, W * 0.3), cw = Math.min(W * 0.4, 300); D.rect(S, x0, cy - 70, cw, 140, '#13264a', '#8fa3c4', 2, 6);
-        for (let k = 0; k < 14; k++) { const xx = x0 + 14 + k * (cw - 28) / 13; D.circle(S, xx, cy - 46, 6, S.i > 0.01 ? C.amber : '#6f86ad'); D.circle(S, xx, cy + 46, 6, S.i > 0.01 ? C.amber : '#6f86ad'); }
-        if (S.i > 0.01) for (let k = -1; k <= 1; k++) D.arrow(S, x0 + 20, cy + k * 14, x0 + cw - 20, cy + k * 14, `rgba(76,194,255,${0.2 + 0.6 * S.i / p.I})`, 1.5, 7);
-        D.rect(S, x0 + cw - 30, cy - 24, 30, 48, '#8aa0c6', '#fff', 1); D.text(S, 'stop', x0 + cw - 15, cy + 40, { size: 10, align: 'center', color: C.muted });
-        const plE = x0 + cw - 30 - (p.g - S.x) * 18; D.rect(S, x0 - 120, cy - 22, plE - x0 + 120, 44, '#c9d6ec', '#fff', 1.5, 4); D.text(S, 'plunger', x0 - 60, cy + 4, { size: 11, align: 'center', color: '#0e1d38', weight: 700 });
-        D.spring(S, x0 - 200, cy, x0 - 120, cy, 7, 10); D.rect(S, x0 - 214, cy - 30, 14, 60, '#3b4f75');
+        const x0 = Math.max(250, W * 0.3), cw = Math.min(W * 0.4, 300); D.rect(S, x0, cy - 70, cw, 140, '#eef1f4', '#57606a', 2, 6);
+        for (let k = 0; k < 14; k++) { const xx = x0 + 14 + k * (cw - 28) / 13; D.circle(S, xx, cy - 46, 6, S.i > 0.01 ? C.amber : '#6e7781'); D.circle(S, xx, cy + 46, 6, S.i > 0.01 ? C.amber : '#6e7781'); }
+        if (S.i > 0.01) for (let k = -1; k <= 1; k++) D.arrow(S, x0 + 20, cy + k * 14, x0 + cw - 20, cy + k * 14, `rgba(11,127,193,${0.2 + 0.6 * S.i / p.I})`, 1.5, 7);
+        D.rect(S, x0 + cw - 30, cy - 24, 30, 48, '#9aa4af', '#24292f', 1); D.text(S, 'stop', x0 + cw - 15, cy + 40, { size: 10, align: 'center', color: C.muted });
+        const plE = x0 + cw - 30 - (p.g - S.x) * 18; D.rect(S, x0 - 120, cy - 22, plE - x0 + 120, 44, '#8c959f', '#24292f', 1.5, 4); D.text(S, 'plunger', x0 - 60, cy + 4, { size: 11, align: 'center', color: '#2b3440', weight: 700 });
+        D.spring(S, x0 - 200, cy, x0 - 120, cy, 7, 10); D.rect(S, x0 - 214, cy - 30, 14, 60, '#6e7781');
         D.text(S, `gap g = ${M.fmt(Math.max(0.15, p.g - S.x), 2)} mm`, plE + 4, cy - 30, { size: 11, color: C.cyan });
         D.text(S, 'F = (NI)² μ₀ A / (2g²)   (2.18);  A = 1 cm²', 16, 24, { size: 12 });
         S.set('F', S.F || 0); S.set('x', S.x); S.set('i', S.i); S.set('v', S.v); S.set('st', S.x >= p.g - 0.2 ? 'pulled in' : p.on ? 'pulling' : 'released');
       } else {
-        const x0 = 60, Lb = Math.min(W - 260, 420); D.rect(S, x0, cy - 30, 80, 60, '#1d2b48', C.green, 1.5, 6); D.text(S, 'motor', x0 + 40, cy + 4, { size: 11, align: 'center', color: C.green });
-        D.rect(S, x0 + 80, cy - 22, Lb, 44, '#13264a', '#8fa3c4', 1.5, 4); for (let k = 0; k < Lb; k += 9) D.line(S, x0 + 84 + k, cy - 6, x0 + 88 + k, cy + 6, '#8fa3c4', 1);
-        const rx = x0 + 100 + S.x / 150 * (Lb - 60); D.rect(S, rx, cy - 16, 30, 32, '#6f86ad', '#fff', 1); D.rect(S, rx + 30, cy - 8, x0 + 80 + Lb - rx + 40, 16, '#c9d6ec'); D.rect(S, x0 + 80 + Lb + 40 + (S.x / 150) * 0, cy - 22, 0, 0);
+        const x0 = 60, Lb = Math.min(W - 260, 420); D.rect(S, x0, cy - 30, 80, 60, '#f6f8fa', C.green, 1.5, 6); D.text(S, 'motor', x0 + 40, cy + 4, { size: 11, align: 'center', color: C.green });
+        D.rect(S, x0 + 80, cy - 22, Lb, 44, '#eef1f4', '#57606a', 1.5, 4); for (let k = 0; k < Lb; k += 9) D.line(S, x0 + 84 + k, cy - 6, x0 + 88 + k, cy + 6, '#57606a', 1);
+        const rx = x0 + 100 + S.x / 150 * (Lb - 60); D.rect(S, rx, cy - 16, 30, 32, '#6e7781', '#24292f', 1); D.rect(S, rx + 30, cy - 8, x0 + 80 + Lb - rx + 40, 16, '#8c959f'); D.rect(S, x0 + 80 + Lb + 40 + (S.x / 150) * 0, cy - 22, 0, 0);
         D.text(S, `stroke ${M.fmt(S.x, 1)} / 150 mm`, x0 + 80 + Lb / 2, cy + 46, { size: 11, align: 'center' });
         D.text(S, 'F = 2πηT/p, v = p·n   (2.19), η = 0.9 (ball screw)', 16, 24, { size: 12 });
         S.set('F', S.F || 0); S.set('x', S.x); S.set('i', '—'); S.set('v', S.v || 0); S.set('st', S.v > 0 ? 'extending' : S.v < 0 ? 'retracting' : S.x >= 150 ? 'extended (limit)' : 'retracted (limit)');

@@ -44,14 +44,14 @@
       const pick = (o, n) => { o.traverse(m => (m.userData.pick = n)); return o; };
       G.base = pick(k.cyl(0.16, 0.12, C.base), 'base'); G.base.position.z = 0.06; sc.add(G.base);
       G.waist = new T3.Group(); G.waist.position.z = 0.12; sc.add(G.waist);
-      const turret = pick(k.cyl(0.12, 0.22, 0x5a6f96), 'waist'); turret.position.z = 0.11; G.waist.add(turret);
+      const turret = pick(k.cyl(0.12, 0.22, 0x8c959f), 'waist'); turret.position.z = 0.11; G.waist.add(turret);
       G.sh = new T3.Group(); G.sh.position.set(0, 0, 0.3); G.waist.add(G.sh);
       const shJ = pick(k.cyl(0.08, 0.2, C.joint, 'y'), 'shoulder'); shJ.rotation.set(0, 0, 0); G.sh.add(shJ);
-      const m1 = pick(k.cyl(0.055, 0.09, 0x1d2b48, 'y'), 'actuator'); m1.position.y = -0.15; G.sh.add(m1);
+      const m1 = pick(k.cyl(0.055, 0.09, 0xd0d7de, 'y'), 'actuator'); m1.position.y = -0.15; G.sh.add(m1);
       const ua = pick(k.box(0.09, 0.1, 0.5, C.link), 'upperarm'); ua.position.z = 0.25; G.sh.add(ua);
       G.el = new T3.Group(); G.el.position.z = 0.5; G.sh.add(G.el);
       const elJ = pick(k.cyl(0.065, 0.17, C.joint, 'y'), 'elbow'); G.el.add(elJ);
-      const m2 = pick(k.cyl(0.045, 0.08, 0x1d2b48, 'y'), 'actuator'); m2.position.y = 0.13; G.el.add(m2);
+      const m2 = pick(k.cyl(0.045, 0.08, 0xd0d7de, 'y'), 'actuator'); m2.position.y = 0.13; G.el.add(m2);
       const fa = pick(k.box(0.42, 0.08, 0.08, C.link), 'forearm'); fa.position.x = 0.21; G.el.add(fa);
       G.w4 = new T3.Group(); G.w4.position.x = 0.42; G.el.add(G.w4);
       const w4m = pick(k.cyl(0.045, 0.07, C.joint, 'x'), 'wrist'); G.w4.add(w4m);
@@ -89,7 +89,7 @@
       const v = new THREE.Vector3(); G.tcp.getWorldPosition(v);
       S.set('x', v.x); S.set('y', v.y); S.set('z', v.z); S.set('dof', '6 (3 arm + 3 wrist)');
       const info = ANAT[S.sel]; S.set('sel', info ? info[0] : '—');
-      const html = info ? `<b style="color:#fff">${info[0]}</b><p style="margin:.3em 0 0">${info[1]}</p>` : '<p style="margin:0">Click a part of the robot (or use the selector) to see what it does.</p>';
+      const html = info ? `<b style="color:#1f2328">${info[0]}</b><p style="margin:.3em 0 0">${info[1]}</p>` : '<p style="margin:0">Click a part of the robot (or use the selector) to see what it does.</p>';
       if (S._lastInfo !== html) { S.panel('info').innerHTML = html; S._lastInfo = html; }
     }
   });
@@ -222,7 +222,7 @@
       const base = k.cyl(0.18, 0.08, C.base); base.position.z = 0.04; g.add(base);
       P.rot = new T3.Group(); g.add(P.rot); const col = k.cyl(0.07, 0.56, C.link); col.position.z = 0.32; P.rot.add(col); lab('R₁ (base rotation)', base, [0.2, 0, 0]);
       P.boom = new T3.Group(); P.boom.position.z = 0.6; P.rot.add(P.boom); const pv = k.cyl(0.08, 0.18, C.joint, 'y'); P.boom.add(pv); lab('R₂ (elevation)', pv, [0, -0.12, 0.05]);
-      const sleeve = k.box(0.35, 0.1, 0.1, 0x5a6f96); sleeve.position.x = 0.1; P.boom.add(sleeve);
+      const sleeve = k.box(0.35, 0.1, 0.1, 0x8c959f); sleeve.position.x = 0.1; P.boom.add(sleeve);
       P.arm = seg(g, C.white, 0.03); lab('P₃ (telescopic r)', P.arm.mesh, [0, 0, 0.07]);
     } else if (type === 'scara') {
       const col = k.cyl(0.08, 0.62, C.base); col.position.z = 0.31; g.add(col); lab('R₁ (vertical axis)', col, [0.12, 0, 0.25]);
@@ -231,13 +231,13 @@
       P.quill = seg(g, C.white, 0.02); lab('P₃ (quill)', P.quill.mesh, [0.06, 0, 0]);
     } else if (type === 'articulated') {
       const base = k.cyl(0.16, 0.1, C.base); base.position.z = 0.05; g.add(base);
-      P.waist = new T3.Group(); g.add(P.waist); const tur = k.cyl(0.1, 0.3, 0x5a6f96); tur.position.z = 0.25; P.waist.add(tur); lab('R₁ waist', tur, [0.15, 0, 0]);
+      P.waist = new T3.Group(); g.add(P.waist); const tur = k.cyl(0.1, 0.3, 0x8c959f); tur.position.z = 0.25; P.waist.add(tur); lab('R₁ waist', tur, [0.15, 0, 0]);
       const sh = k.cyl(0.075, 0.18, C.joint, 'y'); sh.position.z = 0.4; P.waist.add(sh); lab('R₂ shoulder', sh, [0, -0.15, 0]);
       P.ua = seg(g, C.link, 0.045); P.fa = seg(g, C.link, 0.038);
       P.el = k.cyl(0.06, 0.15, C.joint, 'y'); g.add(P.el); lab('R₃ elbow', P.el, [0, 0, 0.09]);
     } else if (type === 'parallel') {
       const top = k.cyl(DELTA.R + 0.08, 0.04, C.base); top.position.z = DELTA.h + 0.03; g.add(top); lab('Fixed base (3 motors)', top, [0, 0, 0.08]);
-      [[-0.35, -0.35], [0.35, -0.35], [0, 0.4]].forEach(([x, y]) => { const post = k.box(0.04, 0.04, DELTA.h + 0.05, 0x2a3c62); post.position.set(x, y, (DELTA.h + 0.05) / 2); g.add(post); });
+      [[-0.35, -0.35], [0.35, -0.35], [0, 0.4]].forEach(([x, y]) => { const post = k.box(0.04, 0.04, DELTA.h + 0.05, 0x6e7781); post.position.set(x, y, (DELTA.h + 0.05) / 2); g.add(post); });
       P.bic = [0, 1, 2].map(i => seg(g, C.joint, 0.022)); P.fore = [0, 1, 2].map(() => seg(g, C.white, 0.012));
       P.plat = k.cyl(DELTA.r + 0.015, 0.025, C.dark); g.add(P.plat); lab('Moving platform', P.plat, [0.1, 0, -0.04]);
       lab('Leg 1 (R-S-S)', P.bic[0].mesh, [0, 0, 0.05]);
@@ -296,7 +296,7 @@
       S.set('tcp', p.map(v => v.toFixed(3)).join(', '));
       for (let i = 1; i <= 7; i++) { const el = S.inputs['q' + i].el.closest('.ctl'); el.style.opacity = i <= n ? 1 : 0.35; el.querySelector('label span').textContent = `Joint ${i}` + (i <= n ? ` (${pat[i - 1]})` : ' (unused)'); }
       const m = MECH[S.p.mech]; const dof = M.inst.grubler(m.m, m.N, m.J, m.sf);
-      const html = RIL.ui.kv([['Mechanism', m.name], ['m (space)', m.m], ['N (links incl. ground)', m.N], ['J (joints)', m.J], ['Σ fᵢ', `${m.f} = ${m.sf}`], [`DOF = ${m.m}(${m.N}−1−${m.J})+${m.sf}`, `<b style="color:#f2a516">${dof}</b>`]]) + (S.p.mech === 'sps' ? '<p style="margin:.4em 0 0">The formula gives 12, but 6 of these are idle spins of the legs about their own axes: the platform still has 6 DOF.</p>' : '');
+      const html = RIL.ui.kv([['Mechanism', m.name], ['m (space)', m.m], ['N (links incl. ground)', m.N], ['J (joints)', m.J], ['Σ fᵢ', `${m.f} = ${m.sf}`], [`DOF = ${m.m}(${m.N}−1−${m.J})+${m.sf}`, `<b style="color:#9a5b00">${dof}</b>`]]) + (S.p.mech === 'sps' ? '<p style="margin:.4em 0 0">The formula gives 12, but 6 of these are idle spins of the legs about their own axes: the platform still has 6 DOF.</p>' : '');
       if (S._g !== html) { S.panel('grub').innerHTML = html; S._g = html; }
     }
   });

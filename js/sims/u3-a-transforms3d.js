@@ -26,7 +26,7 @@
     equations: ['{}^{A}\\mathbf p={}^{A}_{B}R\\,{}^{B}\\mathbf p+{}^{A}\\mathbf p_{B,org}\\;(3.2)', '{}^{A}_{C}T={}^{A}_{B}T\\,{}^{B}_{C}T'],
     setup(S) {
       const k = K(), sc = S.three.scene; S.fA = k.frame(0.4); sc.add(S.fA); S.fB = k.frame(0.3); sc.add(S.fB); S.ghost = k.frame(0.22, { opacity: 0.3 }); sc.add(S.ghost); S.fC = k.frame(0.2); sc.add(S.fC);
-      S.aT = arrowObj(0xf2a516); S.aP = arrowObj(0x4cc2ff); S.aR = arrowObj(0x6fe39b); sc.add(S.aT, S.aP, S.aR);
+      S.aT = arrowObj(0xf2a516); S.aP = arrowObj(0x1f9bd7); S.aR = arrowObj(0x2da44e); sc.add(S.aT, S.aP, S.aR);
       S.pt = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); sc.add(S.pt);
       S.three.label('{A}', [0, 0, 0], '', [0, 0, -0.07]); S.lB = S.three.label('{B}', S.fB, '', [0, 0, -0.06]); S.lC = S.three.label('{C}', S.fC, 'dim', [0, 0, -0.05]); S.lg = S.three.label('other order', S.ghost, 'dim', [0, 0, 0.1]); S.three.label('p', S.pt, '', [0.04, 0, 0.04]);
     },
@@ -40,7 +40,7 @@
       const pB = [p.px, p.py, p.pz], pA = M.applyT(TAB, pB), oB = M.pof(TAB);
       setArrow(S.aT, [0, 0, 0], oB); setArrow(S.aP, oB, pA); setArrow(S.aR, [0, 0, 0], pA); S.pt.position.set(...pA);
       S.set('pA', vfmt(pA)); S.set('pB', vfmt(pB)); S.set('len', M.v3.norm(M.v3.sub(pA, oB))); S.set('oC', vfmt(M.pof(TAC)));
-      RIL.setHTML(S.panel('m'), mat(M.Rof(TAB), 4, '<sup>A</sup><sub>B</sub>R =') + RIL.ui.vec(oB, 3, '<sup>A</sup>p<sub>B,org</sub> =') + mat(TAB, 3, '<sup>A</sup><sub>B</sub>T =') + mat(TBC, 3, '<sup>B</sup><sub>C</sub>T =') + mat(TAC, 3, '<sup>A</sup><sub>C</sub>T =') + `<p style="margin:.4em 0 0;color:#8fa3c4">ᴬp = ᴬ_B R ᴮp + ᴬp_B,org = ${vfmt(pA)} m. The ghost frame uses ${p.seq === 'TR' ? 'R·Trans' : 'Trans·R'}: origin ${vfmt(M.pof(other))} — different, so the order matters.</p>`, S, 'm');
+      RIL.setHTML(S.panel('m'), mat(M.Rof(TAB), 4, '<sup>A</sup><sub>B</sub>R =') + RIL.ui.vec(oB, 3, '<sup>A</sup>p<sub>B,org</sub> =') + mat(TAB, 3, '<sup>A</sup><sub>B</sub>T =') + mat(TBC, 3, '<sup>B</sup><sub>C</sub>T =') + mat(TAC, 3, '<sup>A</sup><sub>C</sub>T =') + `<p style="margin:.4em 0 0;color:#57606a">ᴬp = ᴬ_B R ᴮp + ᴬp_B,org = ${vfmt(pA)} m. The ghost frame uses ${p.seq === 'TR' ? 'R·Trans' : 'Trans·R'}: origin ${vfmt(M.pof(other))} — different, so the order matters.</p>`, S, 'm');
     }
   });
 
@@ -65,9 +65,9 @@
     onControl(S, id) { if (id === 'mode' || id === 'th' || id === 'be' || id === 'ga') S.prog = 1; },
     setup(S) {
       const k = K(), sc = S.three.scene; S.f0 = k.frame(0.9, { opacity: 0.3 }); sc.add(S.f0); S.f1 = k.frame(0.9); sc.add(S.f1);
-      S.v0 = arrowObj(0x8fa3c4); S.v1 = arrowObj(0xf2a516); sc.add(S.v0, S.v1);
+      S.v0 = arrowObj(0x8c959f); S.v1 = arrowObj(0xf2a516); sc.add(S.v0, S.v1);
       S.lab = S.three.label('ᴬp', [0, 0, 0], ''); S.lab0 = S.three.label('ᴮp (before)', [0, 0, 0], 'dim');
-      S.arc = k.polyline([[0, 0, 0], [0, 0, 0]], 0x6fe39b); sc.add(S.arc);
+      S.arc = k.polyline([[0, 0, 0], [0, 0, 0]], 0x2da44e); sc.add(S.arc);
       const grid = sc.children.find(o => o.type === 'GridHelper'); if (grid) grid.scale.set(1.5, 1.5, 1.5);
     },
     step(S, dt) { if (S.running) { S.prog = Math.min(1, (S.prog >= 1 ? 0 : S.prog) + dt * 0.5); if (S.prog >= 1) S.pause(); } },
@@ -80,7 +80,7 @@
       const e = M.rpyFromR(Rf);
       S.set('p', vfmt(pf)); S.set('n', M.fmt(M.v3.norm(v), 4) + ', ' + M.fmt(M.v3.norm(pf), 4)); S.set('det', det, ''); S.set('orth', orth); S.set('rpy', vfmt([e.gamma * R2D, e.beta * R2D, e.alpha * R2D], 2));
       const note = p.mode === 'cur' ? 'Current (moving) axes: post-multiply, R = R_x(γ)R_y(β)R_z(α). Compare with fixed-axis RPY (pre-multiply) — the results differ unless the rotations commute.' : p.mode === 'rpy' ? 'Fixed axes: γ about x, then β about y, then α about z (each about the fixed frame) — pre-multiplication.' : 'Columns of R are the unit vectors of the rotated frame expressed in the original frame.';
-      RIL.setHTML(S.panel('m'), mat(Rf, 4, 'R =') + RIL.ui.vec(v, 3, '<sup>B</sup>p =') + RIL.ui.vec(pf, 4, '<sup>A</sup>p = R <sup>B</sup>p =') + `<p style="margin:.4em 0 0;color:#8fa3c4">${note}</p>`, S, 'm');
+      RIL.setHTML(S.panel('m'), mat(Rf, 4, 'R =') + RIL.ui.vec(v, 3, '<sup>B</sup>p =') + RIL.ui.vec(pf, 4, '<sup>A</sup>p = R <sup>B</sup>p =') + `<p style="margin:.4em 0 0;color:#57606a">${note}</p>`, S, 'm');
     }
   });
 
@@ -99,7 +99,7 @@
     readouts: [{ id: 'pa', label: 'ᴬp', unit: 'm' }, { id: 'back', label: 'T⁻¹ ᴬp (should equal ᴮp)', unit: 'm' }, { id: 'ori', label: 'Orientation of {B} (RPY)', unit: '°' }],
     panels: [{ id: 'm', title: 'Homogeneous matrices', wide: true }],
     equations: ['T=\\begin{bmatrix}R&\\mathbf t\\\\\\mathbf 0^T&1\\end{bmatrix}\\;(3.6)', 'T^{-1}=\\begin{bmatrix}R^T&-R^T\\mathbf t\\\\\\mathbf 0^T&1\\end{bmatrix}\\;(3.8)'],
-    setup(S) { const k = K(), sc = S.three.scene; const grid = sc.children.find(o => o.type === 'GridHelper'); if (grid) grid.scale.set(2.5, 2.5, 2.5); S.fA = k.frame(1); sc.add(S.fA); S.fB = k.frame(0.8); sc.add(S.fB); S.a1 = arrowObj(0xf2a516); S.a2 = arrowObj(0x4cc2ff); S.a3 = arrowObj(0x6fe39b); sc.add(S.a1, S.a2, S.a3); S.pt = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); sc.add(S.pt); S.three.label('{A}', [0, 0, 0], '', [0, 0, -0.2]); S.three.label('{B}', S.fB, '', [0, 0, -0.2]); S.three.label('p', S.pt, '', [0.1, 0, 0.1]); },
+    setup(S) { const k = K(), sc = S.three.scene; const grid = sc.children.find(o => o.type === 'GridHelper'); if (grid) grid.scale.set(2.5, 2.5, 2.5); S.fA = k.frame(1); sc.add(S.fA); S.fB = k.frame(0.8); sc.add(S.fB); S.a1 = arrowObj(0xf2a516); S.a2 = arrowObj(0x1f9bd7); S.a3 = arrowObj(0x2da44e); sc.add(S.a1, S.a2, S.a3); S.pt = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); sc.add(S.pt); S.three.label('{A}', [0, 0, 0], '', [0, 0, -0.2]); S.three.label('{B}', S.fB, '', [0, 0, -0.2]); S.three.label('p', S.pt, '', [0.1, 0, 0.1]); },
     draw(S) {
       const p = S.p, k = K(), R = { x: M.rotX, y: M.rotY, z: M.rotZ }[p.ax](p.th * D2R), t = [p.tx, p.ty, p.tz], T = M.homog(R, t); k.applyT(S.fB, T);
       const pb = [p.px, p.py, p.pz], ph = M.mat.mulVec(T, [...pb, 1]), pa = ph.slice(0, 3), Ti = M.invT(T), back = M.mat.mulVec(Ti, ph).slice(0, 3);
@@ -145,8 +145,8 @@
       S.rob.update(q); S.rob.frames.forEach((f, i) => (f.visible = S.p.frames || i === 0 || i === 3));
       const p = M.pof(T[3]), e = M.rpyFromR(M.Rof(T[3]));
       S.set('p', vfmt(p, 4)); S.set('rpy', vfmt([e.gamma * R2D, e.beta * R2D, e.alpha * R2D], 1)); S.set('var', q.map((v, i) => tbl[i].type === 'R' ? M.fmt(v * R2D, 1) + '°' : M.fmt(v, 3) + ' m').join(', '));
-      const rows = S.T.map((r, i) => ({ cells: [i + 1, M.fmt(r.a, 3), M.fmt(r.alpha, 1) + '°', r.type === 'P' ? `<b style="color:#f2a516">${M.fmt(r.d, 3)}*</b>` : M.fmt(r.d, 3), r.type === 'R' ? `<b style="color:#f2a516">${M.fmt(r.theta, 1)}°*</b>` : M.fmt(r.theta, 1) + '°', r.type], hl: i === +S.p.link - 1 }));
-      RIL.setHTML(S.panel('tbl'), RIL.ui.kv(rows, ['Link i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i', 'Joint']) + '<p style="margin:.3em 0;color:#8fa3c4">* joint variable</p>' + A.map((Ai, i) => mat(Ai, 3, `A<sub>${i + 1}</sub> =`)).join('') + mat(T[3], 4, '<sup>0</sup>T<sub>3</sub> ='), S, 'tbl');
+      const rows = S.T.map((r, i) => ({ cells: [i + 1, M.fmt(r.a, 3), M.fmt(r.alpha, 1) + '°', r.type === 'P' ? `<b style="color:#9a5b00">${M.fmt(r.d, 3)}*</b>` : M.fmt(r.d, 3), r.type === 'R' ? `<b style="color:#9a5b00">${M.fmt(r.theta, 1)}°*</b>` : M.fmt(r.theta, 1) + '°', r.type], hl: i === +S.p.link - 1 }));
+      RIL.setHTML(S.panel('tbl'), RIL.ui.kv(rows, ['Link i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i', 'Joint']) + '<p style="margin:.3em 0;color:#57606a">* joint variable</p>' + A.map((Ai, i) => mat(Ai, 3, `A<sub>${i + 1}</sub> =`)).join('') + mat(T[3], 4, '<sup>0</sup>T<sub>3</sub> ='), S, 'tbl');
     }
   });
 
@@ -171,7 +171,7 @@
       if (S.running) { const l = S.trail[S.trail.length - 1]; if (!l || M.v3.norm(M.v3.sub(l, p)) > 0.005) { S.trail.push(p); if (S.trail.length > 400) S.trail.shift(); if (S.trail.length > 1) k.updateLine(S.line, S.trail); } }
       S.set('p', vfmt(p, 4)); S.set('rpy', vfmt([e.gamma * R2D, e.beta * R2D, e.alpha * R2D], 1)); S.set('z', vfmt([T6[0][2], T6[1][2], T6[2][2]], 3)); S.set('reach', M.v3.norm(M.v3.sub(p, [0, 0, 0.4])));
       const i = +S.p.show; const rows = tb.map((L, j) => ({ cells: [j + 1, M.fmt(L.a, 3), M.fmt(L.alpha * R2D, 0) + '°', M.fmt(L.d, 3), `θ${j + 1}${L.offset ? ' + ' + M.fmt(L.offset * R2D, 0) + '°' : ''} = ${M.fmt((q[j] + (L.offset || 0)) * R2D, 1)}°`], hl: j === i - 1 }));
-      RIL.setHTML(S.panel('m'), RIL.ui.kv(rows, ['i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i']) + mat(A[i - 1], 4, `A<sub>${i}</sub> =`) + mat(T6, 4, '<sup>0</sup>T<sub>6</sub> =') + '<p style="margin:.3em 0 0;color:#8fa3c4">Educational 6R model (elbow arm with spherical wrist, Spong-type DH); not a specific manufacturer\'s robot.</p>', S, 'm');
+      RIL.setHTML(S.panel('m'), RIL.ui.kv(rows, ['i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i']) + mat(A[i - 1], 4, `A<sub>${i}</sub> =`) + mat(T6, 4, '<sup>0</sup>T<sub>6</sub> =') + '<p style="margin:.3em 0 0;color:#57606a">Educational 6R model (elbow arm with spherical wrist, Spong-type DH); not a specific manufacturer\'s robot.</p>', S, 'm');
     }
   });
 })();

@@ -11,21 +11,21 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap;
     renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
-    const scene = new T.Scene(); scene.background = new T.Color(0x070c18); scene.fog = new T.Fog(0x070c18, 14, 42);
+    const scene = new T.Scene(); scene.background = new T.Color(0xffffff); scene.fog = new T.Fog(0xffffff, 14, 42);
     const camera = new T.PerspectiveCamera(38, 1, 0.05, 120); camera.position.set(1.9, 1.45, 3.9);
     const controls = new T.OrbitControls(camera, canvas);
     controls.target.set(0, 0.95, 0); controls.enableDamping = true; controls.dampingFactor = 0.08;
     controls.maxPolarAngle = HP - 0.03; controls.minDistance = 0.45; controls.maxDistance = 16;
     try { const pm = new T.PMREMGenerator(renderer); scene.environment = pm.fromScene(new T.RoomEnvironment(), 0.04).texture; scene.environmentIntensity = 0.55; } catch (e) { /* environment map optional */ }
-    scene.add(new T.HemisphereLight(0xbfd9ff, 0x0a1020, 0.55));
+    scene.add(new T.HemisphereLight(0xffffff, 0xb8c0cc, 0.55));
     const key = new T.DirectionalLight(0xffffff, 1.9); key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
     const sc = key.shadow.camera; sc.left = -4; sc.right = 4; sc.top = 4; sc.bottom = -4; sc.near = 0.5; sc.far = 24; key.shadow.bias = -0.0004;
     scene.add(key, key.target);
-    const rim = new T.DirectionalLight(0x22d3ee, 1.1); scene.add(rim, rim.target);
-    const floor = new T.Mesh(new T.PlaneGeometry(240, 240), new T.MeshStandardMaterial({ color: 0x0b1324, roughness: 0.82, metalness: 0.15 }));
+    const rim = new T.DirectionalLight(0xffffff, 0.6); scene.add(rim, rim.target);
+    const floor = new T.Mesh(new T.PlaneGeometry(240, 240), new T.MeshStandardMaterial({ color: 0xf3f4f6, roughness: 0.82, metalness: 0.15 }));
     floor.rotation.x = -HP; floor.receiveShadow = true; scene.add(floor);
-    const grid = new T.GridHelper(120, 240, 0x1d6fd6, 0x15233f); grid.position.y = 0.002; grid.material.transparent = true; grid.material.opacity = 0.55; scene.add(grid);
-    const pad = new T.Mesh(new T.RingGeometry(0.62, 0.66, 64), new T.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.5 })); pad.rotation.x = -HP; pad.position.y = 0.004; scene.add(pad);
+    const grid = new T.GridHelper(120, 240, 0xc4ccd5, 0xe1e5ea); grid.position.y = 0.002; grid.material.transparent = true; grid.material.opacity = 0.55; scene.add(grid);
+    const pad = new T.Mesh(new T.RingGeometry(0.62, 0.66, 64), new T.MeshBasicMaterial({ color: 0x0e7490, transparent: true, opacity: 0.5 })); pad.rotation.x = -HP; pad.position.y = 0.004; scene.add(pad);
     const props = new T.Group(); scene.add(props);
     const fx = new T.Group(); scene.add(fx);
     const setPts = (o, pts) => { const g = o.geometry; if (g.attributes.position && g.attributes.position.count === pts.length) { g.setFromPoints(pts); g.attributes.position.needsUpdate = true; } else { g.dispose(); o.geometry = new T.BufferGeometry().setFromPoints(pts); } };

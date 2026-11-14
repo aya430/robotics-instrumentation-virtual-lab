@@ -449,7 +449,7 @@
     const renderer = new T3.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = T3.PCFSoftShadowMap; 
     stage.append(renderer.domElement);
-    const scene = new T3.Scene(); scene.background = new T3.Color(o.background || 0xeef1f5);
+    const scene = new T3.Scene(); scene.background = new T3.Color(o.background || 0xffffff);
     /* procedural studio environment so metals reflect something */
     try {
       const es = new T3.Scene(); es.background = new T3.Color(0x9aa4b0);

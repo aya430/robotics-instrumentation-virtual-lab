@@ -38,17 +38,17 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, y = H * 0.52, X = f => 40 + f * (W - 80), L = +p.lvl;
-      const hl = lv => L === lv; D.rect(S, X(0), y, X(1) - X(0), 14, '#22355c', hl(0) ? C.amber : '#3a5384', hl(0) ? 2 : 1, 4);
+      const hl = lv => L === lv; D.rect(S, X(0), y, X(1) - X(0), 14, '#c9d1d9', hl(0) ? C.amber : '#8c959f', hl(0) ? 2 : 1, 4);
       const st = [[0.04, 'Feeder', 1, C.text], [0.28, 'CNC machine', 1, C.cyan], [0.45, 'Robot', 1, C.green], [0.6, 'Vision', 1, C.violet], [0.75, 'Reject\ndiverter', 0, C.red], [0.9, 'Packing', 0, C.amber]];
       st.forEach(([f, n, lvl, col]) => { const x = X(f); const bw2 = Math.min(84, (S.W - 80) * 0.13); D.block(S, x - bw2 / 2, y - 96, bw2, 42, n, { stroke: hl(lvl) || hl(0) ? C.amber : col, size: 10.5 }); });
-      if (S.mach) { const pr = S.mach.t / p.tm; D.rect(S, X(0.28) - 36, y - 48, 72, 6, '#22355c'); D.rect(S, X(0.3) - 36, y - 48, 72 * Math.min(1, pr), 6, C.cyan); }
-      if (S.robotT > 0) { const a = PI * (1 - S.robotT / 1.2); D.link(S, X(0.45), y - 54, X(0.45) + Math.cos(a) * 34, y - 54 - Math.sin(a) * 20, 6, C.green, '#fff'); }
-      [0.2, 0.43, 0.58, 0.88].forEach((f, i) => { const x = X(f); D.rect(S, x - 4, y + 18, 8, 14, hl(0) ? C.amber : '#4cc2ff'); D.text(S, 'PE' + (i + 1), x, y + 46, { size: 10, align: 'center', color: C.muted }); });
-      S.parts.forEach(q => D.rect(S, X(q.x) - 9, y - 16, 18, 16, q.st === 'raw' ? '#8a6a3a' : q.def && q.insp ? C.red : '#9fb3d1', '#fff', 1, 2));
-      S.flash.forEach(f => { D.circle(S, X(f.x), y - 120, 6 + 10 * (0.6 - f.t), null, f.col, 2); D.line(S, X(f.x), y - 112, W / 2, 40, `rgba(242,165,22,${f.t})`, 1, [3, 3]); });
+      if (S.mach) { const pr = S.mach.t / p.tm; D.rect(S, X(0.28) - 36, y - 48, 72, 6, '#c9d1d9'); D.rect(S, X(0.3) - 36, y - 48, 72 * Math.min(1, pr), 6, C.cyan); }
+      if (S.robotT > 0) { const a = PI * (1 - S.robotT / 1.2); D.link(S, X(0.45), y - 54, X(0.45) + Math.cos(a) * 34, y - 54 - Math.sin(a) * 20, 6, C.green, '#24292f'); }
+      [0.2, 0.43, 0.58, 0.88].forEach((f, i) => { const x = X(f); D.rect(S, x - 4, y + 18, 8, 14, hl(0) ? C.amber : '#0b7fc1'); D.text(S, 'PE' + (i + 1), x, y + 46, { size: 10, align: 'center', color: C.muted }); });
+      S.parts.forEach(q => D.rect(S, X(q.x) - 9, y - 16, 18, 16, q.st === 'raw' ? '#8a6a3a' : q.def && q.insp ? C.red : '#a8b1bb', '#24292f', 1, 2));
+      S.flash.forEach(f => { D.circle(S, X(f.x), y - 120, 6 + 10 * (0.6 - f.t), null, f.col, 2); D.line(S, X(f.x), y - 112, W / 2, 40, `rgba(199,119,0,${f.t})`, 1, [3, 3]); });
       D.block(S, W / 2 - 60, 16, 120, 34, 'PLC (level 1)', { stroke: hl(1) ? C.amber : C.green, size: 11 }); D.block(S, W - 150, 16, 130, 34, 'SCADA / MES / ERP', { stroke: L >= 2 ? C.amber : C.violet, size: 10.5 }); D.line(S, W / 2 + 60, 33, W - 150, 33, C.violet, 1.5, [4, 3]);
       // pyramid
-      const px = 40, py = H - 18; PYR.slice().reverse().forEach((r, i) => { const w = 240 - i * 40, x = px + (240 - w) / 2, yy = py - (i + 1) * 18; D.rect(S, x, yy, w, 16, hl(i) ? C.amber : '#13264a', '#3a5384', 1, 2); D.text(S, r[0].split(' – ')[0], x + w / 2, yy + 12, { size: 9.5, align: 'center', color: hl(i) ? '#0e1d38' : C.muted, weight: 650 }); });
+      const px = 40, py = H - 18; PYR.slice().reverse().forEach((r, i) => { const w = 240 - i * 40, x = px + (240 - w) / 2, yy = py - (i + 1) * 18; D.rect(S, x, yy, w, 16, hl(i) ? C.amber : '#eef1f4', '#8c959f', 1, 2); D.text(S, r[0].split(' – ')[0], x + w / 2, yy + 12, { size: 9.5, align: 'center', color: hl(i) ? '#2b3440' : C.muted, weight: 650 }); });
       D.text(S, `${PYR[4 - L][0]}: ${PYR[4 - L][1]} (${PYR[4 - L][2]})`, 300, H - 30, { size: 11.5, color: C.amber });
       const fault = { none: '', sensor: 'FAULT: PE1 stuck OFF — PLC never sees the part, machine waits (line starves)', machine: 'FAULT: machine down — PLC holds upstream parts (sensor-based interlock)', jam: 'FAULT: packing jam — PE4 blocked, PLC stops feeding downstream' }[p.fault];
       if (fault) D.text(S, fault, 16, H * 0.25, { size: 12, weight: 700, color: C.red });
@@ -84,7 +84,7 @@
       if (S.Q.motor) S.boxes.forEach(b => { b.x += 0.08 * dt; if (b.x > 1.05) b.x = -0.05; });
     },
     draw(S) {
-      D.clear(S); const p = S.p, W = S.W, H = S.H, I = S.I, Q = S.Q, m = S.mem; const on = C.green, off = '#3b4f75';
+      D.clear(S); const p = S.p, W = S.W, H = S.H, I = S.I, Q = S.Q, m = S.mem; const on = C.green, off = '#6e7781';
       // architecture
       const ax = 16, ay = 16, bw = Math.min(110, W * 0.11); const PH = ['input scan', 'program execution', 'output update', 'communication / housekeeping'];
       const blocks = [['Power\nsupply', null], ['Input\nmodule', 0], ['CPU\n+ memory', 1], ['Output\nmodule', 2], ['Comms\n(fieldbus)', 3]];
@@ -97,23 +97,23 @@
       // ladder
       const lx = Math.max(250, W * 0.36), lw = W - lx - 16, ly = ay + 6, rh = Math.min(58, (H - 120) / 4); D.line(S, lx, ly, lx, ly + 4 * rh, C.text, 3); D.line(S, lx + lw, ly, lx + lw, ly + 4 * rh, C.text, 3);
       const contact = (x, y, lbl, closed, nc) => { D.line(S, x, y - 9, x, y + 9, closed ? on : C.text, 2); D.line(S, x + 12, y - 9, x + 12, y + 9, closed ? on : C.text, 2); if (nc) D.line(S, x - 2, y + 9, x + 14, y - 9, closed ? on : C.text, 1.5); D.text(S, lbl, x + 6, y - 14, { size: 9.5, align: 'center', color: C.muted }); };
-      const coil = (x, y, lbl, v) => { D.circle(S, x, y, 10, v ? 'rgba(111,227,155,.35)' : null, v ? on : C.text, 2); D.text(S, lbl, x, y - 16, { size: 9.5, align: 'center', color: C.muted }); };
+      const coil = (x, y, lbl, v) => { D.circle(S, x, y, 10, v ? 'rgba(26,155,75,.35)' : null, v ? on : C.text, 2); D.text(S, lbl, x, y - 16, { size: 9.5, align: 'center', color: C.muted }); };
       const wire = (x1, x2, y, v) => D.line(S, x1, y, x2, y, v ? on : C.text, v ? 3 : 1.5);
       // rung 1: (Start || Latch) && Stop && Estop -> Latch(M0.0)
       let y = ly + rh * 0.5; const c1 = lx + 30, c2 = lx + lw * 0.32, c3 = lx + lw * 0.5, cE = lx + lw - 30; const branch = I.start || m.latch;
       wire(lx, c1, y, true); contact(c1, y, 'I0.0 Start', I.start); D.line(S, c1 - 8, y, c1 - 8, y + 22, C.text, 1.5); D.line(S, c1 - 8, y + 22, c1 + 20, y + 22, m.latch ? on : C.text, 1.5); contact(c1 + 22, y + 22, 'M0.0', m.latch); D.line(S, c1 + 34, y + 22, c1 + 44, y + 22, C.text, 1.5); D.line(S, c1 + 44, y + 22, c1 + 44, y, C.text, 1.5);
       wire(c1 + 12, c2, y, branch); contact(c2, y, 'I0.1 Stop', I.stop, true); wire(c2 + 12, c3, y, branch && I.stop); contact(c3, y, 'I0.2 E-stop', I.estop, true); wire(c3 + 12, cE - 10, y, branch && I.stop && I.estop); coil(cE, y, 'M0.0 Run latch', m.latch); wire(cE + 10, lx + lw, y, false);
       // rung 2: M0.0 && I0.3 -> TON T1
-      y = ly + rh * 1.6; wire(lx, c1, y, true); contact(c1, y, 'M0.0', m.latch); wire(c1 + 12, c2, y, m.latch); contact(c2, y, 'I0.3 Part', I.pe); wire(c2 + 12, cE - 40, y, m.latch && I.pe); D.rect(S, cE - 40, y - 14, 60, 28, '#13264a', m.t1 > 0 ? on : C.text, 1.5, 3); D.text(S, `TON T1 ${M.fmt(m.t1, 1)}/${p.ptime}s`, cE - 10, y + 4, { size: 9.5, align: 'center' });
+      y = ly + rh * 1.6; wire(lx, c1, y, true); contact(c1, y, 'M0.0', m.latch); wire(c1 + 12, c2, y, m.latch); contact(c2, y, 'I0.3 Part', I.pe); wire(c2 + 12, cE - 40, y, m.latch && I.pe); D.rect(S, cE - 40, y - 14, 60, 28, '#eef1f4', m.t1 > 0 ? on : C.text, 1.5, 3); D.text(S, `TON T1 ${M.fmt(m.t1, 1)}/${p.ptime}s`, cE - 10, y + 4, { size: 9.5, align: 'center' });
       // rung 3: M0.0 && (!I0.3 || T1.DN) -> Q0.0
       y = ly + rh * 2.6; wire(lx, c1, y, true); contact(c1, y, 'M0.0', m.latch); wire(c1 + 12, c2, y, m.latch); contact(c2, y, 'I0.3', !I.pe, true); D.line(S, c2 - 8, y, c2 - 8, y + 20, C.text, 1.5); D.line(S, c2 - 8, y + 20, c2 + 20, y + 20, C.text, 1.5); contact(c2 + 22, y + 20, 'T1.DN', m.t1dn); D.line(S, c2 + 34, y + 20, c2 + 44, y + 20, C.text, 1.5); D.line(S, c2 + 44, y + 20, c2 + 44, y, C.text, 1.5);
       wire(c2 + 12, cE - 10, y, Q.motor); coil(cE, y, 'Q0.0 Conveyor', Q.motor);
       // rung 4: T1.DN -> CTU C1
-      y = ly + rh * 3.5; wire(lx, c1, y, true); contact(c1, y, 'T1.DN', m.t1dn); wire(c1 + 12, cE - 40, y, m.t1dn); D.rect(S, cE - 40, y - 14, 60, 28, '#13264a', C.text, 1.5, 3); D.text(S, `CTU C1 = ${m.c1}`, cE - 10, y + 4, { size: 9.5, align: 'center' });
+      y = ly + rh * 3.5; wire(lx, c1, y, true); contact(c1, y, 'T1.DN', m.t1dn); wire(c1 + 12, cE - 40, y, m.t1dn); D.rect(S, cE - 40, y - 14, 60, 28, '#eef1f4', C.text, 1.5, 3); D.text(S, `CTU C1 = ${m.c1}`, cE - 10, y + 4, { size: 9.5, align: 'center' });
       // conveyor with boxes
-      const cy = H - 34, cx0 = lx, cx1 = W - 16; D.rect(S, cx0, cy, cx1 - cx0, 10, '#22355c', '#3a5384', 1, 3); const pe = cx0 + 0.6 * (cx1 - cx0); D.rect(S, pe - 3, cy - 30, 6, 30, I.pe ? C.green : '#4cc2ff'); D.text(S, 'photo-eye', pe, cy + 24, { size: 10, align: 'center', color: C.muted });
-      S.boxes.forEach(b => D.rect(S, cx0 + b.x * (cx1 - cx0) - 12, cy - 22, 24, 22, '#8a6a3a', '#fff', 1, 2));
-      D.circle(S, cx0 - 14, cy + 5, 9, Q.motor ? C.green : off, '#fff', 1); D.text(S, 'M', cx0 - 14, cy + 9, { size: 10, align: 'center', weight: 700 });
+      const cy = H - 34, cx0 = lx, cx1 = W - 16; D.rect(S, cx0, cy, cx1 - cx0, 10, '#c9d1d9', '#8c959f', 1, 3); const pe = cx0 + 0.6 * (cx1 - cx0); D.rect(S, pe - 3, cy - 30, 6, 30, I.pe ? C.green : '#0b7fc1'); D.text(S, 'photo-eye', pe, cy + 24, { size: 10, align: 'center', color: C.muted });
+      S.boxes.forEach(b => D.rect(S, cx0 + b.x * (cx1 - cx0) - 12, cy - 22, 24, 22, '#8a6a3a', '#24292f', 1, 2));
+      D.circle(S, cx0 - 14, cy + 5, 9, Q.motor ? C.green : off, '#24292f', 1); D.text(S, 'M', cx0 - 14, cy + 9, { size: 10, align: 'center', weight: 700 });
       const Tprog = p.ninst * p.tins / 1000, Tscan = M.auto.plcScan(p.tio / 2, Tprog, p.tio / 2, p.tc), resp = M.auto.plcResponse(p.tf, Tscan, p.tout);
       S.set('scan', Tscan); S.set('resp', resp); S.set('phase', PH[S.ph]); S.set('mot', Q.motor ? 'ON' : 'OFF', Q.motor ? 'ok' : ''); S.set('tmr', `${M.fmt(m.t1, 2)} / ${p.ptime}`); S.set('cnt', m.c1);
     }
@@ -149,9 +149,9 @@
     draw(S) {
       D.clear(S); const W = S.W, H = S.H, o = S.oee || { A: 1, P: 1, Q: 1 }; const st = S.state;
       const mk = [['Machining centre', st === 'running' ? C.green : st === 'BREAKDOWN' ? C.red : C.amber, `vib ${M.fmt(S.vib || 0, 1)} mm/s`], ['Robot cell', st === 'running' ? C.green : C.amber, `${S.good + S.bad} parts`], ['Vision inspection', C.green, `${S.bad} rejected`]];
-      const bw = Math.min(170, (W - 80) / 3); mk.forEach(([n, col, info], i) => { const x = 20 + i * (bw + 20); D.block(S, x, H - 110, bw, 60, n + '\n' + info, { stroke: col }); D.circle(S, x + bw - 10, H - 100, 5, col); D.line(S, x + bw / 2, H - 110, W / 2, 110, 'rgba(76,194,255,.4)', 1, [4, 4]); for (let k = 0; k < 2; k++) { const f = ((S.t * 0.8 + k / 2 + i / 3) % 1); D.circle(S, x + bw / 2 + (W / 2 - x - bw / 2) * f, H - 110 + (110 - H + 110) * f, 3, C.cyan); } });
+      const bw = Math.min(170, (W - 80) / 3); mk.forEach(([n, col, info], i) => { const x = 20 + i * (bw + 20); D.block(S, x, H - 110, bw, 60, n + '\n' + info, { stroke: col }); D.circle(S, x + bw - 10, H - 100, 5, col); D.line(S, x + bw / 2, H - 110, W / 2, 110, 'rgba(11,127,193,.4)', 1, [4, 4]); for (let k = 0; k < 2; k++) { const f = ((S.t * 0.8 + k / 2 + i / 3) % 1); D.circle(S, x + bw / 2 + (W / 2 - x - bw / 2) * f, H - 110 + (110 - H + 110) * f, 3, C.cyan); } });
       D.block(S, W / 2 - 110, 50, 220, 60, 'Edge / cloud: digital twin\nMES · analytics · OPC UA / MQTT', { stroke: C.violet });
-      const gx = W - 200; [['A', o.A], ['P', o.P], ['Q', o.Q], ['OEE', o.A * o.P * o.Q]].forEach(([n, v], i) => { const y = 40 + i * 26; D.text(S, n, gx, y + 12, { size: 12, weight: 700 }); D.rect(S, gx + 40, y, 140, 16, '#13264a'); D.rect(S, gx + 40, y, 140 * v, 16, n === 'OEE' ? C.amber : C.cyan); D.text(S, M.fmt(v * 100, 1) + ' %', gx + 176, y + 12, { size: 11, align: 'right', color: '#0e1d38', weight: 700 }); });
+      const gx = W - 200; [['A', o.A], ['P', o.P], ['Q', o.Q], ['OEE', o.A * o.P * o.Q]].forEach(([n, v], i) => { const y = 40 + i * 26; D.text(S, n, gx, y + 12, { size: 12, weight: 700 }); D.rect(S, gx + 40, y, 140, 16, '#eef1f4'); D.rect(S, gx + 40, y, 140 * v, 16, n === 'OEE' ? C.amber : C.cyan); D.text(S, M.fmt(v * 100, 1) + ' %', gx + 176, y + 12, { size: 11, align: 'right', color: '#2b3440', weight: 700 }); });
       D.text(S, `State: ${st}`, 20, 30, { size: 14, weight: 800, color: st === 'running' ? C.green : st === 'BREAKDOWN' ? C.red : C.amber });
       (S.events || []).forEach((e, i) => D.text(S, e, 20, 52 + i * 15, { size: 10.5, color: C.muted }));
       S.set('A', o.A * 100); S.set('P', o.P * 100); S.set('Q', o.Q * 100); S.set('OEE', o.A * o.P * o.Q * 100); S.set('st', st, st === 'running' ? 'ok' : 'bad'); S.set('vib', S.vib || 0);

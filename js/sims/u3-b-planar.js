@@ -4,7 +4,7 @@
   const RIL = window.RIL, M = RIL.M, D = RIL.draw, C = RIL.C, D2R = M.D2R, R2D = M.R2D, PI = Math.PI;
   const K = () => RIL.three;
   const ellipse = (S, V, cxw, cyw, J, scale, col) => { // velocity ellipse: image of unit joint-velocity circle
-    const pts = []; for (let k = 0; k <= 60; k++) { const a = 2 * PI * k / 60, q = [Math.cos(a), Math.sin(a)]; const v = M.mat.mulVec(J, q); pts.push([V.X(cxw + v[0] * scale), V.Y(cyw + v[1] * scale)]); } D.poly(S, pts, 'rgba(196,164,255,.12)', col || C.violet, 1.5);
+    const pts = []; for (let k = 0; k <= 60; k++) { const a = 2 * PI * k / 60, q = [Math.cos(a), Math.sin(a)]; const v = M.mat.mulVec(J, q); pts.push([V.X(cxw + v[0] * scale), V.Y(cyw + v[1] * scale)]); } D.poly(S, pts, 'rgba(130,80,223,.12)', col || C.violet, 1.5);
   };
 
   /* ================= Forward kinematics, 2-DOF planar (Topic III.5A) ================= */
@@ -25,9 +25,9 @@
     step(S) { if (S.auto) { S.setParam('t1', +(40 * Math.sin(0.5 * S.t) + 30).toFixed(1), true); S.setParam('t2', +(60 * Math.sin(0.8 * S.t) + 40).toFixed(1), true); } },
     draw(S) {
       D.clear(S); const p = S.p, Lt = p.l1 + p.l2; const V = S.V = D.fit(S, [-Lt * 1.1, Lt * 1.1], [-Lt * 1.1, Lt * 1.1], 24); D.axes2(S, V, [-Lt * 1.1, Lt * 1.1], [-Lt * 1.1, Lt * 1.1], Lt > 1 ? 0.2 : 0.1);
-      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(76,194,255,.25)', 1); D.circle(S, V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, null, 'rgba(76,194,255,.25)', 1);
+      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(11,127,193,.25)', 1); D.circle(S, V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, null, 'rgba(11,127,193,.25)', 1);
       const t1 = p.t1 * D2R, t2 = p.t2 * D2R, f = M.planar2R.fk(p.l1, p.l2, t1, t2);
-      if (p.trace) { const l = S.trail[S.trail.length - 1]; if (!l || Math.hypot(l[0] - f.x, l[1] - f.y) > 0.003) { S.trail.push([f.x, f.y]); if (S.trail.length > 600) S.trail.shift(); } D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(242,165,22,.6)', 1.5, false); }
+      if (p.trace) { const l = S.trail[S.trail.length - 1]; if (!l || Math.hypot(l[0] - f.x, l[1] - f.y) > 0.003) { S.trail.push([f.x, f.y]); if (S.trail.length > 600) S.trail.shift(); } D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(199,119,0,.6)', 1.5, false); }
       D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 14 });
       if (p.frames) { D.frame2(S, V.X(0), V.Y(0), 0, 36, '{0}'); D.frame2(S, V.X(f.ex), V.Y(f.ey), t1, 30, '{1}'); D.frame2(S, V.X(f.x), V.Y(f.y), t1 + t2, 30, '{2}'); }
       const g = S.ctx; g.strokeStyle = C.green; g.lineWidth = 1.5; g.beginPath(); g.arc(V.X(0), V.Y(0), 40, 0, -t1, t1 > 0); g.stroke(); D.text(S, 'θ₁', V.X(0) + 46 * Math.cos(t1 / 2), V.Y(0) - 46 * Math.sin(t1 / 2), { size: 11, color: C.green });
@@ -67,9 +67,9 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, Lt = p.l1 + p.l2, R = Math.max(1.0, Lt * 1.1); const V = S.V = D.fit(S, [-R, R], [-R, R], 20); D.axes2(S, V, [-R, R], [-R, R], 0.2);
-      const g = S.ctx; g.fillStyle = 'rgba(76,194,255,.07)'; g.beginPath(); g.arc(V.X(0), V.Y(0), Lt * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, 0, 2 * PI, true); g.fill(); D.text(S, 'reachable workspace |l₁ − l₂| ≤ r ≤ l₁ + l₂', V.X(0) - Lt * V.s * 0.6, V.Y(0) + Lt * V.s + 14, { size: 10.5, color: C.cyan });
+      const g = S.ctx; g.fillStyle = 'rgba(87,96,106,.07)'; g.beginPath(); g.arc(V.X(0), V.Y(0), Lt * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, 0, 2 * PI, true); g.fill(); D.text(S, 'reachable workspace |l₁ − l₂| ≤ r ≤ l₁ + l₂', V.X(0) - Lt * V.s * 0.6, V.Y(0) + Lt * V.s + 14, { size: 10.5, color: C.cyan });
       const r = S.ik || M.planar2R.ik(p.l1, p.l2, p.x, p.y);
-      if (r.reachable) r.sols.forEach((s, i) => { const f = M.planar2R.fk(p.l1, p.l2, s.t1, s.t2); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, i === +p.br ? 'rgba(242,165,22,.5)' : 'rgba(196,164,255,.5)', 2, false); D.circle(S, V.X(f.ex), V.Y(f.ey), 4, null, i ? C.violet : C.amber, 1.5); });
+      if (r.reachable) r.sols.forEach((s, i) => { const f = M.planar2R.fk(p.l1, p.l2, s.t1, s.t2); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, i === +p.br ? 'rgba(199,119,0,.5)' : 'rgba(130,80,223,.5)', 2, false); D.circle(S, V.X(f.ex), V.Y(f.ey), 4, null, i ? C.violet : C.amber, 1.5); });
       const f = M.planar2R.fk(p.l1, p.l2, S.q[0], S.q[1]); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 13 });
       D.circle(S, V.X(p.x), V.Y(p.y), 9, null, r.reachable ? C.green : C.red, 2.5); D.line(S, V.X(p.x) - 13, V.Y(p.y), V.X(p.x) + 13, V.Y(p.y), r.reachable ? C.green : C.red, 1.5); D.line(S, V.X(p.x), V.Y(p.y) - 13, V.X(p.x), V.Y(p.y) + 13, r.reachable ? C.green : C.red, 1.5);
       if (!r.reachable) D.text(S, `Target unreachable: |c₂| = ${M.fmt(Math.abs(r.D), 3)} > 1 — ${Math.hypot(p.x, p.y) > Lt ? 'beyond maximum reach' : 'inside the inner hole'}. ${p.meth === 'num' ? 'DLS returns the closest pose.' : ''}`, 16, 22, { size: 12.5, weight: 700, color: C.red });
@@ -108,7 +108,7 @@
       const det = p.l1 * p.l2 * Math.sin(S.q[1]); const man = Math.sqrt(Math.abs(M.mat.det(M.mat.mul(r.J, M.mat.T(r.J)))));
       if (Math.abs(det) < 0.01) D.text(S, 'Near singularity: det J ≈ 0 — the ellipse collapses to a line', 16, 22, { size: 12.5, weight: 700, color: C.red });
       S.set('v', `(${M.fmt(r.v[0], 4)}, ${M.fmt(r.v[1], 4)})`); S.set('sp', Math.hypot(...r.v)); S.set('w', r.qd[0] + r.qd[1]); S.set('qd', `(${M.fmt(r.qd[0], 4)}, ${M.fmt(r.qd[1], 4)})`); S.set('det', det, Math.abs(det) < 0.01 ? 'bad' : ''); S.set('man', man);
-      RIL.setHTML(S.panel('m'), (p.mode === 'fwd' ? RIL.ui.vec(r.v, 4, 'ẋ =') + RIL.ui.matrix(r.J, 4, '= J =') + RIL.ui.vec(r.qd, 3, '·') : RIL.ui.vec(r.qd, 4, 'θ̇ =') + (r.Ji ? RIL.ui.matrix(r.Ji, 3, '= J⁻¹ =') : '<span>J singular</span>') + RIL.ui.vec(r.v, 3, '·')) + `<p style="margin:.4em 0 0;color:#8fa3c4">J computed at θ = (${M.fmt(S.q[0] * R2D, 1)}°, ${M.fmt(S.q[1] * R2D, 1)}°); columns are the tip velocities produced by unit rate of each joint.</p>`, S, 'm');
+      RIL.setHTML(S.panel('m'), (p.mode === 'fwd' ? RIL.ui.vec(r.v, 4, 'ẋ =') + RIL.ui.matrix(r.J, 4, '= J =') + RIL.ui.vec(r.qd, 3, '·') : RIL.ui.vec(r.qd, 4, 'θ̇ =') + (r.Ji ? RIL.ui.matrix(r.Ji, 3, '= J⁻¹ =') : '<span>J singular</span>') + RIL.ui.vec(r.v, 3, '·')) + `<p style="margin:.4em 0 0;color:#57606a">J computed at θ = (${M.fmt(S.q[0] * R2D, 1)}°, ${M.fmt(S.q[1] * R2D, 1)}°); columns are the tip velocities produced by unit rate of each joint.</p>`, S, 'm');
     }
   });
 
@@ -166,10 +166,10 @@
       D.clear(S); const p = S.p, L = [p.L1, p.L2, p.L3], Lt = L[0] + L[1] + L[2], V = D.fit(S, [-Lt * 1.08, Lt * 1.08], [-Lt * 1.08, Lt * 1.08], 20); D.axes2(S, V, [-Lt * 1.08, Lt * 1.08], [-Lt * 1.08, Lt * 1.08], 0.2);
       const key = JSON.stringify(p); if (S._k !== key) { const r = M.rng(5), pts = []; let rmin = Infinity; for (let i = 0; i < p.n; i++) { const th = [p.lim1, p.lim2, p.lim3].map(l => (r() * 2 - 1) * l * D2R); const f = M.planarFK(L, th); pts.push([f.x, f.y]); rmin = Math.min(rmin, Math.hypot(f.x, f.y)); } S.pts = pts; S.rmin = rmin;
         const G = 60, cell = 2 * Lt / G, occ = new Set(); pts.forEach(q => occ.add(Math.floor((q[0] + Lt) / cell) + ',' + Math.floor((q[1] + Lt) / cell))); S.area = occ.size * cell * cell; S._k = key; }
-      const g = S.ctx; g.fillStyle = 'rgba(242,165,22,.45)'; S.pts.forEach(q => g.fillRect(V.X(q[0]) - 1, V.Y(q[1]) - 1, 2, 2));
+      const g = S.ctx; g.fillStyle = 'rgba(199,119,0,.45)'; S.pts.forEach(q => g.fillRect(V.X(q[0]) - 1, V.Y(q[1]) - 1, 2, 2));
       const full = p.lim1 >= 180 && p.lim2 >= 180 && p.lim3 >= 180; const din = Math.abs(L[0] - L[1]) + L[2], dout = L[0] + L[1] - L[2];
       if (full && dout > din) { D.circle(S, V.X(0), V.Y(0), din * V.s, null, C.green, 2); D.circle(S, V.X(0), V.Y(0), dout * V.s, null, C.green, 2); D.text(S, 'dexterous annulus', V.X(0) + dout * V.s * 0.7, V.Y(0) - dout * V.s * 0.72, { size: 11, color: C.green }); }
-      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(76,194,255,.6)', 1.5, 1);
+      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(11,127,193,.6)', 1.5, 1);
       const f = M.planarFK(L, S.pose); D.arm(S, V, f.pts, { w: 10 });
       S.set('rmax', Lt); S.set('rmin', S.rmin); S.set('dex', full && dout > din ? `${M.fmt(din, 3)} ≤ r ≤ ${M.fmt(dout, 3)}` : 'none / limited by joint ranges'); S.set('area', S.area);
     }

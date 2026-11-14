@@ -43,25 +43,25 @@
     draw(S) {
       D.clear(S); const W = S.W, H = S.H, { L, k } = this.speedOf(S);
       const y0 = H * 0.55, x0 = 40, x1 = W - 40;
-      D.rect(S, x0, y0, x1 - x0, 14, '#22355c', '#3a5384', 1, 4);
-      for (let x = x0 + ((S.clock * 4) % 24); x < x1; x += 24) D.line(S, x, y0 + 2, x, y0 + 12, 'rgba(143,163,196,.35)', 1);
+      D.rect(S, x0, y0, x1 - x0, 14, '#c9d1d9', '#8c959f', 1, 4);
+      for (let x = x0 + ((S.clock * 4) % 24); x < x1; x += 24) D.line(S, x, y0 + 2, x, y0 + 12, 'rgba(87,96,106,.35)', 1);
       const sx = [0.2, 0.5, 0.8].map(f => x0 + (x1 - x0) * f), names = ['Load', 'Process', 'Unload / inspect'];
       sx.forEach((x, i) => {
         const w = L.who[i]; const [wn, col] = WHO[w];
         D.block(S, x - 58, y0 - 118, 116, 48, names[i] + '\n' + wn, { stroke: col });
         const b = S.busy[i]; const prog = b ? M.clamp(b.t / L.t[i], 0, 1) : 0;
-        D.rect(S, x - 50, y0 - 62, 100, 6, '#22355c'); D.rect(S, x - 50, y0 - 62, 100 * prog, 6, col);
+        D.rect(S, x - 50, y0 - 62, 100, 6, '#c9d1d9'); D.rect(S, x - 50, y0 - 62, 100 * prog, 6, col);
         D.text(S, `${L.t[i]} s`, x + 54, y0 - 56, { size: 10, color: C.muted });
         // worker / machine / robot icon
         const ax = x, ay = y0 - 22;
         if (w === 'H') { D.circle(S, ax + 40, ay - 26, 7, col); D.line(S, ax + 40, ay - 19, ax + 40, ay + 4, col, 3); const sw = Math.sin(S.t * 6 + i) * 8; D.line(S, ax + 40, ay - 12, ax + 26 + sw, ay - 2, col, 3); }
-        else if (w === 'M') { D.rect(S, ax - 18, ay - 40, 36, 26, '#1d2b48', col, 1.5, 3); const ph = b ? Math.abs(Math.sin(S.t * 8)) : 0; D.rect(S, ax - 4, ay - 14, 8, 6 + 10 * ph, col); }
-        else { const a1 = -1.2 + 0.6 * Math.sin(S.t * 2 * (w === 'C' ? k : 1) + i), a2 = 1.2 + 0.5 * Math.sin(S.t * 2.6 * (w === 'C' ? k : 1)); const bx = ax + 44, by = ay + 2; const ex = bx + 30 * Math.cos(a1), ey = by + 30 * Math.sin(a1); D.link(S, bx, by, ex, ey, 6, col, '#fff'); D.link(S, ex, ey, ex + 24 * Math.cos(a1 + a2), ey + 24 * Math.sin(a1 + a2), 5, col, '#fff'); D.joint(S, bx, by, 5); }
-        if (b) D.rect(S, x - 12, y0 - 14, 24, 14, b.col, '#fff', 1, 2);
+        else if (w === 'M') { D.rect(S, ax - 18, ay - 40, 36, 26, '#f6f8fa', col, 1.5, 3); const ph = b ? Math.abs(Math.sin(S.t * 8)) : 0; D.rect(S, ax - 4, ay - 14, 8, 6 + 10 * ph, col); }
+        else { const a1 = -1.2 + 0.6 * Math.sin(S.t * 2 * (w === 'C' ? k : 1) + i), a2 = 1.2 + 0.5 * Math.sin(S.t * 2.6 * (w === 'C' ? k : 1)); const bx = ax + 44, by = ay + 2; const ex = bx + 30 * Math.cos(a1), ey = by + 30 * Math.sin(a1); D.link(S, bx, by, ex, ey, 6, col, '#24292f'); D.link(S, ex, ey, ex + 24 * Math.cos(a1 + a2), ey + 24 * Math.sin(a1 + a2), 5, col, '#24292f'); D.joint(S, bx, by, 5); }
+        if (b) D.rect(S, x - 12, y0 - 14, 24, 14, b.col, '#24292f', 1, 2);
       });
       if (S.p.level === 'hmi') {
         const cx = sx[2] + 44, d = S.p.human, px = cx + 40 + d * 60;
-        D.circle(S, cx, y0 - 20, 1.5 * 60 * 0.6, null, 'rgba(255,123,123,.35)', 1); D.circle(S, cx, y0 - 20, 0.6 * 60 * 0.6, null, 'rgba(255,123,123,.6)', 1);
+        D.circle(S, cx, y0 - 20, 1.5 * 60 * 0.6, null, 'rgba(209,36,47,.35)', 1); D.circle(S, cx, y0 - 20, 0.6 * 60 * 0.6, null, 'rgba(209,36,47,.6)', 1);
         D.circle(S, Math.min(px, W - 20), y0 - 46, 7, C.amber); D.line(S, Math.min(px, W - 20), y0 - 39, Math.min(px, W - 20), y0 - 16, C.amber, 3);
         D.text(S, `Cobot speed ${Math.round(k * 100)} % (speed & separation monitoring)`, W / 2, H - 16, { align: 'center', size: 11, color: k < 0.5 ? C.red : C.green });
       }
@@ -125,7 +125,7 @@
       const last = S.trace[S.trace.length - 1]; if (!last || Math.hypot(last[0] - fk.x, last[1] - fk.y) > 0.002) { if (last) S.len += Math.hypot(last[0] - fk.x, last[1] - fk.y); S.trace.push([fk.x, fk.y]); }
       // deviation from line AB
       const [A, B] = [P.A, P.B]; const ab = [B[0] - A[0], B[1] - A[1]]; const L = Math.hypot(...ab); const dev = Math.abs((fk.x - A[0]) * ab[1] - (fk.y - A[1]) * ab[0]) / L; S.maxDev = Math.max(S.maxDev, dev);
-      D.line(S, V.X(A[0]), V.Y(A[1]), V.X(B[0]), V.Y(B[1]), 'rgba(111,227,155,.5)', 1.5, [6, 5]);
+      D.line(S, V.X(A[0]), V.Y(A[1]), V.X(B[0]), V.Y(B[1]), 'rgba(26,155,75,.5)', 1.5, [6, 5]);
       D.poly(S, S.trace.map(p => [V.X(p[0]), V.Y(p[1])]), null, C.amber, 2.5, false);
       D.arm(S, V, [[0, 0], [fk.ex, fk.ey], [fk.x, fk.y]]);
       [['A', A], ['B', B]].forEach(([n, p]) => { D.circle(S, V.X(p[0]), V.Y(p[1]), 6, null, C.green, 2); D.text(S, n, V.X(p[0]) + 9, V.Y(p[1]) - 8, { size: 13, weight: 700, color: C.green }); });
@@ -133,7 +133,7 @@
       D.text(S, nm, 14, 22, { size: 12.5, weight: 650 });
       S.set('len', S.len); S.set('dev', S.maxDev * 1000); S.set('axes', S.p.ctrl === 'ns' ? 'one at a time' : 'all, synchronised');
       const card = ROBOT_CARDS[S.p.robot];
-      RIL.setHTML(S.panel('tbl'), '<div class="table-scroll">' + RIL.ui.kv(CLASS.map((r, i) => ({ cells: [r[0], r[1], `<b style="color:#f2a516">${card[1][i]}</b>`, r[2]], hl: false })), ['Basis', 'Classes', card[0], 'Remarks / examples']) + '</div>', S, 'tbl');
+      RIL.setHTML(S.panel('tbl'), '<div class="table-scroll">' + RIL.ui.kv(CLASS.map((r, i) => ({ cells: [r[0], r[1], `<b style="color:#9a5b00">${card[1][i]}</b>`, r[2]], hl: false })), ['Basis', 'Classes', card[0], 'Remarks / examples']) + '</div>', S, 'tbl');
     }
   });
 
@@ -202,7 +202,7 @@
       D.circle(S, a.x + a.w / 2 + (b.x - a.x) * f, a.y + a.h / 2 + (b.y - a.y) * f, 5, C.cyan);
       const disp = c.blocks[5][2](v); S.set('in', M.fmt(v, 3) + ' ' + c.unit); S.set('out', disp);
       const dv = parseFloat(disp.replace('−', '-')); S.set('err', S.p.chain === 'dist' ? '4–20 mA output' : M.fmt(dv - v, 3) + ' ' + c.unit);
-      RIL.setHTML(S.panel('info'), `<b style="color:#fff">${c.blocks[+S.p.blk][0]}</b><p style="margin:.3em 0">${BLOCK_INFO[+S.p.blk]}</p><p style="margin:0;color:#8fa3c4">In this chain: ${c.blocks[+S.p.blk][1]}. Output now: <b style="color:#4cc2ff">${c.blocks[+S.p.blk][2](v)}</b></p>`, S, 'i');
+      RIL.setHTML(S.panel('info'), `<b style="color:#1f2328">${c.blocks[+S.p.blk][0]}</b><p style="margin:.3em 0">${BLOCK_INFO[+S.p.blk]}</p><p style="margin:0;color:#57606a">In this chain: ${c.blocks[+S.p.blk][1]}. Output now: <b style="color:#0b7fc1">${c.blocks[+S.p.blk][2](v)}</b></p>`, S, 'i');
     }
   });
 
@@ -253,7 +253,7 @@
       D.clear(S); const m = S.p.mode, ch = S.chart('c'), W = S.W, H = S.H;
       if (m === 'acc') {
         const cx = W * 0.32, cy = H / 2, R = Math.min(W * 0.28, H * 0.42), sc = R / 4;
-        for (let i = 4; i >= 1; i--) D.circle(S, cx, cy, i * sc, i % 2 ? '#13264a' : '#1b3260', '#3a5384', 1);
+        for (let i = 4; i >= 1; i--) D.circle(S, cx, cy, i * sc, i % 2 ? '#eef1f4' : '#e1e6eb', '#8c959f', 1);
         D.circle(S, cx, cy, 4, C.green); D.text(S, 'true value', cx + 8, cy - 8, { size: 10, color: C.green });
         const r2 = M.rng(99); S.shots.forEach((v, i) => { const ang = 2 * Math.PI * r2(); const dy = (S.p.sd * M.gaussRand(r2)); D.circle(S, cx + (v - 100) * sc, cy + dy * sc, 3.5, i === S.shots.length - 1 ? C.amber : C.cyan); });
         const n = S.shots.length, mean = n ? M.inst.mean(S.shots) : NaN, s = n > 1 ? M.inst.std(S.shots) : NaN;
@@ -270,7 +270,7 @@
         const V = D.fit(S, [-0.5, 11], [-0.5, Math.max(6, S.p.bias * 11.5)], 40);
         D.axes2(S, V, [-0.5, 11], [-0.5, Math.max(6, S.p.bias * 11.5)], 1, { xl: 'x (mm)', yl: 'y (V)' });
         D.line(S, V.X(0), V.Y(fit.c), V.X(10), V.Y(fit.c + fit.m * 10), C.amber, 2);
-        D.poly(S, x.map((xi, i) => [V.X(xi), V.Y(yd[i])]), null, 'rgba(196,164,255,.8)', 1.5, false);
+        D.poly(S, x.map((xi, i) => [V.X(xi), V.Y(yd[i])]), null, 'rgba(130,80,223,.8)', 1.5, false);
         x.forEach((xi, i) => { D.circle(S, V.X(xi), V.Y(y[i]), 4, C.cyan); });
         D.text(S, `y = ${M.fmt(fit.m, 4)} x + ${M.fmt(fit.c, 3)}   (least squares, eq. 1.20)`, 50, 24, { size: 12, weight: 650 });
         D.text(S, 'violet: decreasing-input readings (hysteresis loop)', 50, 42, { size: 10.5, color: C.violet });
@@ -281,7 +281,7 @@
         const vin = (rate * S.t) % FS; const adc = M.clamp(Math.floor(vin / Q), 0, 2 ** N - 1) * Q; const ana = Math.round(vin / div) * div;
         const V = D.fit(S, [0, 1.15], [0, 1.05], 40);
         // bar instruments
-        const bar = (x, val, lbl, col) => { D.rect(S, V.X(x), V.Y(1), 50, V.Y(0) - V.Y(1), '#13264a', '#3a5384', 1, 4); D.rect(S, V.X(x), V.Y(val / FS), 50, V.Y(0) - V.Y(val / FS), col); D.text(S, lbl, V.X(x) + 25, V.Y(0) + 16, { size: 10.5, align: 'center', color: C.muted }); D.text(S, M.fmt(val, 3) + ' V', V.X(x) + 25, V.Y(1) - 8, { size: 11, align: 'center', weight: 650 }); };
+        const bar = (x, val, lbl, col) => { D.rect(S, V.X(x), V.Y(1), 50, V.Y(0) - V.Y(1), '#eef1f4', '#8c959f', 1, 4); D.rect(S, V.X(x), V.Y(val / FS), 50, V.Y(0) - V.Y(val / FS), col); D.text(S, lbl, V.X(x) + 25, V.Y(0) + 16, { size: 10.5, align: 'center', color: C.muted }); D.text(S, M.fmt(val, 3) + ' V', V.X(x) + 25, V.Y(1) - 8, { size: 11, align: 'center', weight: 650 }); };
         bar(0.05, vin, 'true input', C.green); bar(0.3, adc, `${N}-bit ADC`, C.cyan); bar(0.55, ana, 'analogue meter', C.amber);
         for (let k = 0; k <= 2 ** N && 2 ** N <= 64; k++) D.line(S, V.X(0.3) + 50, V.Y(k * Q / FS), V.X(0.3) + 58, V.Y(k * Q / FS), C.cyan, 1);
         D.box(S, V.X(0.75), V.Y(0.95), 210, 'Resolution', [['ADC step Q = FSR/2ᴺ', M.fmt(Q, 4) + ' V'], ['Analogue division', M.fmt(div, 3) + ' V'], ['ADC levels 2ᴺ', String(2 ** N)], ['Max error (truncating)', M.fmt(Q, 4) + ' V']]);
@@ -291,7 +291,7 @@
         const V0 = S.p.bias, uV = S.p.sd, I = S.p.nl, uI = S.p.hy; const P = V0 * I; const rv = uV / V0 * 100, ri = uI / I * 100; const rss = Math.hypot(rv, ri) / 100 * P, wc = (rv + ri) / 100 * P;
         const cx = S.W / 2, y = S.H * 0.45, sc = Math.min(18, (S.W - 80) / (2 * Math.max(wc, 0.5) * 1.3));
         D.line(S, 40, y, S.W - 40, y, C.muted, 1);
-        D.rect(S, cx - wc * sc, y - 30, 2 * wc * sc, 60, 'rgba(255,123,123,.18)', C.red, 1); D.rect(S, cx - rss * sc, y - 20, 2 * rss * sc, 40, 'rgba(76,194,255,.25)', C.cyan, 1.5);
+        D.rect(S, cx - wc * sc, y - 30, 2 * wc * sc, 60, 'rgba(209,36,47,.18)', C.red, 1); D.rect(S, cx - rss * sc, y - 20, 2 * rss * sc, 40, 'rgba(11,127,193,.25)', C.cyan, 1.5);
         D.line(S, cx, y - 44, cx, y + 44, C.amber, 2.5);
         D.text(S, `P = ${M.fmt(P, 2)} W`, cx, y - 52, { align: 'center', size: 14, weight: 700, color: C.amber });
         D.text(S, `RSS interval ±${M.fmt(rss, 3)} W (eq. 1.16)`, cx, y + 64, { align: 'center', color: C.cyan, size: 12 }); D.text(S, `worst-case ±${M.fmt(wc, 3)} W`, cx, y + 82, { align: 'center', color: C.red, size: 12 });
@@ -325,12 +325,12 @@
       // circuit drawing
       const x0 = 70, yT = 50, yB = H - 50, xr = Math.min(W * 0.42, 330);
       D.line(S, x0, yT, xr, yT, C.text, 2); D.line(S, x0, yB, xr, yB, C.text, 2); D.line(S, x0, yT, x0, yB, C.text, 2);
-      D.circle(S, x0, (yT + yB) / 2, 18, '#0e1d38', C.amber, 2); D.text(S, 'V_s', x0 - 46, (yT + yB) / 2 + 4, { size: 12 }); D.text(S, M.fmt(p.Vs, 1) + ' V', x0, (yT + yB) / 2 + 4, { size: 10, align: 'center' });
+      D.circle(S, x0, (yT + yB) / 2, 18, '#2b3440', C.amber, 2); D.text(S, 'V_s', x0 - 46, (yT + yB) / 2 + 4, { size: 12 }); D.text(S, M.fmt(p.Vs, 1) + ' V', x0, (yT + yB) / 2 + 4, { size: 10, align: 'center' });
       const resistor = (x, y1, y2, lbl) => { const m1 = y1 + (y2 - y1) * 0.25, m2 = y1 + (y2 - y1) * 0.75; D.line(S, x, y1, x, m1, C.text, 2); D.line(S, x, m2, x, y2, C.text, 2); const pts = []; for (let k = 0; k <= 8; k++) pts.push([x + (k % 2 ? 8 : -8) * (k > 0 && k < 8), m1 + (m2 - m1) * k / 8]); D.poly(S, pts, null, C.cyan, 2, false); D.text(S, lbl, x + 14, (m1 + m2) / 2 + 4, { size: 11, color: C.muted }); };
       const mid = (yT + yB) / 2;
       if (p.mode === 'volt') { resistor(xr - 60, yT, mid, `R = ${p.R} kΩ`); resistor(xr - 60, mid, yB, `R = ${p.R} kΩ`); D.circle(S, xr - 60, mid, 4, C.amber); }
       else { resistor(xr - 60, yT, yB, `R_p = ${p.R} kΩ`); const wy = yB - (yB - yT) * (0.25 + 0.5 * p.x); D.arrow(S, xr - 20, wy, xr - 52, wy, C.amber, 2.5, 8); D.line(S, xr - 20, wy, xr - 20, mid, C.amber, 2); }
-      if (p.conn) { const mx = xr + 70; D.line(S, p.mode === 'volt' ? xr - 60 : xr - 20, mid, mx, mid, C.amber, 2); D.line(S, mx, yB, xr, yB, C.text, 2); D.line(S, mx, mid, mx, yB, C.amber, 2); D.rect(S, mx - 16, mid + 30, 32, 50, '#1d2b48', C.amber, 1.5, 4); D.text(S, 'R_m', mx, mid + 60, { size: 11, align: 'center' });
+      if (p.conn) { const mx = xr + 70; D.line(S, p.mode === 'volt' ? xr - 60 : xr - 20, mid, mx, mid, C.amber, 2); D.line(S, mx, yB, xr, yB, C.text, 2); D.line(S, mx, mid, mx, yB, C.amber, 2); D.rect(S, mx - 16, mid + 30, 32, 50, '#f6f8fa', C.amber, 1.5, 4); D.text(S, 'R_m', mx, mid + 60, { size: 11, align: 'center' });
         for (let k = 0; k < 4; k++) { const f = ((S.t * 0.6 + k / 4) % 1); D.circle(S, mx, mid + f * (yB - mid), 2.5, C.cyan); } }
       D.meter(S, Math.min(W - 110, xr + 230), H * 0.42, 70, vm, 0, p.mode === 'volt' ? p.Vs / 2 * 1.1 : p.Vs, 'indicated voltage', 'V');
       D.text(S, `Thevenin resistance seen by the instrument: ${M.fmt(Rth, 2)} kΩ`, Math.min(W - 110, xr + 230), H * 0.42 + 70, { size: 11, align: 'center', color: C.muted });
@@ -376,8 +376,8 @@
       D.clear(S); const p = S.p, y = S.x[0], u = this.u(S, S.t), W = S.W, H = S.H; const lo = Math.min(p.u0, 0), hi = p.u1 * 1.35 + 5;
       const bx = W * 0.18, top = 40, bot = H - 50, Y = v => bot - (bot - top) * (v - lo) / (hi - lo);
       if (+p.ord === 2) { // spring-mass with pointer
-        D.rect(S, bx - 40, top - 10, 80, 10, '#3b4f75'); const my = Y(y); D.spring(S, bx, top, bx, my - 18, 9, 10); D.rect(S, bx - 22, my - 18, 44, 36, '#6f86ad', '#c9d6ec', 1.5, 4); D.arrow(S, bx + 22, my, bx + 60, my, C.amber, 2.5);
-      } else { D.rect(S, bx - 10, top, 20, bot - top, '#0e1d38', '#8fa3c4', 1.5, 10); D.circle(S, bx, bot + 10, 16, C.red); D.rect(S, bx - 6, Y(y), 12, bot - Y(y) + 6, C.red); }
+        D.rect(S, bx - 40, top - 10, 80, 10, '#6e7781'); const my = Y(y); D.spring(S, bx, top, bx, my - 18, 9, 10); D.rect(S, bx - 22, my - 18, 44, 36, '#6e7781', '#8c959f', 1.5, 4); D.arrow(S, bx + 22, my, bx + 60, my, C.amber, 2.5);
+      } else { D.rect(S, bx - 10, top, 20, bot - top, '#2b3440', '#57606a', 1.5, 10); D.circle(S, bx, bot + 10, 16, C.red); D.rect(S, bx - 6, Y(y), 12, bot - Y(y) + 6, C.red); }
       for (let v = Math.ceil(lo / 25) * 25; v <= hi; v += 25) { D.line(S, bx + 14, Y(v), bx + 24, Y(v), C.muted, 1); D.text(S, String(v), bx + 28, Y(v) + 4, { size: 10, color: C.muted }); }
       D.line(S, bx - 30, Y(u), bx + 70, Y(u), C.green, 1.5, [5, 4]); D.text(S, 'true input', bx + 72, Y(u) + 4, { size: 10, color: C.green });
       const ord = +p.ord; const wn = 2 * Math.PI * p.fn; let k = [['', ''], ['', ''], ['', '']];

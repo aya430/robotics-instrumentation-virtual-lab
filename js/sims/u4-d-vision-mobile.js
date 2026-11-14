@@ -74,15 +74,15 @@
       D.text(S, 'Optics (not to scale)', ox, oy - 8, { size: 11, color: C.muted }); const ly = oy + 120; D.line(S, ox + 20, ly - 70, ox + 20, ly + 70, C.cyan, 3); D.text(S, 'object plane (FOV W)', ox + 4, ly + 90, { size: 10, color: C.muted });
       const lx = ox + lw * 0.72; const g = S.ctx; g.strokeStyle = C.amber; g.lineWidth = 2; g.beginPath(); g.ellipse(lx, ly, 6, 40, 0, 0, 2 * PI); g.stroke(); D.text(S, `lens f = ${p.f} mm`, lx - 30, ly - 48, { size: 10.5, color: C.amber });
       const sx = ox + lw - 4; D.line(S, sx, ly - 70 * m * 6, sx, ly + 70 * m * 6, C.green, 4); D.text(S, 'sensor', sx - 30, ly + 70 * m * 6 + 14, { size: 10, color: C.green });
-      D.line(S, ox + 20, ly - 70, sx, ly + 70 * m * 6, 'rgba(255,255,255,.35)', 1); D.line(S, ox + 20, ly + 70, sx, ly - 70 * m * 6, 'rgba(255,255,255,.35)', 1);
+      D.line(S, ox + 20, ly - 70, sx, ly + 70 * m * 6, 'rgba(36,41,47,.35)', 1); D.line(S, ox + 20, ly + 70, sx, ly - 70 * m * 6, 'rgba(36,41,47,.35)', 1);
       D.text(S, `u = ${M.fmt(u, 1)} mm`, (ox + 20 + lx) / 2 - 30, ly + 12, { size: 11 }); D.text(S, `v = ${M.fmt(v, 2)} mm`, (lx + sx) / 2 - 20, ly + 12, { size: 11 });
       D.text(S, LIGHT[p.light], ox, H - 14, { size: 12, weight: 650, color: C.amber });
       // image
-      const ix = ox + lw + 20, iw = W - ix - 16, ih = iw * 0.8 > H - 140 ? H - 140 : iw * 0.8, iw2 = ih / 0.8; drawImg(S, S.img, ix, 20, iw2, ih); D.rect(S, ix, 20, iw2, ih, null, '#3a5384', 1);
+      const ix = ox + lw + 20, iw = W - ix - 16, ih = iw * 0.8 > H - 140 ? H - 140 : iw * 0.8, iw2 = ih / 0.8; drawImg(S, S.img, ix, 20, iw2, ih); D.rect(S, ix, 20, iw2, ih, null, '#8c959f', 1);
       D.text(S, `${Math.round(p.N)} × ${S.img.h} pixels, 8-bit`, ix, ih + 36, { size: 11, color: C.muted });
       // zoom on scratch area
       const zx = Math.floor((SCRATCH.x0 + 15 + p.W / 2) / (p.W / p.N)), zy = Math.floor((p.W * 0.4 - (SCRATCH.y0 + 7)) / (p.W / p.N)); const n = 8, cs = Math.min(13, (H - ih - 60) / n);
-      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const xx = M.clamp(zx + i, 0, S.img.w - 1), yy = M.clamp(zy + j, 0, S.img.h - 1), v2 = Math.round(S.img.d[yy * S.img.w + xx]); D.rect(S, ix + 240 + i * cs * 2.2, ih + 26 + j * cs, cs * 2.2, cs, `rgb(${v2},${v2},${v2})`, '#22355c', 0.5); D.text(S, String(v2), ix + 240 + i * cs * 2.2 + cs * 1.1, ih + 26 + j * cs + cs * 0.75, { size: Math.max(7, cs * 0.6), align: 'center', color: v2 > 128 ? '#000' : '#fff' }); }
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const xx = M.clamp(zx + i, 0, S.img.w - 1), yy = M.clamp(zy + j, 0, S.img.h - 1), v2 = Math.round(S.img.d[yy * S.img.w + xx]); D.rect(S, ix + 240 + i * cs * 2.2, ih + 26 + j * cs, cs * 2.2, cs, `rgb(${v2},${v2},${v2})`, '#c9d1d9', 0.5); D.text(S, String(v2), ix + 240 + i * cs * 2.2 + cs * 1.1, ih + 26 + j * cs + cs * 0.75, { size: Math.max(7, cs * 0.6), align: 'center', color: v2 > 128 ? '#000' : '#24292f' }); }
       D.text(S, '8 × 8 pixel values near the scratch', ix + 240, ih + 20, { size: 10, color: C.muted });
       const rs = p.W / p.N; S.set('m', m); S.set('u', u); S.set('v', v); S.set('rs', rs); S.set('def', 0.5 / rs, 0.5 / rs >= 2 ? 'ok' : 'bad'); S.set('mean', `${M.fmt(S.mean, 1)}, ${M.fmt(S.sat * 100, 1)} % saturated`);
     }
@@ -123,11 +123,11 @@
       const show = k => k === 0 ? r.img : k === 1 ? r.sm : k === 2 ? r.B : k === 3 ? r.E : k >= 4 ? r.B : r.img;
       const mapFor = k => k === 2 || k === 4 ? (v => v ? [242, 242, 242] : [14, 20, 36]) : k === 6 ? null : null;
       if (st === 4) drawImg(S, r.B, big.x, big.y, big.w, big.h, v => v ? [80, 110, 160] : [14, 20, 36]); else if (st >= 5) drawImg(S, r.img, big.x, big.y, big.w, big.h); else drawImg(S, show(st), big.x, big.y, big.w, big.h, mapFor(st));
-      if (st === 4 || st === 6) r.blobs.forEach((b, i) => { const [x0, y0, x1, y1] = b.bbox; if (st === 6) { D.rect(S, big.x + x0 * sx, big.y + y0 * sx, (x1 - x0 + 1) * sx, (y1 - y0 + 1) * sx, null, b.cls.startsWith('circ') ? C.cyan : b.cls.startsWith('rect') ? C.amber : C.violet, 2.5); D.text(S, `#${i + 1} ${b.cls}${b.holes ? `, ${b.holes} hole${b.holes > 1 ? 's' : ''}` : ''}`, big.x + x0 * sx, big.y + y0 * sx - 5, { size: 11, weight: 700, color: '#fff' }); }
+      if (st === 4 || st === 6) r.blobs.forEach((b, i) => { const [x0, y0, x1, y1] = b.bbox; if (st === 6) { D.rect(S, big.x + x0 * sx, big.y + y0 * sx, (x1 - x0 + 1) * sx, (y1 - y0 + 1) * sx, null, b.cls.startsWith('circ') ? C.cyan : b.cls.startsWith('rect') ? C.amber : C.violet, 2.5); D.text(S, `#${i + 1} ${b.cls}${b.holes ? `, ${b.holes} hole${b.holes > 1 ? 's' : ''}` : ''}`, big.x + x0 * sx, big.y + y0 * sx - 5, { size: 11, weight: 700, color: '#24292f' }); }
         const cx = big.x + (b.cx + 0.5) * sx, cy = big.y + (b.cy + 0.5) * sx; D.circle(S, cx, cy, 4, C.red); const L = Math.sqrt(b.area) * sx * 0.7; D.line(S, cx - Math.cos(b.theta) * L, cy - Math.sin(b.theta) * L, cx + Math.cos(b.theta) * L, cy + Math.sin(b.theta) * L, C.red, 2); });
       if (st === 5) r.corners.forEach(c => D.circle(S, big.x + (c.x + 0.5) * sx, big.y + (c.y + 0.5) * sx, 4, null, C.amber, 2));
       D.text(S, `${st + 1}. ${STAGES[st]}`, big.x + 6, big.y + big.h + 18, { size: 12.5, weight: 700, color: C.amber });
-      for (let k = 0; k < 7; k++) { const x = 16 + k * (th + 6), y = H - th * 0.8 - 8; if (k === 4) drawImg(S, r.B, x, y, th, th * 0.8, v => v ? [80, 110, 160] : [14, 20, 36]); else drawImg(S, k >= 5 ? r.img : show(k), x, y, th, th * 0.8, mapFor(k)); D.rect(S, x, y, th, th * 0.8, null, k === st ? C.amber : '#3a5384', k === st ? 2.5 : 1); }
+      for (let k = 0; k < 7; k++) { const x = 16 + k * (th + 6), y = H - th * 0.8 - 8; if (k === 4) drawImg(S, r.B, x, y, th, th * 0.8, v => v ? [80, 110, 160] : [14, 20, 36]); else drawImg(S, k >= 5 ? r.img : show(k), x, y, th, th * 0.8, mapFor(k)); D.rect(S, x, y, th, th * 0.8, null, k === st ? C.amber : '#8c959f', k === st ? 2.5 : 1); }
       S.set('T', r.T); S.set('n', r.blobs.length); S.set('c', r.corners.length); S.set('st', STAGES[st]);
       RIL.setHTML(S.panel('f'), '<div class="table-scroll">' + RIL.ui.kv(r.blobs.map((b, i) => [i + 1, b.area, `(${M.fmt(b.cx, 1)}, ${M.fmt(b.cy, 1)})`, M.fmt(b.theta * M.R2D, 1) + '°', `${b.bbox[2] - b.bbox[0] + 1} × ${b.bbox[3] - b.bbox[1] + 1}`, b.perimeter, M.fmt(b.circularity, 3), b.holes, M.fmt(b.rect, 3), b.cls]), ['#', 'Area m₀₀ (px)', 'Centroid (x̄, ȳ)', 'Orientation θ', 'Bounding box', 'Perimeter (px)', 'Circularity 4πA/P²', 'Holes', 'Rectangularity A_filled/(L₁L₂)', 'Rule-based class']) + '</div>', S, 'f');
     }
@@ -171,14 +171,14 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, X = f => 30 + f * (W - 60), y = H * 0.6;
-      D.rect(S, X(0), y, X(1) - X(0), 16, '#22355c', '#3a5384', 1, 3); D.rect(S, X(0.45) - 18, 18, 36, 26, '#1d2b48', C.cyan, 1.5, 4); D.line(S, X(0.45), 44, X(0.45) - 40, y - 4, 'rgba(76,194,255,.4)', 1); D.line(S, X(0.45), 44, X(0.45) + 40, y - 4, 'rgba(76,194,255,.4)', 1); D.text(S, 'camera + ' + (p.light === 'dark' ? 'dark-field ring' : 'ring light'), X(0.45), 14, { size: 10, align: 'center', color: C.cyan });
-      D.rect(S, X(0.72) - 30, y - 70, 18, 40, '#3b4f75'); D.rect(S, X(0.72) - 14, y + 30, 60, 50, 'rgba(255,123,123,.15)', C.red, 1.5, 4); D.text(S, 'reject bin', X(0.72) + 16, y + 96, { size: 10, align: 'center', color: C.red }); D.text(S, 'pusher', X(0.72) - 21, y - 76, { size: 10, align: 'center', color: C.muted });
-      S.parts.forEach(q => { const px = X(q.x), py = y - 10 + (q.y || 0) * 200; const w = q.w * 0.6; D.rect(S, px - w / 2, py - 11, w, 22, q.done ? (q.res.accept ? '#6fe39b' : '#ff7b7b') : '#9fb3d1', '#fff', 1, 2); D.circle(S, px + 9, py, 3.5, '#0e1d38'); if (q.holes === 2) D.circle(S, px - 9, py, 3.5, '#0e1d38'); if (q.scratch) D.line(S, px - w / 2 + 4, py - 6, px - 2, py + 3, '#ffe', 1); });
+      D.rect(S, X(0), y, X(1) - X(0), 16, '#c9d1d9', '#8c959f', 1, 3); D.rect(S, X(0.45) - 18, 18, 36, 26, '#f6f8fa', C.cyan, 1.5, 4); D.line(S, X(0.45), 44, X(0.45) - 40, y - 4, 'rgba(11,127,193,.4)', 1); D.line(S, X(0.45), 44, X(0.45) + 40, y - 4, 'rgba(11,127,193,.4)', 1); D.text(S, 'camera + ' + (p.light === 'dark' ? 'dark-field ring' : 'ring light'), X(0.45), 14, { size: 10, align: 'center', color: C.cyan });
+      D.rect(S, X(0.72) - 30, y - 70, 18, 40, '#6e7781'); D.rect(S, X(0.72) - 14, y + 30, 60, 50, 'rgba(209,36,47,.15)', C.red, 1.5, 4); D.text(S, 'reject bin', X(0.72) + 16, y + 96, { size: 10, align: 'center', color: C.red }); D.text(S, 'pusher', X(0.72) - 21, y - 76, { size: 10, align: 'center', color: C.muted });
+      S.parts.forEach(q => { const px = X(q.x), py = y - 10 + (q.y || 0) * 200; const w = q.w * 0.6; D.rect(S, px - w / 2, py - 11, w, 22, q.done ? (q.res.accept ? '#1a9b4b' : '#d1242f') : '#a8b1bb', '#24292f', 1, 2); D.circle(S, px + 9, py, 3.5, '#2b3440'); if (q.holes === 2) D.circle(S, px - 9, py, 3.5, '#2b3440'); if (q.scratch) D.line(S, px - w / 2 + 4, py - 6, px - 2, py + 3, '#fff8c5', 1); });
       if (S.cap) { const r = S.cap.r; drawImg(S, r.img, W - 200, 60, 180, 144); D.rect(S, W - 200, 60, 180, 144, null, C.cyan, 1.5); D.text(S, 'captured image', W - 200, 54, { size: 10.5, color: C.muted }); D.text(S, r.accept ? 'ACCEPT' : 'REJECT: ' + r.why, W - 200, 222, { size: 12, weight: 800, color: r.accept ? C.green : C.red }); }
       const steps = ['1 arrive', '2 capture', '3 process', '4 features', '5 classify', '6 accept/reject', '7 sort']; steps.forEach((s, i) => D.text(S, s, 16 + i * Math.min(100, (W - 240) / 7), H - 14, { size: 10.5, color: C.muted }));
       const L = S.last; if (L) { S.set('last', L.bad ? `defective (${L.dk})` : 'good', L.bad ? 'bad' : 'ok'); S.set('meas', `${M.fmt(L.res.width, 2)} mm / ${L.res.holes} / ${L.res.scr}`); S.set('dec', L.res.accept ? 'accept' : 'reject — ' + L.res.why, L.res.accept ? 'ok' : 'bad'); }
       const cm = S.cm; S.set('acc', `${cm.gg + cm.bg} / ${cm.gb + cm.bb}`); S.set('esc', cm.bg, cm.bg ? 'bad' : ''); S.set('fr', cm.gb, cm.gb ? 'bad' : '');
-      RIL.setHTML(S.panel('cm'), RIL.ui.kv([['True: good', cm.gg, cm.gb], ['True: defective', cm.bg, cm.bb]], ['', 'Decision: accept', 'Decision: reject']) + `<p style="margin:.3em 0 0;color:#8fa3c4">Accuracy ${M.fmt((cm.gg + cm.bb) / Math.max(1, cm.gg + cm.gb + cm.bg + cm.bb) * 100, 1)} % over ${S.n} parts.</p>`, S, 'cm');
+      RIL.setHTML(S.panel('cm'), RIL.ui.kv([['True: good', cm.gg, cm.gb], ['True: defective', cm.bg, cm.bb]], ['', 'Decision: accept', 'Decision: reject']) + `<p style="margin:.3em 0 0;color:#57606a">Accuracy ${M.fmt((cm.gg + cm.bb) / Math.max(1, cm.gg + cm.gb + cm.bg + cm.bb) * 100, 1)} % over ${S.n} parts.</p>`, S, 'cm');
     }
   });
 
@@ -226,14 +226,14 @@
     },
     draw(S) {
       D.clear(S); const V = S.V = D.fit(S, [0, GW * CELL], [0, GH * CELL], 12); const s = CELL * V.s;
-      for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) { const k = y * GW + x; if (S.truth[k]) D.rect(S, V.X(x * CELL), V.Y((y + 1) * CELL), s, s, S.map[k] ? 'rgba(255,123,123,.85)' : '#3b4f75'); }
-      const g = S.ctx; g.strokeStyle = 'rgba(143,163,196,.07)'; g.lineWidth = 1; g.beginPath(); for (let x = 0; x <= GW; x++) { g.moveTo(V.X(x * CELL), V.Y(0)); g.lineTo(V.X(x * CELL), V.Y(GH * CELL)); } for (let y = 0; y <= GH; y++) { g.moveTo(V.X(0), V.Y(y * CELL)); g.lineTo(V.X(GW * CELL), V.Y(y * CELL)); } g.stroke();
-      (S.rays || []).forEach(([a, d]) => D.line(S, V.X(S.pose[0]), V.Y(S.pose[1]), V.X(S.pose[0] + Math.cos(a) * d), V.Y(S.pose[1] + Math.sin(a) * d), 'rgba(76,194,255,.35)', 1));
+      for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) { const k = y * GW + x; if (S.truth[k]) D.rect(S, V.X(x * CELL), V.Y((y + 1) * CELL), s, s, S.map[k] ? 'rgba(209,36,47,.85)' : '#6e7781'); }
+      const g = S.ctx; g.strokeStyle = 'rgba(87,96,106,.07)'; g.lineWidth = 1; g.beginPath(); for (let x = 0; x <= GW; x++) { g.moveTo(V.X(x * CELL), V.Y(0)); g.lineTo(V.X(x * CELL), V.Y(GH * CELL)); } for (let y = 0; y <= GH; y++) { g.moveTo(V.X(0), V.Y(y * CELL)); g.lineTo(V.X(GW * CELL), V.Y(y * CELL)); } g.stroke();
+      (S.rays || []).forEach(([a, d]) => D.line(S, V.X(S.pose[0]), V.Y(S.pose[1]), V.X(S.pose[0] + Math.cos(a) * d), V.Y(S.pose[1] + Math.sin(a) * d), 'rgba(11,127,193,.35)', 1));
       if (S.path) D.poly(S, [[V.X(S.pose[0]), V.Y(S.pose[1])], ...S.path.map(q => [V.X(q[0]), V.Y(q[1])])], null, C.green, 2.5, false);
-      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(242,165,22,.6)', 1.5, false);
+      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(199,119,0,.6)', 1.5, false);
       D.circle(S, V.X(S.goal[0]), V.Y(S.goal[1]), 9, null, C.green, 3); D.text(S, 'goal', V.X(S.goal[0]) + 12, V.Y(S.goal[1]) - 8, { size: 11, color: C.green });
-      const rob = (P, col, a) => { const [x, y, th] = P; D.circle(S, V.X(x), V.Y(y), 0.18 * V.s, a ? null : col, col, 2); D.line(S, V.X(x), V.Y(y), V.X(x + Math.cos(th) * 0.25), V.Y(y + Math.sin(th) * 0.25), a ? col : '#0e1d38', 3); };
-      rob(S.odo, 'rgba(196,164,255,.8)', true); rob(S.pose, C.amber);
+      const rob = (P, col, a) => { const [x, y, th] = P; D.circle(S, V.X(x), V.Y(y), 0.18 * V.s, a ? null : col, col, 2); D.line(S, V.X(x), V.Y(y), V.X(x + Math.cos(th) * 0.25), V.Y(y + Math.sin(th) * 0.25), a ? col : '#2b3440', 3); };
+      rob(S.odo, 'rgba(130,80,223,.8)', true); rob(S.pose, C.amber);
       const e = Math.hypot(S.odo[0] - S.pose[0], S.odo[1] - S.pose[1]); const L = S.path ? S.path.reduce((a, q, i, arr) => i ? a + Math.hypot(q[0] - arr[i - 1][0], q[1] - arr[i - 1][1]) : 0, 0) : 0;
       S.set('st', S.state, /reached/.test(S.state) ? 'ok' : /no path/.test(S.state) ? 'bad' : ''); S.set('pose', `${M.fmt(S.pose[0], 2)}, ${M.fmt(S.pose[1], 2)}, ${M.fmt(S.pose[2] * M.R2D, 1)}`); S.set('odo', e); S.set('w', `${M.fmt(S.wR, 2)}, ${M.fmt(S.wL, 2)}`); S.set('vw', S.kin ? `${M.fmt(S.kin.v, 3)}, ${M.fmt(S.kin.w, 3)}` : '0, 0'); S.set('rp', `${M.fmt(L, 2)} m / ${S.replans}`);
     }

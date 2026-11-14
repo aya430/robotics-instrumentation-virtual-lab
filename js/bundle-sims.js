@@ -3,7 +3,7 @@
 /* Shared helpers for canvas simulations (palette, panels, clickable blocks, planar arms) */
 (function () {
   const RIL = window.RIL, M = RIL.M;
-  const C = RIL.C = { text: '#dbe5f5', muted: '#8fa3c4', amber: '#f2a516', cyan: '#4cc2ff', green: '#6fe39b', red: '#ff7b7b', violet: '#c4a4ff', steel: '#6f86ad', dark: '#0b1830', panel: 'rgba(6,14,32,.72)', line: 'rgba(143,163,196,.35)', x: '#e5484d', y: '#30a46c', z: '#3e7bfa' };
+  const C = RIL.C = { text: '#1f2328', muted: '#57606a', amber: '#c77700', cyan: '#0b7fc1', green: '#1a9b4b', red: '#d1242f', violet: '#8250df', steel: '#6e7781', dark: '#ffffff', panel: 'rgba(255,255,255,.9)', line: 'rgba(87,96,106,.35)', x: '#e5484d', y: '#30a46c', z: '#3e7bfa' };
   const D = RIL.draw;
   /** rounded info box with title + rows ([label, value]) */
   D.box = (S, x, y, w, title, rows, o = {}) => {
@@ -15,7 +15,7 @@
   };
   /** block of a block diagram; returns rect for hit-testing */
   D.block = (S, x, y, w, h, label, o = {}) => {
-    D.rect(S, x, y, w, h, o.fill || '#13264a', o.active ? C.amber : (o.stroke || '#3a5384'), o.active ? 2.5 : 1.5, 8);
+    D.rect(S, x, y, w, h, o.fill || '#eef1f4', o.active ? C.amber : (o.stroke || '#8c959f'), o.active ? 2.5 : 1.5, 8);
     const lines = String(label).split('\n');
     lines.forEach((l, i) => D.text(S, l, x + w / 2, y + h / 2 + (i - (lines.length - 1) / 2) * 14 + 4, { size: o.size || 11.5, align: 'center', weight: i === 0 ? 650 : 500, color: i === 0 ? (o.tc || C.text) : C.muted }));
     return { x, y, w, h };
@@ -23,14 +23,14 @@
   D.hit = (r, px, py) => r && px >= r.x && px <= r.x + r.w && py >= r.y && py <= r.y + r.h;
   /** planar serial arm in screen coordinates; pts: [[x,y],...] world metres, V: view */
   D.arm = (S, V, pts, o = {}) => {
-    for (let i = 0; i < pts.length - 1; i++) D.link(S, V.X(pts[i][0]), V.Y(pts[i][1]), V.X(pts[i + 1][0]), V.Y(pts[i + 1][1]), o.w || 12, o.fill || (i % 2 ? '#8aa0c6' : '#6f86ad'), o.stroke || '#c9d6ec');
-    D.rect(S, V.X(pts[0][0]) - 22, V.Y(pts[0][1]) + 6, 44, 10, '#3b4f75', '#8fa3c4', 1, 3);
+    for (let i = 0; i < pts.length - 1; i++) D.link(S, V.X(pts[i][0]), V.Y(pts[i][1]), V.X(pts[i + 1][0]), V.Y(pts[i + 1][1]), o.w || 12, o.fill || (i % 2 ? '#9aa4af' : '#6e7781'), o.stroke || '#8c959f');
+    D.rect(S, V.X(pts[0][0]) - 22, V.Y(pts[0][1]) + 6, 44, 10, '#6e7781', '#57606a', 1, 3);
     for (let i = 0; i < pts.length - 1; i++) D.joint(S, V.X(pts[i][0]), V.Y(pts[i][1]), o.jr || 8);
-    const e = pts[pts.length - 1]; D.circle(S, V.X(e[0]), V.Y(e[1]), 5, o.tip || C.cyan, '#fff', 1.5);
+    const e = pts[pts.length - 1]; D.circle(S, V.X(e[0]), V.Y(e[1]), 5, o.tip || C.cyan, '#24292f', 1.5);
   };
   /** world axes for a planar view */
   D.axes2 = (S, V, xr, yr, step = 0.2, o = {}) => {
-    const g = S.ctx; g.save(); g.strokeStyle = 'rgba(143,163,196,.08)'; g.lineWidth = 1; g.beginPath();
+    const g = S.ctx; g.save(); g.strokeStyle = 'rgba(87,96,106,.08)'; g.lineWidth = 1; g.beginPath();
     for (let x = Math.ceil(xr[0] / step) * step; x <= xr[1] + 1e-9; x += step) { g.moveTo(V.X(x) + .5, V.Y(yr[0])); g.lineTo(V.X(x) + .5, V.Y(yr[1])); }
     for (let y = Math.ceil(yr[0] / step) * step; y <= yr[1] + 1e-9; y += step) { g.moveTo(V.X(xr[0]), V.Y(y) + .5); g.lineTo(V.X(xr[1]), V.Y(y) + .5); }
     g.stroke(); g.restore();
@@ -41,7 +41,7 @@
   D.fit = (S, xr, yr, m = 30, offx = 0) => { const s = Math.min((S.W - 2 * m - offx) / (xr[1] - xr[0]), (S.H - 2 * m) / (yr[1] - yr[0])); const cx = m + offx + ((S.W - 2 * m - offx) - s * (xr[1] - xr[0])) / 2 - s * xr[0]; const cy = S.H - m - ((S.H - 2 * m) - s * (yr[1] - yr[0])) / 2 + s * yr[0]; return D.view(S, cx, cy, s); };
   /** analogue meter with needle; v in [lo,hi] */
   D.meter = (S, x, y, r, v, lo, hi, label, unit, color = C.amber) => {
-    const g = S.ctx; D.rect(S, x - r - 8, y - r - 10, 2 * r + 16, r + 38, '#0e1d38', '#3a5384', 1.5, 8);
+    const g = S.ctx; D.rect(S, x - r - 8, y - r - 10, 2 * r + 16, r + 38, '#ffffff', '#8c959f', 1.5, 8);
     g.strokeStyle = C.muted; g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, r, Math.PI * 1.15, Math.PI * 1.85); g.stroke();
     for (let i = 0; i <= 10; i++) { const a = Math.PI * (1.15 + 0.07 * i); D.line(S, x + Math.cos(a) * r, y + Math.sin(a) * r, x + Math.cos(a) * (r - (i % 5 ? 4 : 8)), y + Math.sin(a) * (r - (i % 5 ? 4 : 8)), C.muted, 1); }
     const f = M.clamp((v - lo) / (hi - lo || 1), -0.02, 1.02); const a = Math.PI * (1.15 + 0.7 * f);
@@ -49,7 +49,7 @@
     D.text(S, label, x, y + 14, { size: 10, color: C.muted, align: 'center' }); D.text(S, M.fmt(v, 3) + ' ' + unit, x, y + 26, { size: 11, align: 'center', weight: 650 });
   };
   /** seven-segment-like digital display */
-  D.lcd = (S, x, y, w, txt, label) => { D.rect(S, x, y, w, 34, '#0a1a12', '#2f5a3e', 1.5, 5); D.text(S, txt, x + w - 8, y + 24, { size: 17, color: '#7dffa8', align: 'right', weight: 700 }); if (label) D.text(S, label, x + 6, y - 5, { size: 10, color: C.muted }); };
+  D.lcd = (S, x, y, w, txt, label) => { D.rect(S, x, y, w, 34, '#effaf2', '#7fbf95', 1.5, 5); D.text(S, txt, x + w - 8, y + 24, { size: 17, color: '#116329', align: 'right', weight: 700 }); if (label) D.text(S, label, x + 6, y - 5, { size: 10, color: C.muted }); };
   /** HTML set with change detection */
   RIL.setHTML = (el, html, S, key) => { if (!el) return; if (S && S['_h_' + key] === html) return; el.innerHTML = html; if (S) S['_h_' + key] = html; };
   /** square wave helper, duty in [0,1] */
@@ -104,14 +104,14 @@
       const pick = (o, n) => { o.traverse(m => (m.userData.pick = n)); return o; };
       G.base = pick(k.cyl(0.16, 0.12, C.base), 'base'); G.base.position.z = 0.06; sc.add(G.base);
       G.waist = new T3.Group(); G.waist.position.z = 0.12; sc.add(G.waist);
-      const turret = pick(k.cyl(0.12, 0.22, 0x5a6f96), 'waist'); turret.position.z = 0.11; G.waist.add(turret);
+      const turret = pick(k.cyl(0.12, 0.22, 0x8c959f), 'waist'); turret.position.z = 0.11; G.waist.add(turret);
       G.sh = new T3.Group(); G.sh.position.set(0, 0, 0.3); G.waist.add(G.sh);
       const shJ = pick(k.cyl(0.08, 0.2, C.joint, 'y'), 'shoulder'); shJ.rotation.set(0, 0, 0); G.sh.add(shJ);
-      const m1 = pick(k.cyl(0.055, 0.09, 0x1d2b48, 'y'), 'actuator'); m1.position.y = -0.15; G.sh.add(m1);
+      const m1 = pick(k.cyl(0.055, 0.09, 0xd0d7de, 'y'), 'actuator'); m1.position.y = -0.15; G.sh.add(m1);
       const ua = pick(k.box(0.09, 0.1, 0.5, C.link), 'upperarm'); ua.position.z = 0.25; G.sh.add(ua);
       G.el = new T3.Group(); G.el.position.z = 0.5; G.sh.add(G.el);
       const elJ = pick(k.cyl(0.065, 0.17, C.joint, 'y'), 'elbow'); G.el.add(elJ);
-      const m2 = pick(k.cyl(0.045, 0.08, 0x1d2b48, 'y'), 'actuator'); m2.position.y = 0.13; G.el.add(m2);
+      const m2 = pick(k.cyl(0.045, 0.08, 0xd0d7de, 'y'), 'actuator'); m2.position.y = 0.13; G.el.add(m2);
       const fa = pick(k.box(0.42, 0.08, 0.08, C.link), 'forearm'); fa.position.x = 0.21; G.el.add(fa);
       G.w4 = new T3.Group(); G.w4.position.x = 0.42; G.el.add(G.w4);
       const w4m = pick(k.cyl(0.045, 0.07, C.joint, 'x'), 'wrist'); G.w4.add(w4m);
@@ -149,7 +149,7 @@
       const v = new THREE.Vector3(); G.tcp.getWorldPosition(v);
       S.set('x', v.x); S.set('y', v.y); S.set('z', v.z); S.set('dof', '6 (3 arm + 3 wrist)');
       const info = ANAT[S.sel]; S.set('sel', info ? info[0] : '—');
-      const html = info ? `<b style="color:#fff">${info[0]}</b><p style="margin:.3em 0 0">${info[1]}</p>` : '<p style="margin:0">Click a part of the robot (or use the selector) to see what it does.</p>';
+      const html = info ? `<b style="color:#1f2328">${info[0]}</b><p style="margin:.3em 0 0">${info[1]}</p>` : '<p style="margin:0">Click a part of the robot (or use the selector) to see what it does.</p>';
       if (S._lastInfo !== html) { S.panel('info').innerHTML = html; S._lastInfo = html; }
     }
   });
@@ -282,7 +282,7 @@
       const base = k.cyl(0.18, 0.08, C.base); base.position.z = 0.04; g.add(base);
       P.rot = new T3.Group(); g.add(P.rot); const col = k.cyl(0.07, 0.56, C.link); col.position.z = 0.32; P.rot.add(col); lab('R₁ (base rotation)', base, [0.2, 0, 0]);
       P.boom = new T3.Group(); P.boom.position.z = 0.6; P.rot.add(P.boom); const pv = k.cyl(0.08, 0.18, C.joint, 'y'); P.boom.add(pv); lab('R₂ (elevation)', pv, [0, -0.12, 0.05]);
-      const sleeve = k.box(0.35, 0.1, 0.1, 0x5a6f96); sleeve.position.x = 0.1; P.boom.add(sleeve);
+      const sleeve = k.box(0.35, 0.1, 0.1, 0x8c959f); sleeve.position.x = 0.1; P.boom.add(sleeve);
       P.arm = seg(g, C.white, 0.03); lab('P₃ (telescopic r)', P.arm.mesh, [0, 0, 0.07]);
     } else if (type === 'scara') {
       const col = k.cyl(0.08, 0.62, C.base); col.position.z = 0.31; g.add(col); lab('R₁ (vertical axis)', col, [0.12, 0, 0.25]);
@@ -291,13 +291,13 @@
       P.quill = seg(g, C.white, 0.02); lab('P₃ (quill)', P.quill.mesh, [0.06, 0, 0]);
     } else if (type === 'articulated') {
       const base = k.cyl(0.16, 0.1, C.base); base.position.z = 0.05; g.add(base);
-      P.waist = new T3.Group(); g.add(P.waist); const tur = k.cyl(0.1, 0.3, 0x5a6f96); tur.position.z = 0.25; P.waist.add(tur); lab('R₁ waist', tur, [0.15, 0, 0]);
+      P.waist = new T3.Group(); g.add(P.waist); const tur = k.cyl(0.1, 0.3, 0x8c959f); tur.position.z = 0.25; P.waist.add(tur); lab('R₁ waist', tur, [0.15, 0, 0]);
       const sh = k.cyl(0.075, 0.18, C.joint, 'y'); sh.position.z = 0.4; P.waist.add(sh); lab('R₂ shoulder', sh, [0, -0.15, 0]);
       P.ua = seg(g, C.link, 0.045); P.fa = seg(g, C.link, 0.038);
       P.el = k.cyl(0.06, 0.15, C.joint, 'y'); g.add(P.el); lab('R₃ elbow', P.el, [0, 0, 0.09]);
     } else if (type === 'parallel') {
       const top = k.cyl(DELTA.R + 0.08, 0.04, C.base); top.position.z = DELTA.h + 0.03; g.add(top); lab('Fixed base (3 motors)', top, [0, 0, 0.08]);
-      [[-0.35, -0.35], [0.35, -0.35], [0, 0.4]].forEach(([x, y]) => { const post = k.box(0.04, 0.04, DELTA.h + 0.05, 0x2a3c62); post.position.set(x, y, (DELTA.h + 0.05) / 2); g.add(post); });
+      [[-0.35, -0.35], [0.35, -0.35], [0, 0.4]].forEach(([x, y]) => { const post = k.box(0.04, 0.04, DELTA.h + 0.05, 0x6e7781); post.position.set(x, y, (DELTA.h + 0.05) / 2); g.add(post); });
       P.bic = [0, 1, 2].map(i => seg(g, C.joint, 0.022)); P.fore = [0, 1, 2].map(() => seg(g, C.white, 0.012));
       P.plat = k.cyl(DELTA.r + 0.015, 0.025, C.dark); g.add(P.plat); lab('Moving platform', P.plat, [0.1, 0, -0.04]);
       lab('Leg 1 (R-S-S)', P.bic[0].mesh, [0, 0, 0.05]);
@@ -356,7 +356,7 @@
       S.set('tcp', p.map(v => v.toFixed(3)).join(', '));
       for (let i = 1; i <= 7; i++) { const el = S.inputs['q' + i].el.closest('.ctl'); el.style.opacity = i <= n ? 1 : 0.35; el.querySelector('label span').textContent = `Joint ${i}` + (i <= n ? ` (${pat[i - 1]})` : ' (unused)'); }
       const m = MECH[S.p.mech]; const dof = M.inst.grubler(m.m, m.N, m.J, m.sf);
-      const html = RIL.ui.kv([['Mechanism', m.name], ['m (space)', m.m], ['N (links incl. ground)', m.N], ['J (joints)', m.J], ['Σ fᵢ', `${m.f} = ${m.sf}`], [`DOF = ${m.m}(${m.N}−1−${m.J})+${m.sf}`, `<b style="color:#f2a516">${dof}</b>`]]) + (S.p.mech === 'sps' ? '<p style="margin:.4em 0 0">The formula gives 12, but 6 of these are idle spins of the legs about their own axes: the platform still has 6 DOF.</p>' : '');
+      const html = RIL.ui.kv([['Mechanism', m.name], ['m (space)', m.m], ['N (links incl. ground)', m.N], ['J (joints)', m.J], ['Σ fᵢ', `${m.f} = ${m.sf}`], [`DOF = ${m.m}(${m.N}−1−${m.J})+${m.sf}`, `<b style="color:#9a5b00">${dof}</b>`]]) + (S.p.mech === 'sps' ? '<p style="margin:.4em 0 0">The formula gives 12, but 6 of these are idle spins of the legs about their own axes: the platform still has 6 DOF.</p>' : '');
       if (S._g !== html) { S.panel('grub').innerHTML = html; S._g = html; }
     }
   });
@@ -500,25 +500,25 @@
     draw(S) {
       D.clear(S); const W = S.W, H = S.H, { L, k } = this.speedOf(S);
       const y0 = H * 0.55, x0 = 40, x1 = W - 40;
-      D.rect(S, x0, y0, x1 - x0, 14, '#22355c', '#3a5384', 1, 4);
-      for (let x = x0 + ((S.clock * 4) % 24); x < x1; x += 24) D.line(S, x, y0 + 2, x, y0 + 12, 'rgba(143,163,196,.35)', 1);
+      D.rect(S, x0, y0, x1 - x0, 14, '#c9d1d9', '#8c959f', 1, 4);
+      for (let x = x0 + ((S.clock * 4) % 24); x < x1; x += 24) D.line(S, x, y0 + 2, x, y0 + 12, 'rgba(87,96,106,.35)', 1);
       const sx = [0.2, 0.5, 0.8].map(f => x0 + (x1 - x0) * f), names = ['Load', 'Process', 'Unload / inspect'];
       sx.forEach((x, i) => {
         const w = L.who[i]; const [wn, col] = WHO[w];
         D.block(S, x - 58, y0 - 118, 116, 48, names[i] + '\n' + wn, { stroke: col });
         const b = S.busy[i]; const prog = b ? M.clamp(b.t / L.t[i], 0, 1) : 0;
-        D.rect(S, x - 50, y0 - 62, 100, 6, '#22355c'); D.rect(S, x - 50, y0 - 62, 100 * prog, 6, col);
+        D.rect(S, x - 50, y0 - 62, 100, 6, '#c9d1d9'); D.rect(S, x - 50, y0 - 62, 100 * prog, 6, col);
         D.text(S, `${L.t[i]} s`, x + 54, y0 - 56, { size: 10, color: C.muted });
         // worker / machine / robot icon
         const ax = x, ay = y0 - 22;
         if (w === 'H') { D.circle(S, ax + 40, ay - 26, 7, col); D.line(S, ax + 40, ay - 19, ax + 40, ay + 4, col, 3); const sw = Math.sin(S.t * 6 + i) * 8; D.line(S, ax + 40, ay - 12, ax + 26 + sw, ay - 2, col, 3); }
-        else if (w === 'M') { D.rect(S, ax - 18, ay - 40, 36, 26, '#1d2b48', col, 1.5, 3); const ph = b ? Math.abs(Math.sin(S.t * 8)) : 0; D.rect(S, ax - 4, ay - 14, 8, 6 + 10 * ph, col); }
-        else { const a1 = -1.2 + 0.6 * Math.sin(S.t * 2 * (w === 'C' ? k : 1) + i), a2 = 1.2 + 0.5 * Math.sin(S.t * 2.6 * (w === 'C' ? k : 1)); const bx = ax + 44, by = ay + 2; const ex = bx + 30 * Math.cos(a1), ey = by + 30 * Math.sin(a1); D.link(S, bx, by, ex, ey, 6, col, '#fff'); D.link(S, ex, ey, ex + 24 * Math.cos(a1 + a2), ey + 24 * Math.sin(a1 + a2), 5, col, '#fff'); D.joint(S, bx, by, 5); }
-        if (b) D.rect(S, x - 12, y0 - 14, 24, 14, b.col, '#fff', 1, 2);
+        else if (w === 'M') { D.rect(S, ax - 18, ay - 40, 36, 26, '#f6f8fa', col, 1.5, 3); const ph = b ? Math.abs(Math.sin(S.t * 8)) : 0; D.rect(S, ax - 4, ay - 14, 8, 6 + 10 * ph, col); }
+        else { const a1 = -1.2 + 0.6 * Math.sin(S.t * 2 * (w === 'C' ? k : 1) + i), a2 = 1.2 + 0.5 * Math.sin(S.t * 2.6 * (w === 'C' ? k : 1)); const bx = ax + 44, by = ay + 2; const ex = bx + 30 * Math.cos(a1), ey = by + 30 * Math.sin(a1); D.link(S, bx, by, ex, ey, 6, col, '#24292f'); D.link(S, ex, ey, ex + 24 * Math.cos(a1 + a2), ey + 24 * Math.sin(a1 + a2), 5, col, '#24292f'); D.joint(S, bx, by, 5); }
+        if (b) D.rect(S, x - 12, y0 - 14, 24, 14, b.col, '#24292f', 1, 2);
       });
       if (S.p.level === 'hmi') {
         const cx = sx[2] + 44, d = S.p.human, px = cx + 40 + d * 60;
-        D.circle(S, cx, y0 - 20, 1.5 * 60 * 0.6, null, 'rgba(255,123,123,.35)', 1); D.circle(S, cx, y0 - 20, 0.6 * 60 * 0.6, null, 'rgba(255,123,123,.6)', 1);
+        D.circle(S, cx, y0 - 20, 1.5 * 60 * 0.6, null, 'rgba(209,36,47,.35)', 1); D.circle(S, cx, y0 - 20, 0.6 * 60 * 0.6, null, 'rgba(209,36,47,.6)', 1);
         D.circle(S, Math.min(px, W - 20), y0 - 46, 7, C.amber); D.line(S, Math.min(px, W - 20), y0 - 39, Math.min(px, W - 20), y0 - 16, C.amber, 3);
         D.text(S, `Cobot speed ${Math.round(k * 100)} % (speed & separation monitoring)`, W / 2, H - 16, { align: 'center', size: 11, color: k < 0.5 ? C.red : C.green });
       }
@@ -582,7 +582,7 @@
       const last = S.trace[S.trace.length - 1]; if (!last || Math.hypot(last[0] - fk.x, last[1] - fk.y) > 0.002) { if (last) S.len += Math.hypot(last[0] - fk.x, last[1] - fk.y); S.trace.push([fk.x, fk.y]); }
       // deviation from line AB
       const [A, B] = [P.A, P.B]; const ab = [B[0] - A[0], B[1] - A[1]]; const L = Math.hypot(...ab); const dev = Math.abs((fk.x - A[0]) * ab[1] - (fk.y - A[1]) * ab[0]) / L; S.maxDev = Math.max(S.maxDev, dev);
-      D.line(S, V.X(A[0]), V.Y(A[1]), V.X(B[0]), V.Y(B[1]), 'rgba(111,227,155,.5)', 1.5, [6, 5]);
+      D.line(S, V.X(A[0]), V.Y(A[1]), V.X(B[0]), V.Y(B[1]), 'rgba(26,155,75,.5)', 1.5, [6, 5]);
       D.poly(S, S.trace.map(p => [V.X(p[0]), V.Y(p[1])]), null, C.amber, 2.5, false);
       D.arm(S, V, [[0, 0], [fk.ex, fk.ey], [fk.x, fk.y]]);
       [['A', A], ['B', B]].forEach(([n, p]) => { D.circle(S, V.X(p[0]), V.Y(p[1]), 6, null, C.green, 2); D.text(S, n, V.X(p[0]) + 9, V.Y(p[1]) - 8, { size: 13, weight: 700, color: C.green }); });
@@ -590,7 +590,7 @@
       D.text(S, nm, 14, 22, { size: 12.5, weight: 650 });
       S.set('len', S.len); S.set('dev', S.maxDev * 1000); S.set('axes', S.p.ctrl === 'ns' ? 'one at a time' : 'all, synchronised');
       const card = ROBOT_CARDS[S.p.robot];
-      RIL.setHTML(S.panel('tbl'), '<div class="table-scroll">' + RIL.ui.kv(CLASS.map((r, i) => ({ cells: [r[0], r[1], `<b style="color:#f2a516">${card[1][i]}</b>`, r[2]], hl: false })), ['Basis', 'Classes', card[0], 'Remarks / examples']) + '</div>', S, 'tbl');
+      RIL.setHTML(S.panel('tbl'), '<div class="table-scroll">' + RIL.ui.kv(CLASS.map((r, i) => ({ cells: [r[0], r[1], `<b style="color:#9a5b00">${card[1][i]}</b>`, r[2]], hl: false })), ['Basis', 'Classes', card[0], 'Remarks / examples']) + '</div>', S, 'tbl');
     }
   });
 
@@ -659,7 +659,7 @@
       D.circle(S, a.x + a.w / 2 + (b.x - a.x) * f, a.y + a.h / 2 + (b.y - a.y) * f, 5, C.cyan);
       const disp = c.blocks[5][2](v); S.set('in', M.fmt(v, 3) + ' ' + c.unit); S.set('out', disp);
       const dv = parseFloat(disp.replace('−', '-')); S.set('err', S.p.chain === 'dist' ? '4–20 mA output' : M.fmt(dv - v, 3) + ' ' + c.unit);
-      RIL.setHTML(S.panel('info'), `<b style="color:#fff">${c.blocks[+S.p.blk][0]}</b><p style="margin:.3em 0">${BLOCK_INFO[+S.p.blk]}</p><p style="margin:0;color:#8fa3c4">In this chain: ${c.blocks[+S.p.blk][1]}. Output now: <b style="color:#4cc2ff">${c.blocks[+S.p.blk][2](v)}</b></p>`, S, 'i');
+      RIL.setHTML(S.panel('info'), `<b style="color:#1f2328">${c.blocks[+S.p.blk][0]}</b><p style="margin:.3em 0">${BLOCK_INFO[+S.p.blk]}</p><p style="margin:0;color:#57606a">In this chain: ${c.blocks[+S.p.blk][1]}. Output now: <b style="color:#0b7fc1">${c.blocks[+S.p.blk][2](v)}</b></p>`, S, 'i');
     }
   });
 
@@ -710,7 +710,7 @@
       D.clear(S); const m = S.p.mode, ch = S.chart('c'), W = S.W, H = S.H;
       if (m === 'acc') {
         const cx = W * 0.32, cy = H / 2, R = Math.min(W * 0.28, H * 0.42), sc = R / 4;
-        for (let i = 4; i >= 1; i--) D.circle(S, cx, cy, i * sc, i % 2 ? '#13264a' : '#1b3260', '#3a5384', 1);
+        for (let i = 4; i >= 1; i--) D.circle(S, cx, cy, i * sc, i % 2 ? '#eef1f4' : '#e1e6eb', '#8c959f', 1);
         D.circle(S, cx, cy, 4, C.green); D.text(S, 'true value', cx + 8, cy - 8, { size: 10, color: C.green });
         const r2 = M.rng(99); S.shots.forEach((v, i) => { const ang = 2 * Math.PI * r2(); const dy = (S.p.sd * M.gaussRand(r2)); D.circle(S, cx + (v - 100) * sc, cy + dy * sc, 3.5, i === S.shots.length - 1 ? C.amber : C.cyan); });
         const n = S.shots.length, mean = n ? M.inst.mean(S.shots) : NaN, s = n > 1 ? M.inst.std(S.shots) : NaN;
@@ -727,7 +727,7 @@
         const V = D.fit(S, [-0.5, 11], [-0.5, Math.max(6, S.p.bias * 11.5)], 40);
         D.axes2(S, V, [-0.5, 11], [-0.5, Math.max(6, S.p.bias * 11.5)], 1, { xl: 'x (mm)', yl: 'y (V)' });
         D.line(S, V.X(0), V.Y(fit.c), V.X(10), V.Y(fit.c + fit.m * 10), C.amber, 2);
-        D.poly(S, x.map((xi, i) => [V.X(xi), V.Y(yd[i])]), null, 'rgba(196,164,255,.8)', 1.5, false);
+        D.poly(S, x.map((xi, i) => [V.X(xi), V.Y(yd[i])]), null, 'rgba(130,80,223,.8)', 1.5, false);
         x.forEach((xi, i) => { D.circle(S, V.X(xi), V.Y(y[i]), 4, C.cyan); });
         D.text(S, `y = ${M.fmt(fit.m, 4)} x + ${M.fmt(fit.c, 3)}   (least squares, eq. 1.20)`, 50, 24, { size: 12, weight: 650 });
         D.text(S, 'violet: decreasing-input readings (hysteresis loop)', 50, 42, { size: 10.5, color: C.violet });
@@ -738,7 +738,7 @@
         const vin = (rate * S.t) % FS; const adc = M.clamp(Math.floor(vin / Q), 0, 2 ** N - 1) * Q; const ana = Math.round(vin / div) * div;
         const V = D.fit(S, [0, 1.15], [0, 1.05], 40);
         // bar instruments
-        const bar = (x, val, lbl, col) => { D.rect(S, V.X(x), V.Y(1), 50, V.Y(0) - V.Y(1), '#13264a', '#3a5384', 1, 4); D.rect(S, V.X(x), V.Y(val / FS), 50, V.Y(0) - V.Y(val / FS), col); D.text(S, lbl, V.X(x) + 25, V.Y(0) + 16, { size: 10.5, align: 'center', color: C.muted }); D.text(S, M.fmt(val, 3) + ' V', V.X(x) + 25, V.Y(1) - 8, { size: 11, align: 'center', weight: 650 }); };
+        const bar = (x, val, lbl, col) => { D.rect(S, V.X(x), V.Y(1), 50, V.Y(0) - V.Y(1), '#eef1f4', '#8c959f', 1, 4); D.rect(S, V.X(x), V.Y(val / FS), 50, V.Y(0) - V.Y(val / FS), col); D.text(S, lbl, V.X(x) + 25, V.Y(0) + 16, { size: 10.5, align: 'center', color: C.muted }); D.text(S, M.fmt(val, 3) + ' V', V.X(x) + 25, V.Y(1) - 8, { size: 11, align: 'center', weight: 650 }); };
         bar(0.05, vin, 'true input', C.green); bar(0.3, adc, `${N}-bit ADC`, C.cyan); bar(0.55, ana, 'analogue meter', C.amber);
         for (let k = 0; k <= 2 ** N && 2 ** N <= 64; k++) D.line(S, V.X(0.3) + 50, V.Y(k * Q / FS), V.X(0.3) + 58, V.Y(k * Q / FS), C.cyan, 1);
         D.box(S, V.X(0.75), V.Y(0.95), 210, 'Resolution', [['ADC step Q = FSR/2ᴺ', M.fmt(Q, 4) + ' V'], ['Analogue division', M.fmt(div, 3) + ' V'], ['ADC levels 2ᴺ', String(2 ** N)], ['Max error (truncating)', M.fmt(Q, 4) + ' V']]);
@@ -748,7 +748,7 @@
         const V0 = S.p.bias, uV = S.p.sd, I = S.p.nl, uI = S.p.hy; const P = V0 * I; const rv = uV / V0 * 100, ri = uI / I * 100; const rss = Math.hypot(rv, ri) / 100 * P, wc = (rv + ri) / 100 * P;
         const cx = S.W / 2, y = S.H * 0.45, sc = Math.min(18, (S.W - 80) / (2 * Math.max(wc, 0.5) * 1.3));
         D.line(S, 40, y, S.W - 40, y, C.muted, 1);
-        D.rect(S, cx - wc * sc, y - 30, 2 * wc * sc, 60, 'rgba(255,123,123,.18)', C.red, 1); D.rect(S, cx - rss * sc, y - 20, 2 * rss * sc, 40, 'rgba(76,194,255,.25)', C.cyan, 1.5);
+        D.rect(S, cx - wc * sc, y - 30, 2 * wc * sc, 60, 'rgba(209,36,47,.18)', C.red, 1); D.rect(S, cx - rss * sc, y - 20, 2 * rss * sc, 40, 'rgba(11,127,193,.25)', C.cyan, 1.5);
         D.line(S, cx, y - 44, cx, y + 44, C.amber, 2.5);
         D.text(S, `P = ${M.fmt(P, 2)} W`, cx, y - 52, { align: 'center', size: 14, weight: 700, color: C.amber });
         D.text(S, `RSS interval ±${M.fmt(rss, 3)} W (eq. 1.16)`, cx, y + 64, { align: 'center', color: C.cyan, size: 12 }); D.text(S, `worst-case ±${M.fmt(wc, 3)} W`, cx, y + 82, { align: 'center', color: C.red, size: 12 });
@@ -782,12 +782,12 @@
       // circuit drawing
       const x0 = 70, yT = 50, yB = H - 50, xr = Math.min(W * 0.42, 330);
       D.line(S, x0, yT, xr, yT, C.text, 2); D.line(S, x0, yB, xr, yB, C.text, 2); D.line(S, x0, yT, x0, yB, C.text, 2);
-      D.circle(S, x0, (yT + yB) / 2, 18, '#0e1d38', C.amber, 2); D.text(S, 'V_s', x0 - 46, (yT + yB) / 2 + 4, { size: 12 }); D.text(S, M.fmt(p.Vs, 1) + ' V', x0, (yT + yB) / 2 + 4, { size: 10, align: 'center' });
+      D.circle(S, x0, (yT + yB) / 2, 18, '#2b3440', C.amber, 2); D.text(S, 'V_s', x0 - 46, (yT + yB) / 2 + 4, { size: 12 }); D.text(S, M.fmt(p.Vs, 1) + ' V', x0, (yT + yB) / 2 + 4, { size: 10, align: 'center' });
       const resistor = (x, y1, y2, lbl) => { const m1 = y1 + (y2 - y1) * 0.25, m2 = y1 + (y2 - y1) * 0.75; D.line(S, x, y1, x, m1, C.text, 2); D.line(S, x, m2, x, y2, C.text, 2); const pts = []; for (let k = 0; k <= 8; k++) pts.push([x + (k % 2 ? 8 : -8) * (k > 0 && k < 8), m1 + (m2 - m1) * k / 8]); D.poly(S, pts, null, C.cyan, 2, false); D.text(S, lbl, x + 14, (m1 + m2) / 2 + 4, { size: 11, color: C.muted }); };
       const mid = (yT + yB) / 2;
       if (p.mode === 'volt') { resistor(xr - 60, yT, mid, `R = ${p.R} kΩ`); resistor(xr - 60, mid, yB, `R = ${p.R} kΩ`); D.circle(S, xr - 60, mid, 4, C.amber); }
       else { resistor(xr - 60, yT, yB, `R_p = ${p.R} kΩ`); const wy = yB - (yB - yT) * (0.25 + 0.5 * p.x); D.arrow(S, xr - 20, wy, xr - 52, wy, C.amber, 2.5, 8); D.line(S, xr - 20, wy, xr - 20, mid, C.amber, 2); }
-      if (p.conn) { const mx = xr + 70; D.line(S, p.mode === 'volt' ? xr - 60 : xr - 20, mid, mx, mid, C.amber, 2); D.line(S, mx, yB, xr, yB, C.text, 2); D.line(S, mx, mid, mx, yB, C.amber, 2); D.rect(S, mx - 16, mid + 30, 32, 50, '#1d2b48', C.amber, 1.5, 4); D.text(S, 'R_m', mx, mid + 60, { size: 11, align: 'center' });
+      if (p.conn) { const mx = xr + 70; D.line(S, p.mode === 'volt' ? xr - 60 : xr - 20, mid, mx, mid, C.amber, 2); D.line(S, mx, yB, xr, yB, C.text, 2); D.line(S, mx, mid, mx, yB, C.amber, 2); D.rect(S, mx - 16, mid + 30, 32, 50, '#f6f8fa', C.amber, 1.5, 4); D.text(S, 'R_m', mx, mid + 60, { size: 11, align: 'center' });
         for (let k = 0; k < 4; k++) { const f = ((S.t * 0.6 + k / 4) % 1); D.circle(S, mx, mid + f * (yB - mid), 2.5, C.cyan); } }
       D.meter(S, Math.min(W - 110, xr + 230), H * 0.42, 70, vm, 0, p.mode === 'volt' ? p.Vs / 2 * 1.1 : p.Vs, 'indicated voltage', 'V');
       D.text(S, `Thevenin resistance seen by the instrument: ${M.fmt(Rth, 2)} kΩ`, Math.min(W - 110, xr + 230), H * 0.42 + 70, { size: 11, align: 'center', color: C.muted });
@@ -833,8 +833,8 @@
       D.clear(S); const p = S.p, y = S.x[0], u = this.u(S, S.t), W = S.W, H = S.H; const lo = Math.min(p.u0, 0), hi = p.u1 * 1.35 + 5;
       const bx = W * 0.18, top = 40, bot = H - 50, Y = v => bot - (bot - top) * (v - lo) / (hi - lo);
       if (+p.ord === 2) { // spring-mass with pointer
-        D.rect(S, bx - 40, top - 10, 80, 10, '#3b4f75'); const my = Y(y); D.spring(S, bx, top, bx, my - 18, 9, 10); D.rect(S, bx - 22, my - 18, 44, 36, '#6f86ad', '#c9d6ec', 1.5, 4); D.arrow(S, bx + 22, my, bx + 60, my, C.amber, 2.5);
-      } else { D.rect(S, bx - 10, top, 20, bot - top, '#0e1d38', '#8fa3c4', 1.5, 10); D.circle(S, bx, bot + 10, 16, C.red); D.rect(S, bx - 6, Y(y), 12, bot - Y(y) + 6, C.red); }
+        D.rect(S, bx - 40, top - 10, 80, 10, '#6e7781'); const my = Y(y); D.spring(S, bx, top, bx, my - 18, 9, 10); D.rect(S, bx - 22, my - 18, 44, 36, '#6e7781', '#8c959f', 1.5, 4); D.arrow(S, bx + 22, my, bx + 60, my, C.amber, 2.5);
+      } else { D.rect(S, bx - 10, top, 20, bot - top, '#2b3440', '#57606a', 1.5, 10); D.circle(S, bx, bot + 10, 16, C.red); D.rect(S, bx - 6, Y(y), 12, bot - Y(y) + 6, C.red); }
       for (let v = Math.ceil(lo / 25) * 25; v <= hi; v += 25) { D.line(S, bx + 14, Y(v), bx + 24, Y(v), C.muted, 1); D.text(S, String(v), bx + 28, Y(v) + 4, { size: 10, color: C.muted }); }
       D.line(S, bx - 30, Y(u), bx + 70, Y(u), C.green, 1.5, [5, 4]); D.text(S, 'true input', bx + 72, Y(u) + 4, { size: 10, color: C.green });
       const ord = +p.ord; const wn = 2 * Math.PI * p.fn; let k = [['', ''], ['', ''], ['', '']];
@@ -889,9 +889,9 @@
       roLabel(S, 'o1', { pot: 'Output voltage V_o (V)', inc: 'Counter (×4 decoding)', abs: 'Gray code word' }[p.mode]);
       if (p.mode === 'pot') {
         const x = p.ang / 340, Vo = M.inst.loadedPot(x, p.Vs, p.ratio, 1), ideal = p.Vs * x;
-        const g = S.ctx; g.lineWidth = 14; g.strokeStyle = '#3b4f75'; g.beginPath(); g.arc(cx, cy, R, PI / 2 + 10 * D2R, PI / 2 + 350 * D2R); g.stroke();
+        const g = S.ctx; g.lineWidth = 14; g.strokeStyle = '#6e7781'; g.beginPath(); g.arc(cx, cy, R, PI / 2 + 10 * D2R, PI / 2 + 350 * D2R); g.stroke();
         g.strokeStyle = C.amber; g.lineWidth = 6; g.beginPath(); g.arc(cx, cy, R, PI / 2 + 10 * D2R, PI / 2 + 10 * D2R + th); g.stroke();
-        const wx = cx + Math.cos(PI / 2 + 10 * D2R + th) * R, wy = cy + Math.sin(PI / 2 + 10 * D2R + th) * R; D.line(S, cx, cy, wx, wy, C.cyan, 4); D.circle(S, cx, cy, 10, '#1d2b48', C.cyan, 2);
+        const wx = cx + Math.cos(PI / 2 + 10 * D2R + th) * R, wy = cy + Math.sin(PI / 2 + 10 * D2R + th) * R; D.line(S, cx, cy, wx, wy, C.cyan, 4); D.circle(S, cx, cy, 10, '#f6f8fa', C.cyan, 2);
         D.text(S, '0 V', cx - 30, cy + R + 22, { size: 10, color: C.muted }); D.text(S, 'V_s', cx + 18, cy + R + 22, { size: 10, color: C.muted });
         D.meter(S, W * 0.74, H * 0.45, 70, Vo, 0, p.Vs, 'V_o (loaded)', 'V');
         D.text(S, `ideal V_o = x·V_s = ${M.fmt(ideal, 3)} V`, W * 0.74, H * 0.45 + 62, { size: 11, align: 'center', color: C.green });
@@ -899,16 +899,16 @@
         const ind = Vo / p.Vs * 340; S.set('a', p.ang); S.set('o1', Vo); S.set('o2', ind); S.set('res', 'continuous (wiper wire-turn limited)'); S.set('err', ind - p.ang);
       } else {
         const N = p.mode === 'inc' ? Math.round(p.N) : 2 ** M.clamp(Math.round(p.N), 3, 12), n = M.clamp(Math.round(p.N), 3, 12);
-        D.circle(S, cx, cy, R, '#13264a', '#3a5384', 2);
+        D.circle(S, cx, cy, R, '#eef1f4', '#8c959f', 2);
         if (p.mode === 'inc') {
-          for (let k = 0; k < N; k++) { const a0 = th + k * 2 * PI / N, a1 = a0 + PI / N; const g = S.ctx; g.fillStyle = 'rgba(219,229,245,.85)'; g.beginPath(); g.arc(cx, cy, R * 0.95, a0, a1); g.arc(cx, cy, R * 0.8, a1, a0, true); g.fill(); }
+          for (let k = 0; k < N; k++) { const a0 = th + k * 2 * PI / N, a1 = a0 + PI / N; const g = S.ctx; g.fillStyle = 'rgba(31,35,40,.85)'; g.beginPath(); g.arc(cx, cy, R * 0.95, a0, a1); g.arc(cx, cy, R * 0.8, a1, a0, true); g.fill(); }
           D.rect(S, cx + R * 0.72, cy - 22, R * 0.36, 12, C.red); D.text(S, 'A', cx + R + 8, cy - 12, { color: C.red, weight: 700 }); D.rect(S, cx + R * 0.72, cy + 10, R * 0.36, 12, C.cyan); D.text(S, 'B', cx + R + 8, cy + 20, { color: C.cyan, weight: 700 });
           const res = M.inst.encoderRes(N, true), meas = S.a0 + S.count * res;
           S.set('a', p.ang); S.set('o1', S.count); S.set('o2', meas); S.set('res', res); S.set('err', meas - p.ang);
           D.text(S, `${N} lines × 4 edges = ${4 * N} counts/rev → resolution 360°/(4N) = ${M.fmt(res, 3)}°  (1.32)`, 16, 22, { size: 12 });
           D.text(S, 'Direction: A leads B → counting up; B leads A → counting down', 16, H - 14, { size: 11, color: C.muted });
         } else {
-          for (let b = 0; b < n; b++) { const r0 = R * (0.35 + 0.6 * b / n), r1 = R * (0.35 + 0.6 * (b + 1) / n); const segs = 2 ** (b + 1); for (let k = 0; k < 2 ** n; k++) { const bit = (M.inst.gray(k) >> (n - 1 - b)) & 1; if (!bit) continue; const a0 = -th + k * 2 * PI / 2 ** n - PI / 2, a1 = a0 + 2 * PI / 2 ** n; const g = S.ctx; g.fillStyle = 'rgba(219,229,245,.85)'; g.beginPath(); g.arc(cx, cy, r1, a0, a1); g.arc(cx, cy, r0, a1, a0, true); g.fill(); } }
+          for (let b = 0; b < n; b++) { const r0 = R * (0.35 + 0.6 * b / n), r1 = R * (0.35 + 0.6 * (b + 1) / n); const segs = 2 ** (b + 1); for (let k = 0; k < 2 ** n; k++) { const bit = (M.inst.gray(k) >> (n - 1 - b)) & 1; if (!bit) continue; const a0 = -th + k * 2 * PI / 2 ** n - PI / 2, a1 = a0 + 2 * PI / 2 ** n; const g = S.ctx; g.fillStyle = 'rgba(31,35,40,.85)'; g.beginPath(); g.arc(cx, cy, r1, a0, a1); g.arc(cx, cy, r0, a1, a0, true); g.fill(); } }
           D.line(S, cx, cy - R * 0.3, cx, cy - R * 1.05, C.amber, 2);
           const code = Math.floor(((p.ang % 360) + 360) % 360 / 360 * 2 ** n), gw = M.inst.gray(code), res = 360 / 2 ** n;
           S.set('a', p.ang); S.set('o1', M.sig.toBin(gw, n)); S.set('o2', M.inst.grayToBin(gw) * res); S.set('res', res); S.set('err', M.inst.grayToBin(gw) * res - p.ang);
@@ -942,11 +942,11 @@
       D.clear(S); const p = S.p, W = S.W, H = S.H;
       if (p.mode === 'lvdt') {
         const cx = W * 0.4, cy = H * 0.45, L = Math.min(W * 0.6, 520), sc = L / 50;
-        D.rect(S, cx - L / 2, cy - 40, L, 80, '#13264a', '#3a5384', 1.5, 6);
+        D.rect(S, cx - L / 2, cy - 40, L, 80, '#eef1f4', '#8c959f', 1.5, 6);
         const coil = (x0, x1, col, lbl) => { for (let x = x0; x < x1; x += 7) { D.line(S, x, cy - 34, x + 3, cy - 18, col, 2); D.line(S, x, cy + 34, x + 3, cy + 18, col, 2); } D.text(S, lbl, (x0 + x1) / 2, cy - 46, { size: 11, align: 'center', color: col, weight: 650 }); };
         coil(cx - L / 2 + 10, cx - L / 6, C.cyan, 'S₁'); coil(cx - L / 6 + 6, cx + L / 6 - 6, C.amber, 'Primary P (AC)'); coil(cx + L / 6, cx + L / 2 - 10, C.violet, 'S₂');
-        const corex = cx - p.x * sc; D.rect(S, corex - L * 0.22, cy - 10, L * 0.44, 20, '#9fb3d1', '#fff', 1, 3); D.line(S, corex + L * 0.22, cy, cx + L / 2 + 50, cy, C.muted, 3); D.text(S, 'core (push rod)', corex, cy + 4, { size: 10, align: 'center', color: '#0e1d38', weight: 700 });
-        D.line(S, cx, cy - 60, cx, cy + 60, 'rgba(111,227,155,.5)', 1, [4, 4]); D.text(S, 'null', cx, cy + 74, { size: 10, align: 'center', color: C.green });
+        const corex = cx - p.x * sc; D.rect(S, corex - L * 0.22, cy - 10, L * 0.44, 20, '#a8b1bb', '#24292f', 1, 3); D.line(S, corex + L * 0.22, cy, cx + L / 2 + 50, cy, C.muted, 3); D.text(S, 'core (push rod)', corex, cy + 4, { size: 10, align: 'center', color: '#2b3440', weight: 700 });
+        D.line(S, cx, cy - 60, cx, cy + 60, 'rgba(26,155,75,.5)', 1, [4, 4]); D.text(S, 'null', cx, cy + 74, { size: 10, align: 'center', color: C.green });
         const Vo = p.K * p.x; D.text(S, `V_o = V_S1 − V_S2 = K·x = ${M.fmt(p.K, 3)} × ${M.fmt(p.x, 2)} = ${M.fmt(Vo, 3)} V (demodulated)`, 16, 22, { size: 12 });
         D.text(S, p.x > 0 ? 'core towards S₁: output in phase with primary' : p.x < 0 ? 'core towards S₂: output 180° out of phase' : 'at null: S₁ and S₂ cancel', 16, H - 14, { size: 11.5, color: C.muted });
         S.set('o', M.fmt(Vo, 3) + ' V'); S.set('m', Vo / p.K); S.set('s', p.K + ' V/mm'); S.set('ph', p.x >= 0 ? '0° (towards S₁)' : '180° (towards S₂)');
@@ -954,7 +954,7 @@
         const A = p.K * 1e-4, d = p.x * 1e-3, Cp = M.inst.capacitance(1, A, d) * 1e12, sens = -Cp / p.x;
         const cx = W * 0.35, cy = H * 0.5, side = Math.sqrt(p.K) * 40, gap = p.x * 30;
         D.rect(S, cx - side, cy - gap / 2 - 12, 2 * side, 12, C.amber); D.rect(S, cx - side, cy + gap / 2, 2 * side, 12, C.cyan);
-        for (let k = -3; k <= 3; k++) D.line(S, cx + k * side / 3.5, cy - gap / 2, cx + k * side / 3.5, cy + gap / 2, 'rgba(219,229,245,.35)', 1, [3, 3]);
+        for (let k = -3; k <= 3; k++) D.line(S, cx + k * side / 3.5, cy - gap / 2, cx + k * side / 3.5, cy + gap / 2, 'rgba(31,35,40,.35)', 1, [3, 3]);
         D.text(S, `d = ${M.fmt(p.x, 3)} mm`, cx + side + 12, cy + 4, { size: 12 }); D.text(S, `A = ${M.fmt(p.K, 2)} cm²`, cx, cy - gap / 2 - 22, { size: 12, align: 'center' });
         D.lcd(S, W * 0.66, H * 0.4, 170, M.fmt(Cp, 3) + ' pF', 'Capacitance-to-digital converter');
         D.text(S, 'C = ε₀ εᵣ A / d   (1.36);  dC/dd = −C/d', 16, 22, { size: 12 });
@@ -988,11 +988,11 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, n = S.n || 0, cx = W * 0.25, cy = H * 0.5, R = Math.min(70, H * 0.25);
-      D.rect(S, cx - R * 2.2, cy - R * 0.7, R * 1.6, R * 1.4, '#1d2b48', C.cyan, 1.5, 8); D.text(S, 'Tachogenerator', cx - R * 1.4, cy - R * 0.85, { size: 11, align: 'center', color: C.cyan });
+      D.rect(S, cx - R * 2.2, cy - R * 0.7, R * 1.6, R * 1.4, '#f6f8fa', C.cyan, 1.5, 8); D.text(S, 'Tachogenerator', cx - R * 1.4, cy - R * 0.85, { size: 11, align: 'center', color: C.cyan });
       D.text(S, 'N S', cx - R * 1.4, cy + 4, { size: 14, weight: 700, align: 'center' });
-      D.rect(S, cx - R * 0.6, cy - 6, R * 2.2, 12, '#9fb3d1');
-      const g = S.ctx; for (let k = 0; k < 24; k++) { const a = (S.ang || 0) + k * PI / 12; D.line(S, cx + R * 1.2 + Math.cos(a) * R * 0.55, cy + Math.sin(a) * R * 0.55, cx + R * 1.2 + Math.cos(a) * R * 0.65, cy + Math.sin(a) * R * 0.65, k % 2 ? C.amber : '#fff', 3); }
-      D.circle(S, cx + R * 1.2, cy, R * 0.52, null, '#3a5384', 1.5); D.text(S, 'encoder disc', cx + R * 1.2, cy + R * 0.95, { size: 11, align: 'center', color: C.amber });
+      D.rect(S, cx - R * 0.6, cy - 6, R * 2.2, 12, '#a8b1bb');
+      const g = S.ctx; for (let k = 0; k < 24; k++) { const a = (S.ang || 0) + k * PI / 12; D.line(S, cx + R * 1.2 + Math.cos(a) * R * 0.55, cy + Math.sin(a) * R * 0.55, cx + R * 1.2 + Math.cos(a) * R * 0.65, cy + Math.sin(a) * R * 0.65, k % 2 ? C.amber : '#24292f', 3); }
+      D.circle(S, cx + R * 1.2, cy, R * 0.52, null, '#8c959f', 1.5); D.text(S, 'encoder disc', cx + R * 1.2, cy + R * 0.95, { size: 11, align: 'center', color: C.amber });
       D.meter(S, W * 0.68, H * 0.38, 64, S.vt || 0, 0, p.Kt * p.w / 1000 * 1.1, 'tacho V_t', 'V');
       D.lcd(S, W * 0.6, H * 0.68, 150, M.fmt(S.ne || 0, 1) + ' rpm', 'encoder speed');
       const qe = 60 / (4 * p.N * p.Ts / 1000);
@@ -1029,11 +1029,11 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, wn = 2 * PI * p.fn, z = S.z[0], k = p.m * wn * wn;
       const hx = W * 0.3 + M.clamp(S.base[0], -2, 2) * 40, cy = H * 0.5, hw = 220, hh = 120;
-      D.rect(S, hx - hw / 2, cy - hh / 2, hw, hh, 'rgba(19,38,74,.6)', '#8fa3c4', 2, 8); D.text(S, 'housing (moves with the robot link)', hx, cy - hh / 2 - 8, { size: 10.5, align: 'center', color: C.muted });
+      D.rect(S, hx - hw / 2, cy - hh / 2, hw, hh, 'rgba(255,255,255,.9)', '#57606a', 2, 8); D.text(S, 'housing (moves with the robot link)', hx, cy - hh / 2 - 8, { size: 10.5, align: 'center', color: C.muted });
       const mx = hx + M.clamp(z * 1000 * 8, -hw / 2 + 30, hw / 2 - 30);
       D.spring(S, hx - hw / 2, cy - 18, mx - 24, cy - 18, 8, 7); D.text(S, 'k', (hx - hw / 2 + mx - 24) / 2, cy - 30, { size: 11, color: C.muted });
       D.line(S, hx - hw / 2, cy + 18, mx - 40, cy + 18, C.muted, 2); D.rect(S, mx - 46, cy + 8, 22, 20, null, C.muted, 2); D.text(S, 'c', mx - 35, cy + 42, { size: 11, color: C.muted, align: 'center' });
-      D.rect(S, mx - 24, cy - 32, 48, 64, C.amber, '#fff', 1.5, 4); D.text(S, 'm', mx, cy + 5, { size: 14, weight: 700, align: 'center', color: '#0e1d38' });
+      D.rect(S, mx - 24, cy - 32, 48, 64, C.amber, '#24292f', 1.5, 4); D.text(S, 'm', mx, cy + 5, { size: 14, weight: 700, align: 'center', color: '#2b3440' });
       D.line(S, hx, cy + hh / 2 + 8, hx, cy + hh / 2 + 20, C.green, 1.5); D.arrow(S, hx, cy + hh / 2 + 14, mx, cy + hh / 2 + 14, C.cyan, 1.5, 6); D.text(S, 'z (×8000 for visibility)', hx, cy + hh / 2 + 34, { size: 10, align: 'center', color: C.cyan });
       D.arrow(S, hx, cy - hh / 2 - 26, hx + this.a(S, S.t) * 6, cy - hh / 2 - 26, C.red, 2.5);
       const r = (p.f / p.fn), ar = M.inst.secondOrderFreq(r, p.zeta).M;
@@ -1066,17 +1066,17 @@
       D.clear(S); const p = S.p, W = S.W, H = S.H, r = this.calc(p, p.F), vo = p.Vex * p.GF * r.e * 1000;
       if (p.mode === 'cant') {
         const x0 = 70, y0 = H * 0.42, Lp = Math.min(W * 0.5, 380), th = 8 + p.h * 2;
-        D.rect(S, x0 - 40, y0 - 60, 40, 120, '#3b4f75', '#8fa3c4', 1.5); for (let k = 0; k < 6; k++) D.line(S, x0 - 40, y0 - 60 + k * 24, x0 - 52, y0 - 48 + k * 24, C.muted, 1);
+        D.rect(S, x0 - 40, y0 - 60, 40, 120, '#6e7781', '#57606a', 1.5); for (let k = 0; k < 6; k++) D.line(S, x0 - 40, y0 - 60 + k * 24, x0 - 52, y0 - 48 + k * 24, C.muted, 1);
         const defl = M.clamp(r.e * 4e4, 0, 90); const pts = [], pts2 = [];
         for (let k = 0; k <= 30; k++) { const s = k / 30, x = x0 + s * Lp, y = y0 + defl * s * s * (3 - s) / 2; pts.push([x, y - th / 2]); pts2.push([x, y + th / 2]); }
-        D.poly(S, pts.concat(pts2.reverse()), '#8aa0c6', '#c9d6ec', 1.5);
+        D.poly(S, pts.concat(pts2.reverse()), '#9aa4af', '#8c959f', 1.5);
         D.rect(S, x0 + 12, y0 - th / 2 - 5, 34, 5, C.red); D.rect(S, x0 + 12, y0 + th / 2, 34, 5, C.cyan); D.text(S, 'T (tension) gauges', x0 + 12, y0 - th / 2 - 10, { size: 10, color: C.red }); D.text(S, 'C (compression) gauges', x0 + 12, y0 + th / 2 + 18, { size: 10, color: C.cyan });
         const tip = pts[0]; const ex = x0 + Lp, ey = y0 + defl; D.arrow(S, ex - 4, ey - 70, ex - 4, ey - th / 2 - 2, C.amber, 3); D.text(S, `F = ${p.F} N`, ex + 4, ey - 50, { size: 13, weight: 700, color: C.amber });
         D.text(S, 'ε = 6FL/(Ebh²)  (1.53);  full bridge V_o = V_ex G_F ε', 16, 22, { size: 12 });
       } else {
         const cx = W * 0.32, cy = H * 0.45, Lp = Math.min(W * 0.46, 340), rr = 14 + p.L * 0.8; const tw = M.clamp(r.e * 2500, 0, 1.2);
-        D.rect(S, cx - Lp / 2, cy - rr, Lp, 2 * rr, '#8aa0c6', '#c9d6ec', 1.5, 6);
-        for (let k = 0; k <= 8; k++) { const x = cx - Lp / 2 + k * Lp / 8; D.line(S, x, cy - rr, x + tw * rr * 1.2, cy + rr, 'rgba(14,29,56,.45)', 1.2); }
+        D.rect(S, cx - Lp / 2, cy - rr, Lp, 2 * rr, '#9aa4af', '#8c959f', 1.5, 6);
+        for (let k = 0; k <= 8; k++) { const x = cx - Lp / 2 + k * Lp / 8; D.line(S, x, cy - rr, x + tw * rr * 1.2, cy + rr, 'rgba(255,255,255,.9)', 1.2); }
         D.rect(S, cx - 18, cy - 14, 14, 28, C.red); D.rect(S, cx + 6, cy - 14, 14, 28, C.cyan); D.text(S, '±45° gauges', cx, cy + rr + 18, { size: 11, align: 'center', color: C.muted });
         const arc = (x, dir) => { const g = S.ctx; g.strokeStyle = C.amber; g.lineWidth = 3; g.beginPath(); g.ellipse(x, cy, 12, rr + 12, 0, -1.2 * dir, 1.2 * dir, dir < 0); g.stroke(); };
         arc(cx - Lp / 2 - 10, 1); arc(cx + Lp / 2 + 10, -1); D.text(S, `T = ${p.F} N·m`, cx + Lp / 2 + 30, cy - rr - 10, { size: 13, weight: 700, color: C.amber });
@@ -1114,15 +1114,15 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, s = SENS[p.sens], m = MAT[p.mat], rng = s.Sn * 1.6, d = p.d / 100 * rng, sn = this.sn(S);
       const fx = 120, cy = H * 0.48, span = W - fx - 120; S.face = fx; S.span = span; const X = v => fx + v / rng * span;
-      D.rect(S, 20, cy - 34, fx - 20, 68, '#1d2b48', C.cyan, 2, 6); D.text(S, s.n.split(' ')[0], 70, cy + 4, { size: 11, align: 'center', weight: 650 });
-      D.circle(S, 40, cy - 46, 7, S.state || (p.sens === 'us') ? C.green : '#33415e', '#fff', 1); D.text(S, 'LED', 52, cy - 42, { size: 10, color: C.muted });
+      D.rect(S, 20, cy - 34, fx - 20, 68, '#f6f8fa', C.cyan, 2, 6); D.text(S, s.n.split(' ')[0], 70, cy + 4, { size: 11, align: 'center', weight: 650 });
+      D.circle(S, 40, cy - 46, 7, S.state || (p.sens === 'us') ? C.green : '#d0d7de', '#24292f', 1); D.text(S, 'LED', 52, cy - 42, { size: 10, color: C.muted });
       // field
-      if (p.sens === 'us') { const tc = (S.t * 1.2) % 1; for (let k = 0; k < 3; k++) { const rr = ((tc + k / 3) % 1) * (X(d) - fx); D.circle(S, fx, cy, rr, null, `rgba(76,194,255,${0.6 - 0.5 * rr / span})`, 1.5); } }
-      else if (p.sens === 'photo') { D.line(S, fx, cy - 6, X(d), cy - 6, 'rgba(255,123,123,.7)', 2); D.line(S, X(d), cy + 6, fx, cy + 6, `rgba(255,123,123,${0.8 * m.refl})`, 2, [5, 4]); }
-      else { for (let k = 1; k <= 4; k++) { const g = S.ctx; g.strokeStyle = `rgba(76,194,255,${0.45 - k * 0.08})`; g.lineWidth = 1.2; g.beginPath(); g.ellipse(fx, cy, k * span * s.Sn / rng / 3.2, 30 + k * 6, 0, -PI / 2, PI / 2); g.stroke(); } }
-      if (sn > 0 && p.sens !== 'us') { D.line(S, X(sn), cy - 70, X(sn), cy + 70, C.amber, 1.5, [6, 4]); D.text(S, 'S_r', X(sn) - 6, cy - 76, { size: 11, color: C.amber }); D.line(S, X(sn * 1.1), cy - 60, X(sn * 1.1), cy + 60, 'rgba(242,165,22,.4)', 1, [3, 4]); }
-      const col = { steel: '#9fb3d1', al: '#d6dde8', plastic: '#ff9f6b', water: '#4c9bff', wood: '#7a5634', magnet: '#9fb3d1' }[p.mat];
-      D.rect(S, X(d), cy - 40, 50, 80, col, '#fff', 1.5, 4); if (m.mag) { D.rect(S, X(d), cy - 12, 12, 24, C.red); D.text(S, 'N', X(d) + 3, cy + 4, { size: 10, weight: 700 }); }
+      if (p.sens === 'us') { const tc = (S.t * 1.2) % 1; for (let k = 0; k < 3; k++) { const rr = ((tc + k / 3) % 1) * (X(d) - fx); D.circle(S, fx, cy, rr, null, `rgba(11,127,193,${0.6 - 0.5 * rr / span})`, 1.5); } }
+      else if (p.sens === 'photo') { D.line(S, fx, cy - 6, X(d), cy - 6, 'rgba(209,36,47,.7)', 2); D.line(S, X(d), cy + 6, fx, cy + 6, `rgba(209,36,47,${0.8 * m.refl})`, 2, [5, 4]); }
+      else { for (let k = 1; k <= 4; k++) { const g = S.ctx; g.strokeStyle = `rgba(11,127,193,${0.45 - k * 0.08})`; g.lineWidth = 1.2; g.beginPath(); g.ellipse(fx, cy, k * span * s.Sn / rng / 3.2, 30 + k * 6, 0, -PI / 2, PI / 2); g.stroke(); } }
+      if (sn > 0 && p.sens !== 'us') { D.line(S, X(sn), cy - 70, X(sn), cy + 70, C.amber, 1.5, [6, 4]); D.text(S, 'S_r', X(sn) - 6, cy - 76, { size: 11, color: C.amber }); D.line(S, X(sn * 1.1), cy - 60, X(sn * 1.1), cy + 60, 'rgba(199,119,0,.4)', 1, [3, 4]); }
+      const col = { steel: '#a8b1bb', al: '#d6dde8', plastic: '#d4602a', water: '#0969da', wood: '#7a5634', magnet: '#a8b1bb' }[p.mat];
+      D.rect(S, X(d), cy - 40, 50, 80, col, '#24292f', 1.5, 4); if (m.mag) { D.rect(S, X(d), cy - 12, 12, 24, C.red); D.text(S, 'N', X(d) + 3, cy + 4, { size: 10, weight: 700 }); }
       D.text(S, m.n, X(d) + 25, cy + 56, { size: 11, align: 'center', color: C.muted });
       D.line(S, fx, cy + 90, X(d), cy + 90, C.muted, 1); D.text(S, `${M.fmt(d, 1)} mm`, (fx + X(d)) / 2, cy + 104, { size: 11, align: 'center' });
       let out, rd;
@@ -1154,13 +1154,13 @@
       const E = M.inst.typeK_mV(p.T) - M.inst.typeK_mV(p.Tr); const Tind = p.cjc ? M.inst.typeK_inverse(E + M.inst.typeK_mV(p.Tr)) : M.inst.typeK_inverse(E);
       // bath
       const bx = 40, bw = Math.min(W * 0.42, 330), by = H * 0.3, bh = H * 0.55; const heat = M.clamp((p.T + 50) / 450, 0, 1);
-      D.rect(S, bx, by, bw, bh, `rgb(${Math.round(40 + 180 * heat)},${Math.round(70 + 20 * heat)},${Math.round(140 - 110 * heat)})`, '#c9d6ec', 2, 6);
-      for (let k = 0; k < 8; k++) { const yy = by + bh - ((S.t * 30 * heat + k * 37) % bh); D.circle(S, bx + 20 + k * bw / 8, yy, 2 + heat * 2, 'rgba(255,255,255,.35)'); }
+      D.rect(S, bx, by, bw, bh, `rgb(${Math.round(238 + 11 * heat)},${Math.round(241 - 50 * heat)},${Math.round(244 - 60 * heat)})`, '#8c959f', 2, 6);
+      for (let k = 0; k < 8; k++) { const yy = by + bh - ((S.t * 30 * heat + k * 37) % bh); D.circle(S, bx + 20 + k * bw / 8, yy, 2 + heat * 2, 'rgba(36,41,47,.35)'); }
       D.text(S, `${M.fmt(p.T, 1)} °C`, bx + bw / 2, by + bh + 22, { size: 14, weight: 700, align: 'center' });
       const probes = [['Pt100 RTD', bx + bw * 0.2, C.cyan], ['NTC', bx + bw * 0.5, C.violet], ['Type K', bx + bw * 0.8, C.amber]];
       probes.forEach(([n, x, c]) => { D.rect(S, x - 4, by - 60, 8, bh * 0.75 + 60, c); D.text(S, n, x, by - 66, { size: 11, align: 'center', color: c, weight: 650 }); });
       // thermocouple reference junction
-      D.rect(S, bx + bw * 0.8 - 30, by - 110, 60, 26, '#1d2b48', C.amber, 1, 4); D.text(S, `T_r ${p.Tr} °C`, bx + bw * 0.8, by - 93, { size: 10.5, align: 'center' });
+      D.rect(S, bx + bw * 0.8 - 30, by - 110, 60, 26, '#f6f8fa', C.amber, 1, 4); D.text(S, `T_r ${p.Tr} °C`, bx + bw * 0.8, by - 93, { size: 10.5, align: 'center' });
       const ix = Math.min(W - 250, bx + bw + 40);
       D.box(S, ix, 30, 230, 'Pt100 RTD  R_T = R₀(1 + AT + BT²)', [['R_T', M.fmt(R, 3) + ' Ω'], ['V = I·R_T', M.fmt(p.I * R, 2) + ' mV'], ['Linear-model T', M.fmt(Tlin, 2) + ' °C']], { tc: C.cyan });
       D.box(S, ix, 112, 230, 'NTC  R = R₂₅ exp[β(1/T − 1/T₂₅)]', [['R', M.fmt(Rn, 3) + ' kΩ'], ['Sensitivity α = −β/T²', M.fmt(-p.beta / (p.T + 273.15) ** 2 * 100, 2) + ' %/°C']], { tc: C.violet });
@@ -1193,7 +1193,7 @@
       D.clear(S); const p = S.p, W = S.W, H = S.H, P = p.p * 1000, nu = 0.3; const ch = S.chart('c');
       if (p.mode === 'mano') {
         const h = M.clamp(P / (p.rho * M.g0), 0, 10); const cx = W * 0.3, top = 40, bot = H - 40, sc = (bot - top - 40) / Math.max(0.2, 100e3 / (p.rho * M.g0)); const lv = (bot - top) / 2 + top;
-        D.rect(S, cx - 70, top, 20, bot - top, '#0e1d38', '#8fa3c4', 1.5); D.rect(S, cx + 50, top, 20, bot - top, '#0e1d38', '#8fa3c4', 1.5); D.rect(S, cx - 70, bot - 20, 140, 20, '#0e1d38', '#8fa3c4', 1.5);
+        D.rect(S, cx - 70, top, 20, bot - top, '#f6f8fa', '#57606a', 1.5); D.rect(S, cx + 50, top, 20, bot - top, '#f6f8fa', '#57606a', 1.5); D.rect(S, cx - 70, bot - 20, 140, 20, '#f6f8fa', '#57606a', 1.5);
         const dy = h * sc / 2; D.rect(S, cx - 68, lv + dy, 16, bot - lv - dy, '#c8cdd6'); D.rect(S, cx + 52, lv - dy, 16, bot - lv + dy, '#c8cdd6'); D.rect(S, cx - 68, bot - 18, 136, 16, '#c8cdd6');
         D.arrow(S, cx - 60, top - 30, cx - 60, lv + dy - 4, C.amber, 2.5); D.text(S, 'p applied', cx - 60, top - 34, { size: 11, align: 'center', color: C.amber });
         D.line(S, cx + 80, lv - dy, cx + 80, lv + dy, C.cyan, 2); D.text(S, `h = ${M.fmt(h * 1000, 1)} mm`, cx + 88, lv + 4, { size: 12, color: C.cyan });
@@ -1204,8 +1204,8 @@
       } else if (p.mode === 'dia') {
         const a = p.a / 1000, t = p.th / 1000, E = p.E * 1e9; const y = M.inst.diaphragm(P, a, t, E, nu), e = M.inst.diaphragmCentreStrain(P, a, t, E, nu);
         const cx = W * 0.32, cy = H * 0.45, Rp = Math.min(W * 0.24, 170), amp = M.clamp(y / t * 120, 0, 80);
-        D.rect(S, cx - Rp - 30, cy - 10, 30, 70, '#3b4f75'); D.rect(S, cx + Rp, cy - 10, 30, 70, '#3b4f75');
-        const pts = []; for (let k = 0; k <= 40; k++) { const r = -1 + 2 * k / 40; pts.push([cx + r * Rp, cy - amp * (1 - r * r) ** 2]); } D.poly(S, pts, null, '#c9d6ec', 5, false);
+        D.rect(S, cx - Rp - 30, cy - 10, 30, 70, '#6e7781'); D.rect(S, cx + Rp, cy - 10, 30, 70, '#6e7781');
+        const pts = []; for (let k = 0; k <= 40; k++) { const r = -1 + 2 * k / 40; pts.push([cx + r * Rp, cy - amp * (1 - r * r) ** 2]); } D.poly(S, pts, null, '#8c959f', 5, false);
         for (let k = -3; k <= 3; k++) D.arrow(S, cx + k * Rp / 4, cy + 60, cx + k * Rp / 4, cy + 14, C.amber, 2, 7);
         D.text(S, 'p', cx, cy + 78, { size: 13, align: 'center', color: C.amber, weight: 700 });
         D.rect(S, cx - 14, cy - amp - 8, 28, 4, C.red); D.rect(S, cx + Rp * 0.82, cy - 5, 14, 4, C.cyan); D.text(S, 'centre gauge (+ε)', cx, cy - amp - 14, { size: 10, align: 'center', color: C.red }); D.text(S, 'edge gauge (−ε)', cx + Rp * 0.82, cy - 12, { size: 10, align: 'center', color: C.cyan });
@@ -1216,7 +1216,7 @@
         const c = []; for (let k = 0; k <= 20; k++) { const pp = k * 100; c.push([pp, M.inst.diaphragm(pp * 1000, a, t, E, nu) * 1e6]); } ch.set(0, c); ch.set(1, [[p.p, y * 1e6]]);
       } else {
         const cx = W * 0.35, cy = H * 0.52, R = Math.min(W * 0.2, 120), frac = M.clamp(p.p / 2000, 0, 1);
-        D.circle(S, cx, cy, R + 20, '#13264a', '#8fa3c4', 2); const g = S.ctx; g.strokeStyle = '#c9a26b'; g.lineWidth = 9; g.beginPath(); g.arc(cx, cy, R * 0.75, PI * 0.75, PI * (0.75 + 1.5 - 0.25 * frac)); g.stroke();
+        D.circle(S, cx, cy, R + 20, '#eef1f4', '#57606a', 2); const g = S.ctx; g.strokeStyle = '#c9a26b'; g.lineWidth = 9; g.beginPath(); g.arc(cx, cy, R * 0.75, PI * 0.75, PI * (0.75 + 1.5 - 0.25 * frac)); g.stroke();
         for (let k = 0; k <= 10; k++) { const a = PI * (0.75 + 0.15 * k); D.line(S, cx + Math.cos(a) * (R + 6), cy + Math.sin(a) * (R + 6), cx + Math.cos(a) * (R + 16), cy + Math.sin(a) * (R + 16), C.muted, 1.5); D.text(S, String(k * 200), cx + Math.cos(a) * (R + 30), cy + Math.sin(a) * (R + 30) + 4, { size: 9, align: 'center', color: C.muted }); }
         const a = PI * (0.75 + 1.5 * frac); D.line(S, cx, cy, cx + Math.cos(a) * R, cy + Math.sin(a) * R, C.amber, 3); D.circle(S, cx, cy, 6, C.amber);
         D.text(S, 'Bourdon tube straightens under pressure; linkage, sector and pinion drive the pointer', 16, 22, { size: 12 });
@@ -1262,8 +1262,8 @@
       const vap = n * p.Vex * p.GF * p.eps * 1e-6 / 4;
       // beam
       const x0 = 50, y0 = H * 0.32, Lp = Math.min(W * 0.42, 300), defl = M.clamp(p.eps / 1500 * 40, -40, 40);
-      D.rect(S, x0 - 26, y0 - 40, 26, 80, '#3b4f75'); const top = [], bot = [];
-      for (let k = 0; k <= 24; k++) { const s = k / 24, x = x0 + s * Lp, y = y0 + defl * s * s * (3 - s) / 2; top.push([x, y - 9]); bot.push([x, y + 9]); } D.poly(S, top.concat(bot.slice().reverse()), '#8aa0c6', '#c9d6ec', 1.5);
+      D.rect(S, x0 - 26, y0 - 40, 26, 80, '#6e7781'); const top = [], bot = [];
+      for (let k = 0; k <= 24; k++) { const s = k / 24, x = x0 + s * Lp, y = y0 + defl * s * s * (3 - s) / 2; top.push([x, y - 9]); bot.push([x, y + 9]); } D.poly(S, top.concat(bot.slice().reverse()), '#9aa4af', '#8c959f', 1.5);
       D.rect(S, x0 + 10, y0 - 14, 34, 5, C.red); if (n > 1) D.rect(S, x0 + 10, y0 + 9, 34, 5, C.cyan); if (n === 4) { D.rect(S, x0 + 50, y0 - 14, 34, 5, C.red); D.rect(S, x0 + 50, y0 + 9, 34, 5, C.cyan); }
       D.arrow(S, x0 + Lp, y0 + defl - 60 * Math.sign(p.eps || 1), x0 + Lp, y0 + defl - 12 * Math.sign(p.eps || 1), C.amber, 3); D.text(S, `ε = ${p.eps} µε at gauge`, x0, y0 - 52, { size: 12, weight: 650 });
       // bridge diagram
@@ -1272,7 +1272,7 @@
       const arm = (a, b, lbl, val, act) => { D.line(S, ...a, ...b, act ? C.amber : C.text, act ? 3 : 2); const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; D.text(S, lbl, mx + (mx < bx ? -48 : 10), my + (my < by ? -2 : 14), { size: 11, color: act ? C.amber : C.muted, weight: 650 }); D.text(S, M.fmt(val, 3) + ' Ω', mx + (mx < bx ? -48 : 10), my + (my < by ? 12 : 28), { size: 10, color: C.text }); };
       arm(nodes.T, nodes.L, 'R₁', arms[0], true); arm(nodes.L, nodes.B, 'R₂', arms[1], n > 1); arm(nodes.T, nodes.R, 'R₄', arms[3], n === 4); arm(nodes.R, nodes.B, 'R₃', arms[2], n === 4);
       D.text(S, `+V_ex = ${p.Vex} V`, bx, by - s - 10, { size: 11, align: 'center' }); D.text(S, '0 V', bx, by + s + 18, { size: 11, align: 'center' });
-      D.line(S, ...nodes.L, ...nodes.R, 'rgba(76,194,255,.6)', 1.5, [4, 4]); D.text(S, `V_o = ${M.fmt(vo * 1000, 4)} mV`, bx, by + 4, { size: 13, align: 'center', weight: 700, color: C.cyan });
+      D.line(S, ...nodes.L, ...nodes.R, 'rgba(11,127,193,.6)', 1.5, [4, 4]); D.text(S, `V_o = ${M.fmt(vo * 1000, 4)} mV`, bx, by + 4, { size: 13, align: 'center', weight: 700, color: C.cyan });
       D.text(S, 'V_o = V_ex [R₁/(R₁+R₂) − R₄/(R₃+R₄)];   ΔR/R = G_F ε  (1.50);   V_o ≈ n V_ex G_F ε / 4  (1.51)', 16, H - 14, { size: 11.5, color: C.muted });
       S.set('dR', p.GF * p.eps * 1e-6 * p.R); S.set('vex', vo * 1000); S.set('vap', vap * 1000); S.set('nl', vap ? (vo - vap) / vap * 100 : 0); S.set('vt', vt * 1000); S.set('amp', vo * p.G);
       const ch = S.chart('c'); [1, 2, 4].forEach((cfg, i) => { const pts = []; for (let e = -1500; e <= 1500; e += 100) { const q = Object.assign({}, p, { cfg, dT: 0 }); const ar = cfg === 1 ? [p.R * (1 + p.GF * e * 1e-6), p.R, p.R, p.R] : this.arms(q, e); pts.push([e, p.Vex * (ar[0] / (ar[0] + ar[1]) - ar[3] / (ar[2] + ar[3])) * 1000]); } ch.set(i, pts); });
@@ -1331,11 +1331,11 @@
       // energy pulses
       for (let k = 0; k < 6; k++) { const f = ((S.t * 0.8 + k / 6) % 1); if (flow) D.circle(S, 16 + f * (x0 - 16), cy + 44, 3, col); }
       if (p.tech === 'elec') {
-        D.rect(S, x0, cy - 8, Lc, 16, '#3b4f75', '#8fa3c4', 1, 3); for (let k = 0; k < Lc; k += 8) D.line(S, x0 + k + ((S.x || 0) * 3000 % 8), cy - 8, x0 + k + 4 + ((S.x || 0) * 3000 % 8), cy + 8, '#8fa3c4', 1);
-        D.rect(S, x0 + 10 + x * sc, cy - 26, 60, 52, '#6f86ad', '#c9d6ec', 1.5, 4); D.text(S, 'nut / carriage', x0 + 40 + x * sc, cy + 42, { size: 10, align: 'center', color: C.muted });
+        D.rect(S, x0, cy - 8, Lc, 16, '#6e7781', '#57606a', 1, 3); for (let k = 0; k < Lc; k += 8) D.line(S, x0 + k + ((S.x || 0) * 3000 % 8), cy - 8, x0 + k + 4 + ((S.x || 0) * 3000 % 8), cy + 8, '#57606a', 1);
+        D.rect(S, x0 + 10 + x * sc, cy - 26, 60, 52, '#6e7781', '#8c959f', 1.5, 4); D.text(S, 'nut / carriage', x0 + 40 + x * sc, cy + 42, { size: 10, align: 'center', color: C.muted });
       } else {
-        D.rect(S, x0, cy - 34, Lc * 0.85, 68, '#13264a', '#c9d6ec', 2, 4);
-        const px = x0 + 8 + x * sc; D.rect(S, x0 + 2, cy - 32, px - x0 - 2, 64, p.tech === 'hyd' ? 'rgba(242,165,22,.35)' : 'rgba(76,194,255,.25)'); D.rect(S, px, cy - 32, 12, 64, '#8aa0c6', '#fff', 1); D.rect(S, px + 12, cy - 7, Lc * 0.85 - (px - x0) + 20, 14, '#c9d6ec');
+        D.rect(S, x0, cy - 34, Lc * 0.85, 68, '#eef1f4', '#8c959f', 2, 4);
+        const px = x0 + 8 + x * sc; D.rect(S, x0 + 2, cy - 32, px - x0 - 2, 64, p.tech === 'hyd' ? 'rgba(199,119,0,.35)' : 'rgba(11,127,193,.25)'); D.rect(S, px, cy - 32, 12, 64, '#9aa4af', '#24292f', 1); D.rect(S, px + 12, cy - 7, Lc * 0.85 - (px - x0) + 20, 14, '#8c959f');
         D.text(S, 'A (cap end)', x0 + 6, cy - 40, { size: 10, color: C.muted }); D.text(S, 'A − a (rod end)', x0 + Lc * 0.85 - 4, cy - 40, { size: 10, color: C.muted, align: 'right' });
       }
       const rodEnd = p.tech === 'elec' ? x0 + 70 + x * sc : x0 + Lc * 0.85 + 32 + x * sc;
@@ -1380,14 +1380,14 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, [ia, w, th] = S.x; const cx = W * 0.3, cy = H * 0.5, R = Math.min(W * 0.22, H * 0.4);
       // stator
-      const g = S.ctx; D.circle(S, cx, cy, R, '#22355c', '#8fa3c4', 2);
+      const g = S.ctx; D.circle(S, cx, cy, R, '#c9d1d9', '#57606a', 2);
       g.fillStyle = '#c0392b'; g.beginPath(); g.arc(cx, cy, R * 0.92, PI * 0.72, PI * 1.28); g.arc(cx, cy, R * 0.72, PI * 1.28, PI * 0.72, true); g.fill(); D.text(S, 'N', cx - R * 0.83, cy + 5, { size: 15, weight: 800, align: 'center' });
       g.fillStyle = '#2f6fd6'; g.beginPath(); g.arc(cx, cy, R * 0.92, -PI * 0.28, PI * 0.28); g.arc(cx, cy, R * 0.72, PI * 0.28, -PI * 0.28, true); g.fill(); D.text(S, 'S', cx + R * 0.83, cy + 5, { size: 15, weight: 800, align: 'center' });
-      for (let k = -2; k <= 2; k++) D.arrow(S, cx - R * 0.68, cy + k * R * 0.15, cx + R * 0.66, cy + k * R * 0.15, 'rgba(255,255,255,.12)', 1, 6);
+      for (let k = -2; k <= 2; k++) D.arrow(S, cx - R * 0.68, cy + k * R * 0.15, cx + R * 0.66, cy + k * R * 0.15, 'rgba(36,41,47,.12)', 1, 6);
       // rotor with conductors; current direction fixed in space by commutator
-      D.circle(S, cx, cy, R * 0.62, '#3b4f75', '#c9d6ec', 1.5);
-      const nc = 12; for (let k = 0; k < nc; k++) { const a = th + k * 2 * PI / nc; const px = cx + Math.cos(a) * R * 0.52, py = cy + Math.sin(a) * R * 0.52; const side = Math.cos(a) > 0 ? 1 : -1; const s = Math.abs(ia) < 0.05 ? 0 : side * Math.sign(ia); D.circle(S, px, py, 7, s > 0 ? C.amber : s < 0 ? C.cyan : '#6f86ad', '#fff', 1); if (s > 0) D.circle(S, px, py, 2, '#0e1d38'); else if (s < 0) { D.line(S, px - 3, py - 3, px + 3, py + 3, '#0e1d38', 1.5); D.line(S, px - 3, py + 3, px + 3, py - 3, '#0e1d38', 1.5); } }
-      D.circle(S, cx, cy, R * 0.18, '#b87333', '#fff', 1); for (let k = 0; k < 8; k++) { const a = th + k * PI / 4; D.line(S, cx, cy, cx + Math.cos(a) * R * 0.18, cy + Math.sin(a) * R * 0.18, '#3b2a1a', 1.5); }
+      D.circle(S, cx, cy, R * 0.62, '#6e7781', '#8c959f', 1.5);
+      const nc = 12; for (let k = 0; k < nc; k++) { const a = th + k * 2 * PI / nc; const px = cx + Math.cos(a) * R * 0.52, py = cy + Math.sin(a) * R * 0.52; const side = Math.cos(a) > 0 ? 1 : -1; const s = Math.abs(ia) < 0.05 ? 0 : side * Math.sign(ia); D.circle(S, px, py, 7, s > 0 ? C.amber : s < 0 ? C.cyan : '#6e7781', '#24292f', 1); if (s > 0) D.circle(S, px, py, 2, '#2b3440'); else if (s < 0) { D.line(S, px - 3, py - 3, px + 3, py + 3, '#2b3440', 1.5); D.line(S, px - 3, py + 3, px + 3, py - 3, '#2b3440', 1.5); } }
+      D.circle(S, cx, cy, R * 0.18, '#b87333', '#24292f', 1); for (let k = 0; k < 8; k++) { const a = th + k * PI / 4; D.line(S, cx, cy, cx + Math.cos(a) * R * 0.18, cy + Math.sin(a) * R * 0.18, '#f3e6d6', 1.5); }
       D.rect(S, cx - 6, cy - R * 0.18 - 14, 12, 12, '#333'); D.rect(S, cx - 6, cy + R * 0.18 + 2, 12, 12, '#333');
       if (Math.abs(ia) > 0.05) { D.arrow(S, cx + R * 0.35, cy - R * 0.7, cx - R * 0.35, cy - R * 0.7, C.green, 2.5); D.text(S, `T = K_t i_a = ${M.fmt(p.K * ia, 3)} N·m`, cx, cy - R - 10, { size: 11, align: 'center', color: C.green }); }
       D.text(S, '● current out of page   ✕ into page;  F = BIl on each conductor', cx, cy + R + 20, { size: 10.5, align: 'center', color: C.muted });
@@ -1432,23 +1432,23 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, r = this.refRad(S);
       const bx = 30, by = 40, bw = Math.min(W * 0.55, 440), bh = H - 90;
-      D.rect(S, bx, by, bw, bh, 'rgba(19,38,74,.6)', '#8fa3c4', 2, 10); D.text(S, 'servo housing', bx + 10, by + 16, { size: 10.5, color: C.muted });
+      D.rect(S, bx, by, bw, bh, 'rgba(255,255,255,.9)', '#57606a', 2, 10); D.text(S, 'servo housing', bx + 10, by + 16, { size: 10.5, color: C.muted });
       // motor
-      D.rect(S, bx + 20, by + bh * 0.55, bw * 0.3, bh * 0.32, '#1d2b48', C.cyan, 1.5, 6); D.text(S, 'DC motor', bx + 20 + bw * 0.15, by + bh * 0.55 + bh * 0.16 + 4, { size: 11, align: 'center', color: C.cyan });
+      D.rect(S, bx + 20, by + bh * 0.55, bw * 0.3, bh * 0.32, '#f6f8fa', C.cyan, 1.5, 6); D.text(S, 'DC motor', bx + 20 + bw * 0.15, by + bh * 0.55 + bh * 0.16 + 4, { size: 11, align: 'center', color: C.cyan });
       // gear train
-      const gear = (x, y, rr, teeth, ang, col) => { const g = S.ctx; g.fillStyle = col; g.beginPath(); for (let k = 0; k < teeth * 2; k++) { const a = ang + k * PI / teeth, rad = k % 2 ? rr : rr * 0.84; g.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } g.closePath(); g.fill(); D.circle(S, x, y, rr * 0.2, '#0e1d38'); D.line(S, x, y, x + Math.cos(ang) * rr * 0.7, y + Math.sin(ang) * rr * 0.7, '#0e1d38', 2); };
+      const gear = (x, y, rr, teeth, ang, col) => { const g = S.ctx; g.fillStyle = col; g.beginPath(); for (let k = 0; k < teeth * 2; k++) { const a = ang + k * PI / teeth, rad = k % 2 ? rr : rr * 0.84; g.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } g.closePath(); g.fill(); D.circle(S, x, y, rr * 0.2, '#2b3440'); D.line(S, x, y, x + Math.cos(ang) * rr * 0.7, y + Math.sin(ang) * rr * 0.7, '#2b3440', 2); };
       const gy = by + bh * 0.4, n = p.n; const st = Math.pow(n, 1 / 3);
       gear(bx + 30 + bw * 0.3, gy, 12, 8, S.motorAng, '#c9a26b'); gear(bx + 30 + bw * 0.3 + 34, gy, 26, 16, -S.motorAng / st, '#b98f58'); gear(bx + 30 + bw * 0.3 + 72, gy - 10, 18, 12, S.motorAng / st / st, '#c9a26b'); gear(bx + bw - 70, gy, 40, 24, -S.th, '#d4b07a');
       D.text(S, `gear train n = ${n}:1`, bx + bw * 0.55, gy + 52, { size: 10.5, align: 'center', color: C.amber });
       // pot + control board
-      D.rect(S, bx + bw - 100, by + bh * 0.65, 60, 40, '#2a1f3d', C.violet, 1.5, 4); D.text(S, 'feedback pot', bx + bw - 70, by + bh * 0.65 + 56, { size: 10, align: 'center', color: C.violet }); D.line(S, bx + bw - 70, by + bh * 0.65 + 20, bx + bw - 70 + Math.cos(-S.th) * 16, by + bh * 0.65 + 20 + Math.sin(-S.th) * 16, C.violet, 2);
-      D.rect(S, bx + 20, by + 26, bw * 0.35, 46, '#10301e', C.green, 1.5, 4); D.text(S, 'control circuit (PID)', bx + 20 + bw * 0.175, by + 46, { size: 10.5, align: 'center', color: C.green }); D.text(S, `e = ${M.fmt((r - S.th) * R2D, 1)}°`, bx + 20 + bw * 0.175, by + 62, { size: 10.5, align: 'center' });
+      D.rect(S, bx + bw - 100, by + bh * 0.65, 60, 40, '#ece4fb', C.violet, 1.5, 4); D.text(S, 'feedback pot', bx + bw - 70, by + bh * 0.65 + 56, { size: 10, align: 'center', color: C.violet }); D.line(S, bx + bw - 70, by + bh * 0.65 + 20, bx + bw - 70 + Math.cos(-S.th) * 16, by + bh * 0.65 + 20 + Math.sin(-S.th) * 16, C.violet, 2);
+      D.rect(S, bx + 20, by + 26, bw * 0.35, 46, '#dcf3e3', C.green, 1.5, 4); D.text(S, 'control circuit (PID)', bx + 20 + bw * 0.175, by + 46, { size: 10.5, align: 'center', color: C.green }); D.text(S, `e = ${M.fmt((r - S.th) * R2D, 1)}°`, bx + 20 + bw * 0.175, by + 62, { size: 10.5, align: 'center' });
       D.arrow(S, bx + bw - 100, by + bh * 0.65 + 10, bx + 20 + bw * 0.35, by + 60, C.violet, 1.5, 7); D.arrow(S, bx + 40, by + 72, bx + 40, by + bh * 0.55, C.green, 1.5, 7);
       // output shaft horn
       const ox = Math.min(W - 110, bx + bw + 100), oy = H * 0.45, L = 70;
-      D.circle(S, ox, oy, L + 12, null, '#3a5384', 1); for (let a = 0; a <= 180; a += 30) { const aa = PI - a * D2R; D.line(S, ox + Math.cos(aa) * (L + 6), oy - Math.sin(aa) * (L + 6), ox + Math.cos(aa) * (L + 14), oy - Math.sin(aa) * (L + 14), C.muted, 1); D.text(S, a + '°', ox + Math.cos(aa) * (L + 28), oy - Math.sin(aa) * (L + 28) + 4, { size: 9, align: 'center', color: C.muted }); }
-      const ra = PI - r; D.line(S, ox, oy, ox + Math.cos(ra) * L, oy - Math.sin(ra) * L, 'rgba(111,227,155,.7)', 2, [5, 4]);
-      const ta = PI - S.th; D.link(S, ox, oy, ox + Math.cos(ta) * L, oy - Math.sin(ta) * L, 12, '#e9eef7', '#8fa3c4'); D.circle(S, ox, oy, 9, C.amber);
+      D.circle(S, ox, oy, L + 12, null, '#8c959f', 1); for (let a = 0; a <= 180; a += 30) { const aa = PI - a * D2R; D.line(S, ox + Math.cos(aa) * (L + 6), oy - Math.sin(aa) * (L + 6), ox + Math.cos(aa) * (L + 14), oy - Math.sin(aa) * (L + 14), C.muted, 1); D.text(S, a + '°', ox + Math.cos(aa) * (L + 28), oy - Math.sin(aa) * (L + 28) + 4, { size: 9, align: 'center', color: C.muted }); }
+      const ra = PI - r; D.line(S, ox, oy, ox + Math.cos(ra) * L, oy - Math.sin(ra) * L, 'rgba(26,155,75,.7)', 2, [5, 4]);
+      const ta = PI - S.th; D.link(S, ox, oy, ox + Math.cos(ta) * L, oy - Math.sin(ta) * L, 12, '#c9d1d9', '#57606a'); D.circle(S, ox, oy, 9, C.amber);
       D.text(S, 'output shaft', ox, oy + 32, { size: 10.5, align: 'center', color: C.muted });
       if (p.src === 'pwm') { const px = ox - 80, py = H - 34; D.text(S, `RC pulse ${p.tp.toFixed(3)} ms every 20 ms → θ = 180°(t_p − 1)/1 = ${M.fmt(M.act.rcServoAngle(p.tp), 1)}°`, 16, H - 10, { size: 11, color: C.amber }); D.poly(S, [[px, py], [px + 10, py], [px + 10, py - 14], [px + 10 + p.tp * 20, py - 14], [px + 10 + p.tp * 20, py], [px + 160, py]], null, C.amber, 2, false); }
       S.set('ref', r * R2D); S.set('th', S.th * R2D); S.set('e', (r - S.th) * R2D); S.set('u', S.u || 0); S.set('mp', S.mp); S.set('jeq', 2e-3 + p.n * p.n * 2e-6);
@@ -1491,13 +1491,13 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, m = +p.m, Nr = +p.Nr, cx = W * 0.32, cy = H * 0.5, R = Math.min(W * 0.24, H * 0.42); const on = this.pattern(S, S.k), names = 'ABCD';
-      D.circle(S, cx, cy, R, '#22355c', '#8fa3c4', 2);
-      for (let k = 0; k < 2 * m; k++) { const a = -k * PI / m, j = k % m, act = on[j]; const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(a); D.rect(S, cx * 0 + R * 0.55, -R * 0.12, R * 0.4, R * 0.24, act ? (k < m ? C.amber : '#c98a10') : '#3b4f75', '#c9d6ec', 1, 3); g.restore();
+      D.circle(S, cx, cy, R, '#c9d1d9', '#57606a', 2);
+      for (let k = 0; k < 2 * m; k++) { const a = -k * PI / m, j = k % m, act = on[j]; const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(a); D.rect(S, cx * 0 + R * 0.55, -R * 0.12, R * 0.4, R * 0.24, act ? (k < m ? C.amber : '#c98a10') : '#6e7781', '#8c959f', 1, 3); g.restore();
         const lx = cx + Math.cos(a) * R * 1.12, ly = cy + Math.sin(a) * R * 1.12; D.text(S, names[j] + (k >= m ? '′' : ''), lx, ly + 4, { size: 12, weight: 700, align: 'center', color: act ? C.amber : C.muted }); }
       // rotor with Nr teeth
-      const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(-S.th); g.fillStyle = '#9fb3d1'; g.beginPath();
+      const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(-S.th); g.fillStyle = '#a8b1bb'; g.beginPath();
       for (let k = 0; k < Nr; k++) { const a0 = k * 2 * PI / Nr, hw = Math.min(0.3, PI / Nr * 0.55); g.lineTo(Math.cos(a0 - hw) * R * 0.53, Math.sin(a0 - hw) * R * 0.53); g.lineTo(Math.cos(a0 + hw) * R * 0.53, Math.sin(a0 + hw) * R * 0.53); g.lineTo(Math.cos(a0 + PI / Nr) * R * 0.3, Math.sin(a0 + PI / Nr) * R * 0.3); }
-      g.closePath(); g.fill(); g.fillStyle = C.red; g.beginPath(); g.arc(R * 0.42, 0, 5, 0, 2 * PI); g.fill(); g.restore(); D.circle(S, cx, cy, 6, '#0e1d38', '#fff', 1);
+      g.closePath(); g.fill(); g.fillStyle = C.red; g.beginPath(); g.arc(R * 0.42, 0, 5, 0, 2 * PI); g.fill(); g.restore(); D.circle(S, cx, cy, 6, '#2b3440', '#24292f', 1);
       const ts = this.stepAngle(S), Sx = 360 / ts, target = S.k * ts * (p.seq === 'half' ? 1 : 1);
       // table of sequence
       const tx = Math.min(W - 230, cx + R + 50), ty = 30; D.text(S, `${p.seq} sequence`, tx, ty, { size: 12, weight: 700 });
@@ -1544,13 +1544,13 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, cx = W * 0.3, cy = H * 0.52, R = Math.min(W * 0.22, H * 0.4), st = SIX[S.sec || 0], eAng = S.th * p.p;
-      D.circle(S, cx, cy, R, '#22355c', '#8fa3c4', 2);
+      D.circle(S, cx, cy, R, '#c9d1d9', '#57606a', 2);
       const phCol = { A: C.red, B: C.green, C: C.cyan };
-      ['A', 'B', 'C'].forEach((ph, i) => { [0, 1].forEach(o => { const a = -(i * 2 * PI / 3 + o * PI); const x = cx + Math.cos(a) * R * 0.78, y = cy + Math.sin(a) * R * 0.78; const act = ph === st.hi || ph === st.lo; const g = S.ctx; g.save(); g.translate(x, y); g.rotate(a); D.rect(S, -R * 0.12, -R * 0.13, R * 0.26, R * 0.26, act ? phCol[ph] : '#3b4f75', '#c9d6ec', 1, 3); g.restore(); D.text(S, ph + (o ? '′' : ''), cx + Math.cos(a) * R * 1.08, cy + Math.sin(a) * R * 1.08 + 4, { size: 12, weight: 700, align: 'center', color: act ? phCol[ph] : C.muted }); }); });
+      ['A', 'B', 'C'].forEach((ph, i) => { [0, 1].forEach(o => { const a = -(i * 2 * PI / 3 + o * PI); const x = cx + Math.cos(a) * R * 0.78, y = cy + Math.sin(a) * R * 0.78; const act = ph === st.hi || ph === st.lo; const g = S.ctx; g.save(); g.translate(x, y); g.rotate(a); D.rect(S, -R * 0.12, -R * 0.13, R * 0.26, R * 0.26, act ? phCol[ph] : '#6e7781', '#8c959f', 1, 3); g.restore(); D.text(S, ph + (o ? '′' : ''), cx + Math.cos(a) * R * 1.08, cy + Math.sin(a) * R * 1.08 + 4, { size: 12, weight: 700, align: 'center', color: act ? phCol[ph] : C.muted }); }); });
       // rotor magnet (drawn as one pole pair; electrical angle = p × mechanical)
       const g = S.ctx; g.save(); g.translate(cx, cy); g.rotate(-S.th); g.fillStyle = '#c0392b'; g.beginPath(); g.arc(0, 0, R * 0.5, -PI / 2, PI / 2); g.fill(); g.fillStyle = '#2f6fd6'; g.beginPath(); g.arc(0, 0, R * 0.5, PI / 2, 3 * PI / 2); g.fill(); g.restore();
       D.text(S, 'N', cx + Math.cos(-S.th) * R * 0.3, cy + Math.sin(-S.th) * R * 0.3 + 5, { size: 13, weight: 800, align: 'center' });
-      [0, 1, 2].forEach(i => { const a = -(i * 2 * PI / 3 + PI / 6); const H1 = SIX[this.sector(eAng + PI / 6)].h; D.circle(S, cx + Math.cos(a) * R * 0.6, cy + Math.sin(a) * R * 0.6, 6, H1[i] ? C.amber : '#33415e', '#fff', 1); D.text(S, 'H' + (i + 1), cx + Math.cos(a) * R * 0.6 + 8, cy + Math.sin(a) * R * 0.6 - 6, { size: 10, color: C.amber }); });
+      [0, 1, 2].forEach(i => { const a = -(i * 2 * PI / 3 + PI / 6); const H1 = SIX[this.sector(eAng + PI / 6)].h; D.circle(S, cx + Math.cos(a) * R * 0.6, cy + Math.sin(a) * R * 0.6, 6, H1[i] ? C.amber : '#d0d7de', '#24292f', 1); D.text(S, 'H' + (i + 1), cx + Math.cos(a) * R * 0.6 + 8, cy + Math.sin(a) * R * 0.6 - 6, { size: 10, color: C.amber }); });
       const tx = Math.min(W - 250, cx + R + 50); D.text(S, 'Commutation table (120° Hall)', tx, 28, { size: 12, weight: 700 });
       SIX.forEach((r, i) => D.text(S, `${r.h.join('')}  →  ${r.hi}+  ${r.lo}−   (${['A', 'B', 'C'].find(x => x !== r.hi && x !== r.lo)} floating)`, tx, 48 + i * 17, { size: 11.5, color: i === S.sec ? C.amber : C.muted, weight: i === S.sec ? 700 : 500 }));
       D.text(S, '3-phase inverter drives the pair selected by the Hall code; slow motion ×1/4', 16, H - 12, { size: 11, color: C.muted });
@@ -1592,19 +1592,19 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, cy = H * 0.5;
       if (p.mode === 'sol') {
-        const x0 = Math.max(250, W * 0.3), cw = Math.min(W * 0.4, 300); D.rect(S, x0, cy - 70, cw, 140, '#13264a', '#8fa3c4', 2, 6);
-        for (let k = 0; k < 14; k++) { const xx = x0 + 14 + k * (cw - 28) / 13; D.circle(S, xx, cy - 46, 6, S.i > 0.01 ? C.amber : '#6f86ad'); D.circle(S, xx, cy + 46, 6, S.i > 0.01 ? C.amber : '#6f86ad'); }
-        if (S.i > 0.01) for (let k = -1; k <= 1; k++) D.arrow(S, x0 + 20, cy + k * 14, x0 + cw - 20, cy + k * 14, `rgba(76,194,255,${0.2 + 0.6 * S.i / p.I})`, 1.5, 7);
-        D.rect(S, x0 + cw - 30, cy - 24, 30, 48, '#8aa0c6', '#fff', 1); D.text(S, 'stop', x0 + cw - 15, cy + 40, { size: 10, align: 'center', color: C.muted });
-        const plE = x0 + cw - 30 - (p.g - S.x) * 18; D.rect(S, x0 - 120, cy - 22, plE - x0 + 120, 44, '#c9d6ec', '#fff', 1.5, 4); D.text(S, 'plunger', x0 - 60, cy + 4, { size: 11, align: 'center', color: '#0e1d38', weight: 700 });
-        D.spring(S, x0 - 200, cy, x0 - 120, cy, 7, 10); D.rect(S, x0 - 214, cy - 30, 14, 60, '#3b4f75');
+        const x0 = Math.max(250, W * 0.3), cw = Math.min(W * 0.4, 300); D.rect(S, x0, cy - 70, cw, 140, '#eef1f4', '#57606a', 2, 6);
+        for (let k = 0; k < 14; k++) { const xx = x0 + 14 + k * (cw - 28) / 13; D.circle(S, xx, cy - 46, 6, S.i > 0.01 ? C.amber : '#6e7781'); D.circle(S, xx, cy + 46, 6, S.i > 0.01 ? C.amber : '#6e7781'); }
+        if (S.i > 0.01) for (let k = -1; k <= 1; k++) D.arrow(S, x0 + 20, cy + k * 14, x0 + cw - 20, cy + k * 14, `rgba(11,127,193,${0.2 + 0.6 * S.i / p.I})`, 1.5, 7);
+        D.rect(S, x0 + cw - 30, cy - 24, 30, 48, '#9aa4af', '#24292f', 1); D.text(S, 'stop', x0 + cw - 15, cy + 40, { size: 10, align: 'center', color: C.muted });
+        const plE = x0 + cw - 30 - (p.g - S.x) * 18; D.rect(S, x0 - 120, cy - 22, plE - x0 + 120, 44, '#8c959f', '#24292f', 1.5, 4); D.text(S, 'plunger', x0 - 60, cy + 4, { size: 11, align: 'center', color: '#2b3440', weight: 700 });
+        D.spring(S, x0 - 200, cy, x0 - 120, cy, 7, 10); D.rect(S, x0 - 214, cy - 30, 14, 60, '#6e7781');
         D.text(S, `gap g = ${M.fmt(Math.max(0.15, p.g - S.x), 2)} mm`, plE + 4, cy - 30, { size: 11, color: C.cyan });
         D.text(S, 'F = (NI)² μ₀ A / (2g²)   (2.18);  A = 1 cm²', 16, 24, { size: 12 });
         S.set('F', S.F || 0); S.set('x', S.x); S.set('i', S.i); S.set('v', S.v); S.set('st', S.x >= p.g - 0.2 ? 'pulled in' : p.on ? 'pulling' : 'released');
       } else {
-        const x0 = 60, Lb = Math.min(W - 260, 420); D.rect(S, x0, cy - 30, 80, 60, '#1d2b48', C.green, 1.5, 6); D.text(S, 'motor', x0 + 40, cy + 4, { size: 11, align: 'center', color: C.green });
-        D.rect(S, x0 + 80, cy - 22, Lb, 44, '#13264a', '#8fa3c4', 1.5, 4); for (let k = 0; k < Lb; k += 9) D.line(S, x0 + 84 + k, cy - 6, x0 + 88 + k, cy + 6, '#8fa3c4', 1);
-        const rx = x0 + 100 + S.x / 150 * (Lb - 60); D.rect(S, rx, cy - 16, 30, 32, '#6f86ad', '#fff', 1); D.rect(S, rx + 30, cy - 8, x0 + 80 + Lb - rx + 40, 16, '#c9d6ec'); D.rect(S, x0 + 80 + Lb + 40 + (S.x / 150) * 0, cy - 22, 0, 0);
+        const x0 = 60, Lb = Math.min(W - 260, 420); D.rect(S, x0, cy - 30, 80, 60, '#f6f8fa', C.green, 1.5, 6); D.text(S, 'motor', x0 + 40, cy + 4, { size: 11, align: 'center', color: C.green });
+        D.rect(S, x0 + 80, cy - 22, Lb, 44, '#eef1f4', '#57606a', 1.5, 4); for (let k = 0; k < Lb; k += 9) D.line(S, x0 + 84 + k, cy - 6, x0 + 88 + k, cy + 6, '#57606a', 1);
+        const rx = x0 + 100 + S.x / 150 * (Lb - 60); D.rect(S, rx, cy - 16, 30, 32, '#6e7781', '#24292f', 1); D.rect(S, rx + 30, cy - 8, x0 + 80 + Lb - rx + 40, 16, '#8c959f'); D.rect(S, x0 + 80 + Lb + 40 + (S.x / 150) * 0, cy - 22, 0, 0);
         D.text(S, `stroke ${M.fmt(S.x, 1)} / 150 mm`, x0 + 80 + Lb / 2, cy + 46, { size: 11, align: 'center' });
         D.text(S, 'F = 2πηT/p, v = p·n   (2.19), η = 0.9 (ball screw)', 16, 24, { size: 12 });
         S.set('F', S.F || 0); S.set('x', S.x); S.set('i', '—'); S.set('v', S.v || 0); S.set('st', S.v > 0 ? 'extending' : S.v < 0 ? 'retracting' : S.x >= 150 ? 'extended (limit)' : 'retracted (limit)');
@@ -1647,19 +1647,19 @@
       D.clear(S); const p = S.p, W = S.W, H = S.H, t = p.type, q = p.q * D2R, ch = S.chart('c'); const cx = W * 0.36, cy = H * 0.55;
       let n = p.n, dof = '1', out = '';
       if (t === 'R' || t === 'P') {
-        if (t === 'R') { D.rect(S, cx - 90, cy, 180, 40, '#3b4f75', '#8fa3c4', 1.5, 4); D.circle(S, cx, cy, 34, '#22355c', C.amber, 3); D.link(S, cx, cy, cx + Math.cos(-q) * 170, cy + Math.sin(-q) * 170, 22, '#8aa0c6'); D.circle(S, cx, cy, 12, C.amber); const g = S.ctx; g.strokeStyle = C.green; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, 60, 0, -q, q > 0); g.stroke(); D.text(S, `θ = ${p.q}°`, cx + 66, cy - 30, { size: 12, color: C.green }); D.text(S, 'link i rotates about joint axis (motor + brake + encoder + reducer + bearing)', 16, 24, { size: 12 }); out = M.fmt(p.q, 1) + '°'; }
-        else { const s = p.q; D.rect(S, cx - 200, cy - 14, 400, 28, '#3b4f75', '#8fa3c4', 1.5, 4); for (let k = -190; k < 200; k += 12) D.line(S, cx + k, cy - 10, cx + k + 6, cy + 10, '#8fa3c4', 1); D.rect(S, cx + s * 2 - 40, cy - 40, 80, 80, '#8aa0c6', '#c9d6ec', 1.5, 6); D.arrow(S, cx - 60, cy - 60, cx + 60, cy - 60, C.green, 2); D.text(S, `d = ${p.q} mm`, cx, cy - 70, { size: 12, align: 'center', color: C.green }); D.text(S, 'carriage translates along guide (ball screw / belt / linear motor)', 16, 24, { size: 12 }); out = M.fmt(p.q, 1) + ' mm'; }
+        if (t === 'R') { D.rect(S, cx - 90, cy, 180, 40, '#6e7781', '#57606a', 1.5, 4); D.circle(S, cx, cy, 34, '#c9d1d9', C.amber, 3); D.link(S, cx, cy, cx + Math.cos(-q) * 170, cy + Math.sin(-q) * 170, 22, '#9aa4af'); D.circle(S, cx, cy, 12, C.amber); const g = S.ctx; g.strokeStyle = C.green; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, 60, 0, -q, q > 0); g.stroke(); D.text(S, `θ = ${p.q}°`, cx + 66, cy - 30, { size: 12, color: C.green }); D.text(S, 'link i rotates about joint axis (motor + brake + encoder + reducer + bearing)', 16, 24, { size: 12 }); out = M.fmt(p.q, 1) + '°'; }
+        else { const s = p.q; D.rect(S, cx - 200, cy - 14, 400, 28, '#6e7781', '#57606a', 1.5, 4); for (let k = -190; k < 200; k += 12) D.line(S, cx + k, cy - 10, cx + k + 6, cy + 10, '#57606a', 1); D.rect(S, cx + s * 2 - 40, cy - 40, 80, 80, '#9aa4af', '#8c959f', 1.5, 6); D.arrow(S, cx - 60, cy - 60, cx + 60, cy - 60, C.green, 2); D.text(S, `d = ${p.q} mm`, cx, cy - 70, { size: 12, align: 'center', color: C.green }); D.text(S, 'carriage translates along guide (ball screw / belt / linear motor)', 16, 24, { size: 12 }); out = M.fmt(p.q, 1) + ' mm'; }
         ch.set(0, [[-180, -180], [180, 180]]); ch.set(1, [[p.q, p.q]]);
       } else if (t === 'harm' || t === 'gear') {
         if (t === 'harm') n = M.act.harmonic(p.n, p.n + 2);
         const g = S.ctx, R = Math.min(W * 0.18, H * 0.38), outAng = q / n * 6;
         if (t === 'harm') {
-          D.circle(S, cx, cy, R + 14, '#22355c', '#c9a26b', 4); D.text(S, `circular spline N_c = ${p.n + 2}`, cx, cy - R - 26, { size: 11, align: 'center', color: '#c9a26b' });
-          g.save(); g.translate(cx, cy); g.rotate(-q); g.strokeStyle = '#9fb3d1'; g.lineWidth = 8; g.beginPath(); g.ellipse(0, 0, R + 4, R - 14, 0, 0, 2 * PI); g.stroke(); g.fillStyle = '#3b4f75'; g.beginPath(); g.ellipse(0, 0, R - 20, R - 36, 0, 0, 2 * PI); g.fill(); g.restore();
-          D.text(S, 'wave generator (input)', cx, cy + 4, { size: 11, align: 'center' }); D.text(S, `flexspline N_f = ${p.n} (output)`, cx, cy + R + 32, { size: 11, align: 'center', color: '#9fb3d1' });
+          D.circle(S, cx, cy, R + 14, '#c9d1d9', '#c9a26b', 4); D.text(S, `circular spline N_c = ${p.n + 2}`, cx, cy - R - 26, { size: 11, align: 'center', color: '#c9a26b' });
+          g.save(); g.translate(cx, cy); g.rotate(-q); g.strokeStyle = '#a8b1bb'; g.lineWidth = 8; g.beginPath(); g.ellipse(0, 0, R + 4, R - 14, 0, 0, 2 * PI); g.stroke(); g.fillStyle = '#6e7781'; g.beginPath(); g.ellipse(0, 0, R - 20, R - 36, 0, 0, 2 * PI); g.fill(); g.restore();
+          D.text(S, 'wave generator (input)', cx, cy + 4, { size: 11, align: 'center' }); D.text(S, `flexspline N_f = ${p.n} (output)`, cx, cy + R + 32, { size: 11, align: 'center', color: '#a8b1bb' });
           D.line(S, cx, cy, cx + Math.cos(-outAng) * (R + 14), cy + Math.sin(-outAng) * (R + 14), C.amber, 3); D.text(S, 'n = N_f/(N_c − N_f)  (2.22) — output arrow ×6 for visibility', 16, 24, { size: 12 });
         } else {
-          const r1 = 28, r2 = 28 * Math.min(n, 6); const gear = (x, y, rr, teeth, ang, col) => { g.fillStyle = col; g.beginPath(); for (let k = 0; k < teeth * 2; k++) { const a = ang + k * PI / teeth, rad = k % 2 ? rr : rr * 0.9; g.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } g.closePath(); g.fill(); D.line(S, x, y, x + Math.cos(ang) * rr * 0.8, y + Math.sin(ang) * rr * 0.8, '#0e1d38', 3); };
+          const r1 = 28, r2 = 28 * Math.min(n, 6); const gear = (x, y, rr, teeth, ang, col) => { g.fillStyle = col; g.beginPath(); for (let k = 0; k < teeth * 2; k++) { const a = ang + k * PI / teeth, rad = k % 2 ? rr : rr * 0.9; g.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } g.closePath(); g.fill(); D.line(S, x, y, x + Math.cos(ang) * rr * 0.8, y + Math.sin(ang) * rr * 0.8, '#2b3440', 3); };
           gear(cx - r2 * 0.5 - r1, cy, r1, 10, -q, '#c9a26b'); gear(cx - r2 * 0.5 + r2 * 0.02 + 2, cy, r2 * 0.95, Math.round(10 * r2 / r1), q / n * Math.min(n, 6) / Math.min(n, 6) * 1, '#b98f58');
           D.text(S, 'motor pinion', cx - r2 * 0.5 - r1, cy + r1 + 18, { size: 11, align: 'center' }); D.text(S, `output gear (drawn ≤ 6:1; actual n = ${n})`, cx, cy + r2 + 22, { size: 11, align: 'center' });
           D.text(S, 'T_L = nηT_m  (2.20);  J_eq = J_m + J_L/n²  (2.21)', 16, 24, { size: 12 });
@@ -1677,13 +1677,13 @@
           D.text(S, 'ground 100, crank 40 (input), coupler 110, rocker 80 mm — Grashof crank-rocker', 16, 24, { size: 12 });
         } else if (t === 'slider') {
           const r = 40, l = 110, x = r * Math.cos(q) + Math.sqrt(l * l - (r * Math.sin(q)) ** 2); const A = [r * Math.cos(q), r * Math.sin(q)]; dof = '1 (planar four-link chain with one P joint)';
-          D.rect(S, X([60, 0]), Y([0, 0]) - 18 * sc / 2, 140 * sc, 18 * sc, '#22355c'); D.link(S, X([0, 0]), Y([0, 0]), X(A), Y(A), 10, C.amber); D.link(S, X(A), Y(A), X([x, 0]), Y([0, 0]), 10); D.rect(S, X([x, 0]) - 18, Y([0, 0]) - 14, 36, 28, C.cyan, '#fff', 1, 3); D.joint(S, X([0, 0]), Y([0, 0]), 7); D.joint(S, X(A), Y(A), 7);
+          D.rect(S, X([60, 0]), Y([0, 0]) - 18 * sc / 2, 140 * sc, 18 * sc, '#c9d1d9'); D.link(S, X([0, 0]), Y([0, 0]), X(A), Y(A), 10, C.amber); D.link(S, X(A), Y(A), X([x, 0]), Y([0, 0]), 10); D.rect(S, X([x, 0]) - 18, Y([0, 0]) - 14, 36, 28, C.cyan, '#24292f', 1, 3); D.joint(S, X([0, 0]), Y([0, 0]), 7); D.joint(S, X(A), Y(A), 7);
           out = 'slider x = ' + M.fmt(x, 1) + ' mm'; const pts = []; for (let a = -180; a <= 180; a += 5) { const aa = a * D2R; pts.push([a, r * Math.cos(aa) + Math.sqrt(l * l - (r * Math.sin(aa)) ** 2)]); } ch.set(0, pts); ch.set(1, [[p.q, x]]);
           D.text(S, 'x = r cos θ + √(l² − r² sin²θ): converts rotation to reciprocation (gripper jaws, presses)', 16, 24, { size: 12 });
         } else {
           const th1 = 50 * D2R + q * 0.25, th2 = -40 * D2R + q * 0.35, l1 = 120, l2 = 100; const E = [l1 * Math.cos(th1), l1 * Math.sin(th1)], Wt = [E[0] + l2 * Math.cos(th2), E[1] + l2 * Math.sin(th2)]; dof = '2 (two motors near the base)';
           const off = [-30, -12]; D.link(S, X([0, 0]), Y([0, 0]), X(E), Y(E), 12); D.link(S, X(E), Y(E), X(Wt), Y(Wt), 10, C.cyan);
-          D.link(S, X(off), Y(off), X([E[0] + off[0], E[1] + off[1]]), Y([E[0] + off[0], E[1] + off[1]]), 6, '#6f86ad'); D.link(S, X([E[0] + off[0], E[1] + off[1]]), Y([E[0] + off[0], E[1] + off[1]]), X(E), Y(E), 6, '#6f86ad');
+          D.link(S, X(off), Y(off), X([E[0] + off[0], E[1] + off[1]]), Y([E[0] + off[0], E[1] + off[1]]), 6, '#6e7781'); D.link(S, X([E[0] + off[0], E[1] + off[1]]), Y([E[0] + off[0], E[1] + off[1]]), X(E), Y(E), 6, '#6e7781');
           D.rect(S, X(Wt) - 24, Y(Wt), 48, 10, C.amber); D.line(S, X(Wt), Y(Wt), X(Wt), Y(Wt) + 30, C.amber, 3); [[0, 0], E, Wt, off].forEach(v => D.joint(S, X(v), Y(v), 6));
           out = 'flange stays horizontal; wrist at (' + M.fmt(Wt[0], 0) + ', ' + M.fmt(Wt[1], 0) + ') mm';
           D.text(S, 'Parallelogram keeps the flange orientation fixed and lets the elbow motor sit at the base (less moving mass)', 16, 24, { size: 12 });
@@ -1724,15 +1724,15 @@
       S.ser = new k.DHRobot(sc, k.ROBOTS.articulated.table, { radius: 0.035, gripper: true }); S.ser.group.position.x = -0.15;
       S.three.label('Serial (open chain)', [-0.15, 0, 1.25], ''); S.three.label('Parallel: Delta (closed chains)', [DL.ox, 0, 1.25], '');
       const G = S.dg = new THREE.Group(); G.position.x = DL.ox; sc.add(G);
-      const plate = new THREE.Mesh(new THREE.CylinderGeometry(DL.R + 0.06, DL.R + 0.06, 0.03, 6), k.mat(0x3b4f75)); plate.rotation.x = PI / 2; plate.position.z = DL.h + 0.02; G.add(plate);
-      const fr = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, DL.h + 0.04), k.mat(0x22355c)); fr.position.set(-DL.R - 0.12, 0, (DL.h) / 2); G.add(fr);
+      const plate = new THREE.Mesh(new THREE.CylinderGeometry(DL.R + 0.06, DL.R + 0.06, 0.03, 6), k.mat(0x6e7781)); plate.rotation.x = PI / 2; plate.position.z = DL.h + 0.02; G.add(plate);
+      const fr = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, DL.h + 0.04), k.mat(0x57606a)); fr.position.set(-DL.R - 0.12, 0, (DL.h) / 2); G.add(fr);
       S.up = [0, 1, 2].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 1, 12), k.mat(0xf2a516)); G.add(m); return m; });
-      S.lo = [0, 1, 2].map(() => [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 1, 8), k.mat(0xc9d6ec)); G.add(m); return m; }));
-      S.plat = new THREE.Mesh(new THREE.CylinderGeometry(DL.r + 0.02, DL.r + 0.02, 0.02, 24), k.mat(0x4cc2ff)); S.plat.rotation.x = PI / 2; G.add(S.plat);
+      S.lo = [0, 1, 2].map(() => [0, 1].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 1, 8), k.mat(0xb8c0cc)); G.add(m); return m; }));
+      S.plat = new THREE.Mesh(new THREE.CylinderGeometry(DL.r + 0.02, DL.r + 0.02, 0.02, 24), k.mat(0x1f9bd7)); S.plat.rotation.x = PI / 2; G.add(S.plat);
       S.loadS = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.08), k.mat(0x8a5a2a)); sc.add(S.loadS); S.loadD = S.loadS.clone(); G.add(S.loadD);
       const pts = []; for (let i = 0; i < 2500; i++) { const q = [(-170 + 340 * Math.random()) * D2R, (-20 + 130 * Math.random()) * D2R, (-150 + 170 * Math.random()) * D2R]; const { T } = M.fkDH(k.ROBOTS.articulated.table, q); const pp = M.pof(T[3]); pts.push([pp[0] - 0.15, pp[1], pp[2]]); }
       S.wsS = k.points(pts, 0xf2a516, 0.012, 0.35); sc.add(S.wsS);
-      const dp = []; for (let i = 0; i < 2500; i++) { const r = deltaFK([0, 1, 2].map(() => (-40 + 120 * Math.random()) * D2R)); if (r) dp.push([r.p[0] + DL.ox, r.p[1], r.p[2]]); } S.wsD = k.points(dp, 0x4cc2ff, 0.012, 0.45); sc.add(S.wsD);
+      const dp = []; for (let i = 0; i < 2500; i++) { const r = deltaFK([0, 1, 2].map(() => (-40 + 120 * Math.random()) * D2R)); if (r) dp.push([r.p[0] + DL.ox, r.p[1], r.p[2]]); } S.wsD = k.points(dp, 0x1f9bd7, 0.012, 0.45); sc.add(S.wsD);
       S.wsInfo = { s: pts.length, d: dp.length };
     },
     step(S) { if (S.auto) { const t = S.t; S.setParam('a', +(20 + 40 * Math.sin(0.6 * t)).toFixed(1), true); S.setParam('b', +(25 + 35 * Math.sin(0.5 * t + 2)).toFixed(1), true); S.setParam('c', +(25 + 35 * Math.sin(0.7 * t + 4)).toFixed(1), true); } },
@@ -1792,21 +1792,21 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, c = this.calc(S); const ph = S.ph, f = S.pt;
       const floor = H - 50, X = u => 60 + u * (W - 120), lift = 140, sx = 0.25, tx = 0.75;
-      D.rect(S, 0, floor, W, 50, '#13264a'); D.rect(S, X(sx) - 60, floor - 8, 120, 8, '#3b4f75'); D.rect(S, X(tx) - 60, floor - 8, 120, 8, '#3b4f75'); D.text(S, 'pick station', X(sx), floor + 24, { size: 11, align: 'center', color: C.muted }); D.text(S, 'place station', X(tx), floor + 24, { size: 11, align: 'center', color: C.muted });
+      D.rect(S, 0, floor, W, 50, '#eef1f4'); D.rect(S, X(sx) - 60, floor - 8, 120, 8, '#6e7781'); D.rect(S, X(tx) - 60, floor - 8, 120, 8, '#6e7781'); D.text(S, 'pick station', X(sx), floor + 24, { size: 11, align: 'center', color: C.muted }); D.text(S, 'place station', X(tx), floor + 24, { size: 11, align: 'center', color: C.muted });
       let gx = sx, gy = 0; const e = f * f * (3 - 2 * f);
       if (ph === 0) { gy = lift * (1 - e); } else if (ph === 1) gy = 0; else if (ph === 2) gy = lift * e; else if (ph === 3) { gy = lift; gx = sx + (tx - sx) * e; } else if (ph === 4) { gx = tx; gy = lift * (1 - e); } else if (ph === 5) { gx = tx; gy = 0; } else { gx = tx + (sx - tx) * e; gy = lift * e; }
       const closed = ph >= 1 && ph <= 4 && !(ph === 1 && f < 0.5), held = closed && !S.drop && (ph >= 2 && ph <= 4 || (ph === 1 && f >= 0.5));
-      const pw = p.part === 'glass' ? 120 : p.part === 'cyl' ? 50 : 70, phh = p.part === 'glass' ? 8 : 60; const partCol = { steel: '#9fb3d1', box: '#b08550', glass: 'rgba(160,220,255,.6)', cyl: '#d6dde8' }[p.part];
+      const pw = p.part === 'glass' ? 120 : p.part === 'cyl' ? 50 : 70, phh = p.part === 'glass' ? 8 : 60; const partCol = { steel: '#a8b1bb', box: '#b08550', glass: 'rgba(11,127,193,.6)', cyl: '#d6dde8' }[p.part];
       let px = X(held ? gx : (ph >= 5 || (ph === 0 && S.prevPlaced) ? (S.drop ? sx : tx) : sx)), py = floor - 8 - (held ? gy : 0);
       if (S.drop && ph >= 2) { px = X(sx); py = floor - 8; }
       if (ph === 6 || ph === 5) px = X(S.drop ? sx : tx);
       const gyp = floor - 8 - phh - gy, gxp = X(gx);
-      D.line(S, gxp, 0, gxp, gyp - 40, '#6f86ad', 10); D.rect(S, gxp - 40, gyp - 44, 80, 14, '#3b4f75', '#8fa3c4', 1, 3); D.text(S, 'robot flange', gxp + 46, gyp - 34, { size: 10, color: C.muted });
+      D.line(S, gxp, 0, gxp, gyp - 40, '#6e7781', 10); D.rect(S, gxp - 40, gyp - 44, 80, 14, '#6e7781', '#57606a', 1, 3); D.text(S, 'robot flange', gxp + 46, gyp - 34, { size: 10, color: C.muted });
       const open = closed ? pw / 2 : pw / 2 + 22;
-      if (p.type === 'vac') { D.poly(S, [[gxp - 18, gyp - 30], [gxp + 18, gyp - 30], [gxp + 26, gyp - 2], [gxp - 26, gyp - 2]], closed ? C.cyan : '#3b4f75', '#fff', 1); if (closed) D.text(S, `−${p.sup} kPa`, gxp, gyp - 12, { size: 10, align: 'center', color: '#0e1d38', weight: 700 }); }
-      else if (p.type === 'mag') { D.rect(S, gxp - 30, gyp - 30, 60, 28, closed ? C.red : '#3b4f75', '#fff', 1, 3); D.text(S, closed ? 'ON' : 'OFF', gxp, gyp - 12, { size: 11, align: 'center', weight: 700 }); }
-      else { const fingers = p.type === 'three' ? [-1, 0, 1] : [-1, 1]; fingers.forEach(sg => { const x = sg === 0 ? gxp : gxp + sg * open; const ang = p.type === 'ang' && !closed ? sg * 0.25 : 0; D.link(S, x, gyp - 30, x + Math.sin(ang) * 50, gyp - 30 + Math.cos(ang) * (phh + 20), sg === 0 ? 6 : 9, C.amber, '#fff'); }); }
-      if (p.part === 'cyl') D.rect(S, px - pw / 2, py - phh, pw, phh, partCol, '#fff', 1, 20); else D.rect(S, px - pw / 2, py - phh, pw, phh, partCol, '#fff', 1, 2);
+      if (p.type === 'vac') { D.poly(S, [[gxp - 18, gyp - 30], [gxp + 18, gyp - 30], [gxp + 26, gyp - 2], [gxp - 26, gyp - 2]], closed ? C.cyan : '#6e7781', '#24292f', 1); if (closed) D.text(S, `−${p.sup} kPa`, gxp, gyp - 12, { size: 10, align: 'center', color: '#2b3440', weight: 700 }); }
+      else if (p.type === 'mag') { D.rect(S, gxp - 30, gyp - 30, 60, 28, closed ? C.red : '#6e7781', '#24292f', 1, 3); D.text(S, closed ? 'ON' : 'OFF', gxp, gyp - 12, { size: 11, align: 'center', weight: 700 }); }
+      else { const fingers = p.type === 'three' ? [-1, 0, 1] : [-1, 1]; fingers.forEach(sg => { const x = sg === 0 ? gxp : gxp + sg * open; const ang = p.type === 'ang' && !closed ? sg * 0.25 : 0; D.link(S, x, gyp - 30, x + Math.sin(ang) * 50, gyp - 30 + Math.cos(ang) * (phh + 20), sg === 0 ? 6 : 9, C.amber, '#24292f'); }); }
+      if (p.part === 'cyl') D.rect(S, px - pw / 2, py - phh, pw, phh, partCol, '#24292f', 1, 20); else D.rect(S, px - pw / 2, py - phh, pw, phh, partCol, '#24292f', 1, 2);
       if (closed && p.type !== 'vac' && p.type !== 'mag' && held) { D.arrow(S, gxp - pw / 2 - 36, gyp + phh / 2, gxp - pw / 2 - 4, gyp + phh / 2, C.green, 2); D.arrow(S, gxp + pw / 2 + 36, gyp + phh / 2, gxp + pw / 2 + 4, gyp + phh / 2, C.green, 2); }
       D.text(S, this.phases[ph].toUpperCase(), 16, 26, { size: 15, weight: 800, color: C.amber });
       const eq = p.type === 'vac' ? 'F = Δp · A (cup area);  required S·m(g + a)' : p.type === 'mag' ? 'Holding force rating vs S·m(g + a); ferrous parts only' : 'F_g ≥ S m (g + a) / (n_f μ)   (2.23)';
@@ -1886,7 +1886,7 @@
       } else if (m === 'shunt') {
         const Rsh = p.b / 1000 / 100 * (100 / Math.max(1, 100)); const R = (p.b / 1000) / 100; const v = p.a * R; const vo = v * p.c;
         D.rect(S, 60, H / 2 - 20, 160, 40, '#5a3f2a', C.amber, 1.5, 4); D.text(S, `R_sh = ${M.fmt(R * 1000, 3)} mΩ`, 140, H / 2 + 4, { size: 11, align: 'center' }); D.line(S, 20, H / 2, 60, H / 2, C.text, 4); D.line(S, 220, H / 2, 280, H / 2, C.text, 4); for (let k = 0; k < 6; k++) D.circle(S, 20 + ((S.t * 80 + k * 45) % 260), H / 2, 3, C.cyan);
-        D.text(S, `I = ${M.fmt(p.a, 1)} A`, 140, H / 2 - 32, { size: 13, align: 'center', weight: 700 }); D.poly(S, [[320, H / 2 - 40], [320, H / 2 + 40], [390, H / 2]], '#1d2b48', C.green, 2); D.text(S, `×${p.c}`, 340, H / 2 + 4, { size: 11 }); D.line(S, 60, H / 2 + 20, 320, H / 2 + 20, C.green, 1); D.line(S, 220, H / 2 - 20, 320, H / 2 - 20, C.green, 1);
+        D.text(S, `I = ${M.fmt(p.a, 1)} A`, 140, H / 2 - 32, { size: 13, align: 'center', weight: 700 }); D.poly(S, [[320, H / 2 - 40], [320, H / 2 + 40], [390, H / 2]], '#f6f8fa', C.green, 2); D.text(S, `×${p.c}`, 340, H / 2 + 4, { size: 11 }); D.line(S, 60, H / 2 + 20, 320, H / 2 + 20, C.green, 1); D.line(S, 220, H / 2 - 20, 320, H / 2 - 20, C.green, 1);
         D.lcd(S, 420, H / 2 - 17, 170, M.fmt(vo, 3) + ' V', 'to ADC (0–3.3 V)'); D.text(S, 'Shunt sized for the full-scale current of 100 A: R_sh = V_FS / I_FS', 16, 24, { size: 12 });
         S.set('r1', M.fmt(R * 1000, 3) + ' mΩ'); S.set('r2', M.fmt(v * 1000, 2) + ' mV'); S.set('r3', M.fmt(p.a * p.a * R, 2) + ' W'); S.set('r4', M.fmt(vo, 3) + ' V' + (vo > 3.3 ? ' (over range)' : ''));
       } else if (m === 'bridge') {
@@ -1898,13 +1898,13 @@
         S.set('r1', M.fmt(vg * 1000, 3) + ' mV'); S.set('r2', M.fmt(Rx / p.b, 1) + ' Ω'); S.set('r3', M.fmt(R2 * R3 / R1, 1) + ' Ω'); S.set('r4', bal ? 'balanced' : 'not balanced', bal ? 'ok' : '');
       } else if (m === 'speed') {
         const f = p.b * p.a / 60, cnt = Math.floor(f * p.c / 1000), nInd = cnt / (p.c / 1000) * 60 / p.b; const cxp = W * 0.3, cyp = H * 0.5, R = Math.min(90, H * 0.3); const ang = S.t * p.a / 60 * 2 * PI * 0.05;
-        const g = S.ctx; g.fillStyle = '#9fb3d1'; g.beginPath(); for (let k = 0; k < p.b * 2; k++) { const a = ang + k * PI / p.b, rr = k % 2 ? R : R * 0.88; g.lineTo(cxp + Math.cos(a) * rr, cyp + Math.sin(a) * rr); } g.closePath(); g.fill(); D.circle(S, cxp, cyp, 10, '#0e1d38');
-        D.rect(S, cxp + R + 6, cyp - 12, 50, 24, '#1d2b48', C.cyan, 1.5, 4); D.text(S, 'pick-up', cxp + R + 31, cyp + 4, { size: 10, align: 'center', color: C.cyan });
+        const g = S.ctx; g.fillStyle = '#a8b1bb'; g.beginPath(); for (let k = 0; k < p.b * 2; k++) { const a = ang + k * PI / p.b, rr = k % 2 ? R : R * 0.88; g.lineTo(cxp + Math.cos(a) * rr, cyp + Math.sin(a) * rr); } g.closePath(); g.fill(); D.circle(S, cxp, cyp, 10, '#2b3440');
+        D.rect(S, cxp + R + 6, cyp - 12, 50, 24, '#f6f8fa', C.cyan, 1.5, 4); D.text(S, 'pick-up', cxp + R + 31, cyp + 4, { size: 10, align: 'center', color: C.cyan });
         D.lcd(S, W * 0.6, H * 0.4, 170, M.fmt(nInd, 0) + ' rpm', `counter, gate ${p.c} ms`); D.text(S, 'f = z n / 60;  n = 60 f / z   (Table 2.6); wheel drawn at 1/20 speed', 16, 24, { size: 12 });
         S.set('r1', M.fmt(f, 1) + ' Hz'); S.set('r2', cnt); S.set('r3', M.fmt(nInd, 1) + ' rpm'); S.set('r4', M.fmt(60 / p.b / (p.c / 1000), 2) + ' rpm');
       } else {
         const Dm = p.c / 1000, d = p.b * Dm, A2 = PI * d * d / 4, rho = 1000, Cd = 0.61; const Q = Cd * A2 * Math.sqrt(2 * p.a * 1000 / (rho * (1 - p.b ** 4)));
-        const x0 = 40, Lp = W - 100, cyp = H * 0.45, Rp = 40; D.rect(S, x0, cyp - Rp, Lp, 2 * Rp, 'rgba(76,155,255,.25)', '#8fa3c4', 2); D.rect(S, x0 + Lp / 2 - 4, cyp - Rp, 8, Rp * (1 - p.b), '#8fa3c4'); D.rect(S, x0 + Lp / 2 - 4, cyp + Rp * p.b, 8, Rp * (1 - p.b), '#8fa3c4');
+        const x0 = 40, Lp = W - 100, cyp = H * 0.45, Rp = 40; D.rect(S, x0, cyp - Rp, Lp, 2 * Rp, 'rgba(9,105,218,.25)', '#57606a', 2); D.rect(S, x0 + Lp / 2 - 4, cyp - Rp, 8, Rp * (1 - p.b), '#57606a'); D.rect(S, x0 + Lp / 2 - 4, cyp + Rp * p.b, 8, Rp * (1 - p.b), '#57606a');
         for (let k = 0; k < 18; k++) { const xx = x0 + ((S.t * 60 * Math.sqrt(p.a + 0.1) + k * Lp / 18) % Lp); const narrow = Math.abs(xx - x0 - Lp / 2) < 30; D.circle(S, xx, cyp + ((k * 37) % (2 * Rp * (narrow ? p.b : 1)) - Rp * (narrow ? p.b : 1)), 2.5, C.cyan); }
         D.text(S, 'orifice plate', x0 + Lp / 2, cyp - Rp - 10, { size: 11, align: 'center' }); D.text(S, `Δp = ${p.a} kPa`, x0 + Lp / 2, cyp + Rp + 24, { size: 12, align: 'center', color: C.amber });
         D.text(S, 'Q = C_d A₂ √[2Δp / (ρ(1 − β⁴))],  C_d = 0.61, water', 16, 24, { size: 12 });
@@ -1973,17 +1973,17 @@
     step(S, dt) { const p = S.p, c = this.calc(p), t = S.t * 0.05; const vd = p.Vd / 1000 * Math.sin(2 * PI * 5 * t), vcm = p.Vcm + p.hum * Math.sin(2 * PI * 50 * t); S.chart('c').push(t * 1000, [vcm + vd / 2, vcm - vd / 2, c.Ad * vd + c.Acm * vcm, c.Ad * (vd + c.dAcm * vcm)]); },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, c = this.calc(p);
-      const oa = (x, y, lbl) => { D.poly(S, [[x, y - 26], [x, y + 26], [x + 48, y]], '#1d2b48', C.cyan, 2); D.text(S, lbl, x + 14, y + 4, { size: 10, color: C.cyan }); };
+      const oa = (x, y, lbl) => { D.poly(S, [[x, y - 26], [x, y + 26], [x + 48, y]], '#f6f8fa', C.cyan, 2); D.text(S, lbl, x + 14, y + 4, { size: 10, color: C.cyan }); };
       const x1 = 90, y1 = H * 0.25, y2 = H * 0.65, x2 = Math.min(W * 0.55, 420);
       oa(x1, y1, 'A1'); oa(x1, y2, 'A2'); oa(x2, (y1 + y2) / 2, 'A3');
       D.line(S, 20, y1 - 12, x1, y1 - 12, C.amber, 2); D.text(S, 'V₁', 22, y1 - 18, { size: 12, color: C.amber }); D.line(S, 20, y2 + 12, x1, y2 + 12, C.green, 2); D.text(S, 'V₂', 22, y2 + 28, { size: 12, color: C.green });
       D.line(S, x1 + 48, y1, x1 + 110, y1, C.text, 1.5); D.line(S, x1 + 48, y2, x1 + 110, y2, C.text, 1.5);
-      D.line(S, x1 + 80, y1, x1 + 80, y1 + 30, C.text, 1.5); D.rect(S, x1 + 72, y1 + 30, 16, 30, '#3b4f75', C.text, 1); D.text(S, 'R', x1 + 92, y1 + 50, { size: 11 });
+      D.line(S, x1 + 80, y1, x1 + 80, y1 + 30, C.text, 1.5); D.rect(S, x1 + 72, y1 + 30, 16, 30, '#6e7781', C.text, 1); D.text(S, 'R', x1 + 92, y1 + 50, { size: 11 });
       D.rect(S, x1 + 72, (y1 + y2) / 2 - 14, 16, 28, '#5a3f2a', C.amber, 1.5); D.text(S, `R_G = ${M.fmt(p.RG, 2)} Ω`, x1 + 94, (y1 + y2) / 2 + 4, { size: 11, color: C.amber });
-      D.rect(S, x1 + 72, y2 - 60, 16, 30, '#3b4f75', C.text, 1); D.text(S, 'R', x1 + 92, y2 - 40, { size: 11 }); D.line(S, x1 + 80, y2 - 30, x1 + 80, y2, C.text, 1.5);
+      D.rect(S, x1 + 72, y2 - 60, 16, 30, '#6e7781', C.text, 1); D.text(S, 'R', x1 + 92, y2 - 40, { size: 11 }); D.line(S, x1 + 80, y2 - 30, x1 + 80, y2, C.text, 1.5);
       D.line(S, x1 + 80, y1 + 60, x1 + 80, (y1 + y2) / 2 - 14, C.text, 1.5); D.line(S, x1 + 80, (y1 + y2) / 2 + 14, x1 + 80, y2 - 60, C.text, 1.5);
-      D.line(S, x1 + 110, y1, x2 - 40, y1, C.text, 1.5); D.rect(S, x2 - 60, y1 - 8, 26, 16, '#3b4f75', C.text, 1); D.text(S, 'R₂', x2 - 54, y1 - 14, { size: 10 }); D.line(S, x2 - 34, y1, x2, (y1 + y2) / 2 - 12, C.text, 1.5);
-      D.line(S, x1 + 110, y2, x2 - 40, y2, C.text, 1.5); D.rect(S, x2 - 60, y2 - 8, 26, 16, '#3b4f75', C.text, 1); D.text(S, 'R₂', x2 - 54, y2 + 22, { size: 10 }); D.line(S, x2 - 34, y2, x2, (y1 + y2) / 2 + 12, C.text, 1.5);
+      D.line(S, x1 + 110, y1, x2 - 40, y1, C.text, 1.5); D.rect(S, x2 - 60, y1 - 8, 26, 16, '#6e7781', C.text, 1); D.text(S, 'R₂', x2 - 54, y1 - 14, { size: 10 }); D.line(S, x2 - 34, y1, x2, (y1 + y2) / 2 - 12, C.text, 1.5);
+      D.line(S, x1 + 110, y2, x2 - 40, y2, C.text, 1.5); D.rect(S, x2 - 60, y2 - 8, 26, 16, '#6e7781', C.text, 1); D.text(S, 'R₂', x2 - 54, y2 + 22, { size: 10 }); D.line(S, x2 - 34, y2, x2, (y1 + y2) / 2 + 12, C.text, 1.5);
       D.line(S, x2 + 48, (y1 + y2) / 2, x2 + 90, (y1 + y2) / 2, C.amber, 2.5); D.text(S, 'V_o', x2 + 94, (y1 + y2) / 2 + 4, { size: 12, color: C.amber, weight: 700 }); D.text(S, 'R₃ feedback (ratio R₃/R₂ = ' + p.r32 + ')', x2 - 20, (y1 + y2) / 2 - 40, { size: 10, color: C.muted });
       const ecm = c.Acm * p.Vcm; D.box(S, Math.min(W - 280, x2 + 130), 30, 260, 'Gain and rejection', [['A_d = (1 + 2R/R_G)R₃/R₂', M.fmt(c.Ad, 1)], ['CMRR', p.cmrr + ' dB = ' + M.fmt(10 ** (p.cmrr / 20), 0)], ['A_cm', M.fmt(c.Acm, 5)], ['CM error at output', M.fmt(ecm * 1000, 3) + ' mV'], ['Difference amp CMRR', M.fmt(20 * Math.log10(c.dCMRR), 1) + ' dB'], ['Diff-amp CM error (×A_d)', M.fmt(c.Ad * c.dAcm * p.Vcm, 2) + ' V']]);
       S.set('G', c.Ad); S.set('Acm', c.Acm); S.set('vo', c.Ad * p.Vd / 1000); S.set('ecm', ecm * 1000); S.set('ein', ecm / c.Ad * 1e6); S.set('dcm', 20 * Math.log10(c.dCMRR));
@@ -2052,17 +2052,17 @@
     step(S, dt) { const p = S.p, t = S.t * 0.04, n = this.noise(p); const sig = 10 * Math.sin(2 * PI * 10 * t); const rx = sig + n.cap * Math.sin(2 * PI * 300 * t) * Math.sign(Math.sin(2 * PI * 20 * t)) + n.ind * Math.sin(2 * PI * 150 * t) + n.gl * Math.sin(2 * PI * 50 * t); S.chart('c').push(t * 1000, [rx, sig]); },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, n = this.noise(p); const yS = H * 0.42, yP = yS - 30 - p.sep * 120;
-      D.rect(S, 20, yS - 26, 80, 52, '#1d2b48', C.green, 1.5, 6); D.text(S, 'sensor', 60, yS + 4, { size: 11, align: 'center', color: C.green }); D.rect(S, W - 120, yS - 30, 100, 60, '#1d2b48', C.cyan, 1.5, 6); D.text(S, p.diff ? 'DAQ (diff)' : 'DAQ (single-ended)', W - 70, yS + 4, { size: 10.5, align: 'center', color: C.cyan });
+      D.rect(S, 20, yS - 26, 80, 52, '#f6f8fa', C.green, 1.5, 6); D.text(S, 'sensor', 60, yS + 4, { size: 11, align: 'center', color: C.green }); D.rect(S, W - 120, yS - 30, 100, 60, '#f6f8fa', C.cyan, 1.5, 6); D.text(S, p.diff ? 'DAQ (diff)' : 'DAQ (single-ended)', W - 70, yS + 4, { size: 10.5, align: 'center', color: C.cyan });
       D.line(S, 30, yP, W - 30, yP, C.red, 6); D.text(S, 'motor power cable (PWM 300 V, 20 kHz)', 40, yP - 10, { size: 11, color: C.red });
-      for (let k = 0; k < 10; k++) { const x = 60 + k * (W - 160) / 10 + (S.t * 40 % 30); if (p.shield === 'none') D.arrow(S, x, yP + 4, x, yS - 10, 'rgba(255,123,123,.35)', 1, 5); }
+      for (let k = 0; k < 10; k++) { const x = 60 + k * (W - 160) / 10 + (S.t * 40 % 30); if (p.shield === 'none') D.arrow(S, x, yP + 4, x, yS - 10, 'rgba(209,36,47,.35)', 1, 5); }
       if (p.twist) { for (let x = 100; x < W - 120; x += 12) { D.line(S, x, yS - 5, x + 6, yS + 5, C.amber, 2); D.line(S, x, yS + 5, x + 6, yS - 5, C.text, 2); } } else { D.line(S, 100, yS - 8, W - 120, yS - 8, C.amber, 2); D.line(S, 100, yS + 8, W - 120, yS + 8, C.text, 2); }
       if (p.shield !== 'none') { D.rect(S, 106, yS - 16, W - 232, 32, null, C.cyan, 1.5, 12); D.line(S, W - 130, yS + 16, W - 130, H - 60, C.cyan, 1.5); if (p.shield === 'both') D.line(S, 110, yS + 16, 110, H - 60, C.cyan, 1.5); }
       D.line(S, 60, yS + 26, 60, H - 60, C.text, 1.5); D.line(S, W - 70, yS + 30, W - 70, H - 60, C.text, 1.5); const gy = H - 60;
       if (p.star) { D.line(S, 60, gy, W / 2, gy + 20, C.text, 1.5); D.line(S, W - 70, gy, W / 2, gy + 20, C.text, 1.5); D.circle(S, W / 2, gy + 20, 5, C.text); D.text(S, 'star point', W / 2 + 8, gy + 24, { size: 10, color: C.muted }); }
-      else { D.text(S, '⏚ ground A', 40, gy + 16, { size: 11, color: C.muted }); D.text(S, `⏚ ground B (ΔV_g = ${p.dVg} V)`, W - 220, gy + 16, { size: 11, color: C.muted }); if (!p.iso) { D.line(S, 60, gy, W - 70, gy, 'rgba(242,165,22,.5)', 1, [4, 4]); D.text(S, 'ground loop', W / 2, gy - 6, { size: 10, color: C.amber, align: 'center' }); } }
+      else { D.text(S, '⏚ ground A', 40, gy + 16, { size: 11, color: C.muted }); D.text(S, `⏚ ground B (ΔV_g = ${p.dVg} V)`, W - 220, gy + 16, { size: 11, color: C.muted }); if (!p.iso) { D.line(S, 60, gy, W - 70, gy, 'rgba(199,119,0,.5)', 1, [4, 4]); D.text(S, 'ground loop', W / 2, gy - 6, { size: 10, color: C.amber, align: 'center' }); } }
       if (p.iso) D.text(S, 'isolation barrier', W - 140, yS - 40, { size: 10.5, color: C.violet });
       const bars = [['capacitive', n.cap, C.red], ['inductive', n.ind, C.amber], ['ground loop', n.gl, C.violet]]; const mx = 400;
-      bars.forEach(([l, v], i) => { const bw2 = Math.min(220, (W - 260)); const x = W / 2 - 110, y = 24 + i * 18; D.rect(S, x, y - 9, bw2, 10, '#13264a'); D.rect(S, x, y - 9, bw2 * Math.min(1, Math.log10(1 + v) / Math.log10(1 + mx)), 10, bars[i][2]); D.text(S, `${l}: ${M.fmt(v, 3)} mV`, x + bw2 + 8, y, { size: 10.5 }); });
+      bars.forEach(([l, v], i) => { const bw2 = Math.min(220, (W - 260)); const x = W / 2 - 110, y = 24 + i * 18; D.rect(S, x, y - 9, bw2, 10, '#eef1f4'); D.rect(S, x, y - 9, bw2 * Math.min(1, Math.log10(1 + v) / Math.log10(1 + mx)), 10, bars[i][2]); D.text(S, `${l}: ${M.fmt(v, 3)} mV`, x + bw2 + 8, y, { size: 10.5 }); });
       const tot = Math.hypot(n.cap, n.ind, n.gl); S.set('cap', n.cap); S.set('ind', n.ind); S.set('gl', n.gl); S.set('tot', tot); S.set('snr', 20 * Math.log10(10 / Math.max(1e-6, tot)));
     }
   });
@@ -2097,12 +2097,12 @@
       const blocks = ['Analogue\ninput', `Sample & hold\nf_s = ${p.fs} Hz`, `Quantiser\n${2 ** N} levels`, `Encoder (SAR)\n${N} bits`, `DAC (R–2R)\nv_o = V_ref D/2ᴺ`, p.smooth ? 'Reconstruction\nfilter' : 'Zero-order\nhold'];
       const bw = Math.min(140, (W - 40) / 6 - 12); blocks.forEach((b, i) => { D.block(S, 16 + i * (bw + 12), 20, bw, 52, b, { size: 10 }); if (i < 5) D.arrow(S, 16 + i * (bw + 12) + bw, 46, 16 + (i + 1) * (bw + 12), 46, C.amber, 1.8, 7); });
       // staircase transfer characteristic
-      const x0 = 50, y0 = H - 30, sz = Math.min(H - 130, W * 0.35); D.rect(S, x0, y0 - sz, sz, sz, 'rgba(6,14,32,.6)', '#3a5384', 1); const pts = [];
-      for (let k = 0; k <= 400; k++) { const v = p.Vref * k / 400; const c = M.clamp(Math.floor(v / Q), 0, 2 ** N - 1); pts.push([x0 + sz * k / 400, y0 - sz * c * Q / p.Vref]); } D.poly(S, pts, null, C.cyan, 1.8, false); D.line(S, x0, y0, x0 + sz, y0 - sz, 'rgba(111,227,155,.5)', 1, [4, 4]);
+      const x0 = 50, y0 = H - 30, sz = Math.min(H - 130, W * 0.35); D.rect(S, x0, y0 - sz, sz, sz, 'rgba(255,255,255,.9)', '#8c959f', 1); const pts = [];
+      for (let k = 0; k <= 400; k++) { const v = p.Vref * k / 400; const c = M.clamp(Math.floor(v / Q), 0, 2 ** N - 1); pts.push([x0 + sz * k / 400, y0 - sz * c * Q / p.Vref]); } D.poly(S, pts, null, C.cyan, 1.8, false); D.line(S, x0, y0, x0 + sz, y0 - sz, 'rgba(26,155,75,.5)', 1, [4, 4]);
       D.text(S, 'ADC transfer characteristic', x0, y0 - sz - 8, { size: 11, color: C.muted }); D.text(S, 'v_in →', x0 + sz - 40, y0 + 16, { size: 10, color: C.muted });
       if (S.last) { const lx = x0 + sz * S.last.vin / p.Vref, ly = y0 - sz * S.last.sar.vout / p.Vref; D.circle(S, lx, ly, 5, C.amber); }
       // binary display
-      const bx = x0 + sz + 40, by = H - 120; if (S.last) { const code = S.last.sar.code; D.text(S, 'Encoded output', bx, by - 10, { size: 11, color: C.muted }); for (let b = N - 1; b >= 0; b--) { const on = (code >> b) & 1; const xx = bx + (N - 1 - b) * Math.min(34, (W - bx - 30) / N); D.rect(S, xx, by, Math.min(30, (W - bx - 30) / N - 4), 30, on ? C.amber : '#13264a', '#3a5384', 1, 4); D.text(S, String(on), xx + Math.min(15, ((W - bx - 30) / N - 4) / 2), by + 20, { size: 13, align: 'center', weight: 700, color: on ? '#0e1d38' : C.muted }); D.text(S, 'b' + b, xx + 4, by + 44, { size: 9, color: C.muted }); } }
+      const bx = x0 + sz + 40, by = H - 120; if (S.last) { const code = S.last.sar.code; D.text(S, 'Encoded output', bx, by - 10, { size: 11, color: C.muted }); for (let b = N - 1; b >= 0; b--) { const on = (code >> b) & 1; const xx = bx + (N - 1 - b) * Math.min(34, (W - bx - 30) / N); D.rect(S, xx, by, Math.min(30, (W - bx - 30) / N - 4), 30, on ? C.amber : '#eef1f4', '#8c959f', 1, 4); D.text(S, String(on), xx + Math.min(15, ((W - bx - 30) / N - 4) / 2), by + 20, { size: 13, align: 'center', weight: 700, color: on ? '#2b3440' : C.muted }); D.text(S, 'b' + b, xx + 4, by + 44, { size: 9, color: C.muted }); } }
       const ny = p.fs > 2 * p.f; const alias = Math.abs(p.f - Math.round(p.f / p.fs) * p.fs);
       D.text(S, ny ? `f_s = ${p.fs} Hz > 2f = ${2 * p.f} Hz: Nyquist satisfied` : `ALIASING: f_s < 2f; ${p.f} Hz appears as ${M.fmt(alias, 2)} Hz`, bx, by - 40, { size: 12.5, weight: 700, color: ny ? C.green : C.red });
       if (S.last) { const L = S.last; S.set('vin', L.vin); S.set('code', M.sig.toBin(L.sar.code, N)); S.set('D', L.sar.code); S.set('vo', L.sar.vout); S.set('eq', L.vin - L.sar.vout);
@@ -2135,8 +2135,8 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, n = Math.round(p.n), cur = (S.k - 1 + n) % n;
-      const rowH = Math.min(38, (H - 40) / 8); for (let i = 0; i < 8; i++) { const y = 20 + i * rowH, act = i < n; D.block(S, 16, y, 150, rowH - 6, `CH${i} ${CH[i][0]}`, { size: 9.5, active: +p.sel === i && act, stroke: act ? '#3a5384' : '#1d2b48', tc: act ? C.text : C.muted }); if (act) { D.rect(S, 180, y + 6, 40, rowH - 18, '#1d2b48', C.green, 1, 3); D.text(S, 'SC', 200, y + rowH / 2 + 1, { size: 9, align: 'center', color: C.green }); D.line(S, 220, y + rowH / 2 - 3, 270, y + rowH / 2 - 3, i === cur ? C.amber : '#3a5384', i === cur ? 2.5 : 1); } }
-      const mx = 270, my = 20 + 4 * rowH - 3; D.rect(S, mx, 20, 50, 8 * rowH - 6, '#13264a', C.amber, 1.5, 6); D.text(S, 'MUX', mx + 25, 14, { size: 10, align: 'center', color: C.amber }); D.line(S, mx + 4, 20 + cur * rowH + rowH / 2 - 3, mx + 46, my, C.amber, 3);
+      const rowH = Math.min(38, (H - 40) / 8); for (let i = 0; i < 8; i++) { const y = 20 + i * rowH, act = i < n; D.block(S, 16, y, 150, rowH - 6, `CH${i} ${CH[i][0]}`, { size: 9.5, active: +p.sel === i && act, stroke: act ? '#8c959f' : '#f6f8fa', tc: act ? C.text : C.muted }); if (act) { D.rect(S, 180, y + 6, 40, rowH - 18, '#f6f8fa', C.green, 1, 3); D.text(S, 'SC', 200, y + rowH / 2 + 1, { size: 9, align: 'center', color: C.green }); D.line(S, 220, y + rowH / 2 - 3, 270, y + rowH / 2 - 3, i === cur ? C.amber : '#8c959f', i === cur ? 2.5 : 1); } }
+      const mx = 270, my = 20 + 4 * rowH - 3; D.rect(S, mx, 20, 50, 8 * rowH - 6, '#eef1f4', C.amber, 1.5, 6); D.text(S, 'MUX', mx + 25, 14, { size: 10, align: 'center', color: C.amber }); D.line(S, mx + 4, 20 + cur * rowH + rowH / 2 - 3, mx + 46, my, C.amber, 3);
       const chain = [p.simul ? 'S/H ×n\n(simultaneous)' : 'S/H', `ADC\n${p.N} bit`, 'Processor\nscaling', 'Display /\nstorage'];
       const bw = Math.min(110, (W - 360) / 4 - 14); chain.forEach((b, i) => { D.block(S, 340 + i * (bw + 14), my - 28, bw, 56, b, { size: 10 }); D.arrow(S, i ? 340 + i * (bw + 14) - 14 : 320, my, 340 + i * (bw + 14), my, C.amber, 2, 7); });
       const tx = 340, ty = my + 60; D.text(S, 'Latest values', tx, ty, { size: 11, color: C.muted }); for (let i = 0; i < n; i++) D.text(S, `CH${i}: ${isNaN(S.vals[i]) ? '—' : M.fmt(S.vals[i] * 100, 1) + ' % FS'}  code ${isNaN(S.vals[i]) ? '—' : Math.round(S.vals[i] * (2 ** p.N - 1))}`, tx + (i >= 4 ? 230 : 0), ty + 18 + (i % 4) * 16, { size: 11, color: i === +p.sel ? C.amber : C.text });
@@ -2175,7 +2175,7 @@
     equations: ['{}^{A}\\mathbf p={}^{A}_{B}R\\,{}^{B}\\mathbf p+{}^{A}\\mathbf p_{B,org}\\;(3.2)', '{}^{A}_{C}T={}^{A}_{B}T\\,{}^{B}_{C}T'],
     setup(S) {
       const k = K(), sc = S.three.scene; S.fA = k.frame(0.4); sc.add(S.fA); S.fB = k.frame(0.3); sc.add(S.fB); S.ghost = k.frame(0.22, { opacity: 0.3 }); sc.add(S.ghost); S.fC = k.frame(0.2); sc.add(S.fC);
-      S.aT = arrowObj(0xf2a516); S.aP = arrowObj(0x4cc2ff); S.aR = arrowObj(0x6fe39b); sc.add(S.aT, S.aP, S.aR);
+      S.aT = arrowObj(0xf2a516); S.aP = arrowObj(0x1f9bd7); S.aR = arrowObj(0x2da44e); sc.add(S.aT, S.aP, S.aR);
       S.pt = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); sc.add(S.pt);
       S.three.label('{A}', [0, 0, 0], '', [0, 0, -0.07]); S.lB = S.three.label('{B}', S.fB, '', [0, 0, -0.06]); S.lC = S.three.label('{C}', S.fC, 'dim', [0, 0, -0.05]); S.lg = S.three.label('other order', S.ghost, 'dim', [0, 0, 0.1]); S.three.label('p', S.pt, '', [0.04, 0, 0.04]);
     },
@@ -2189,7 +2189,7 @@
       const pB = [p.px, p.py, p.pz], pA = M.applyT(TAB, pB), oB = M.pof(TAB);
       setArrow(S.aT, [0, 0, 0], oB); setArrow(S.aP, oB, pA); setArrow(S.aR, [0, 0, 0], pA); S.pt.position.set(...pA);
       S.set('pA', vfmt(pA)); S.set('pB', vfmt(pB)); S.set('len', M.v3.norm(M.v3.sub(pA, oB))); S.set('oC', vfmt(M.pof(TAC)));
-      RIL.setHTML(S.panel('m'), mat(M.Rof(TAB), 4, '<sup>A</sup><sub>B</sub>R =') + RIL.ui.vec(oB, 3, '<sup>A</sup>p<sub>B,org</sub> =') + mat(TAB, 3, '<sup>A</sup><sub>B</sub>T =') + mat(TBC, 3, '<sup>B</sup><sub>C</sub>T =') + mat(TAC, 3, '<sup>A</sup><sub>C</sub>T =') + `<p style="margin:.4em 0 0;color:#8fa3c4">ᴬp = ᴬ_B R ᴮp + ᴬp_B,org = ${vfmt(pA)} m. The ghost frame uses ${p.seq === 'TR' ? 'R·Trans' : 'Trans·R'}: origin ${vfmt(M.pof(other))} — different, so the order matters.</p>`, S, 'm');
+      RIL.setHTML(S.panel('m'), mat(M.Rof(TAB), 4, '<sup>A</sup><sub>B</sub>R =') + RIL.ui.vec(oB, 3, '<sup>A</sup>p<sub>B,org</sub> =') + mat(TAB, 3, '<sup>A</sup><sub>B</sub>T =') + mat(TBC, 3, '<sup>B</sup><sub>C</sub>T =') + mat(TAC, 3, '<sup>A</sup><sub>C</sub>T =') + `<p style="margin:.4em 0 0;color:#57606a">ᴬp = ᴬ_B R ᴮp + ᴬp_B,org = ${vfmt(pA)} m. The ghost frame uses ${p.seq === 'TR' ? 'R·Trans' : 'Trans·R'}: origin ${vfmt(M.pof(other))} — different, so the order matters.</p>`, S, 'm');
     }
   });
 
@@ -2214,9 +2214,9 @@
     onControl(S, id) { if (id === 'mode' || id === 'th' || id === 'be' || id === 'ga') S.prog = 1; },
     setup(S) {
       const k = K(), sc = S.three.scene; S.f0 = k.frame(0.9, { opacity: 0.3 }); sc.add(S.f0); S.f1 = k.frame(0.9); sc.add(S.f1);
-      S.v0 = arrowObj(0x8fa3c4); S.v1 = arrowObj(0xf2a516); sc.add(S.v0, S.v1);
+      S.v0 = arrowObj(0x8c959f); S.v1 = arrowObj(0xf2a516); sc.add(S.v0, S.v1);
       S.lab = S.three.label('ᴬp', [0, 0, 0], ''); S.lab0 = S.three.label('ᴮp (before)', [0, 0, 0], 'dim');
-      S.arc = k.polyline([[0, 0, 0], [0, 0, 0]], 0x6fe39b); sc.add(S.arc);
+      S.arc = k.polyline([[0, 0, 0], [0, 0, 0]], 0x2da44e); sc.add(S.arc);
       const grid = sc.children.find(o => o.type === 'GridHelper'); if (grid) grid.scale.set(1.5, 1.5, 1.5);
     },
     step(S, dt) { if (S.running) { S.prog = Math.min(1, (S.prog >= 1 ? 0 : S.prog) + dt * 0.5); if (S.prog >= 1) S.pause(); } },
@@ -2229,7 +2229,7 @@
       const e = M.rpyFromR(Rf);
       S.set('p', vfmt(pf)); S.set('n', M.fmt(M.v3.norm(v), 4) + ', ' + M.fmt(M.v3.norm(pf), 4)); S.set('det', det, ''); S.set('orth', orth); S.set('rpy', vfmt([e.gamma * R2D, e.beta * R2D, e.alpha * R2D], 2));
       const note = p.mode === 'cur' ? 'Current (moving) axes: post-multiply, R = R_x(γ)R_y(β)R_z(α). Compare with fixed-axis RPY (pre-multiply) — the results differ unless the rotations commute.' : p.mode === 'rpy' ? 'Fixed axes: γ about x, then β about y, then α about z (each about the fixed frame) — pre-multiplication.' : 'Columns of R are the unit vectors of the rotated frame expressed in the original frame.';
-      RIL.setHTML(S.panel('m'), mat(Rf, 4, 'R =') + RIL.ui.vec(v, 3, '<sup>B</sup>p =') + RIL.ui.vec(pf, 4, '<sup>A</sup>p = R <sup>B</sup>p =') + `<p style="margin:.4em 0 0;color:#8fa3c4">${note}</p>`, S, 'm');
+      RIL.setHTML(S.panel('m'), mat(Rf, 4, 'R =') + RIL.ui.vec(v, 3, '<sup>B</sup>p =') + RIL.ui.vec(pf, 4, '<sup>A</sup>p = R <sup>B</sup>p =') + `<p style="margin:.4em 0 0;color:#57606a">${note}</p>`, S, 'm');
     }
   });
 
@@ -2248,7 +2248,7 @@
     readouts: [{ id: 'pa', label: 'ᴬp', unit: 'm' }, { id: 'back', label: 'T⁻¹ ᴬp (should equal ᴮp)', unit: 'm' }, { id: 'ori', label: 'Orientation of {B} (RPY)', unit: '°' }],
     panels: [{ id: 'm', title: 'Homogeneous matrices', wide: true }],
     equations: ['T=\\begin{bmatrix}R&\\mathbf t\\\\\\mathbf 0^T&1\\end{bmatrix}\\;(3.6)', 'T^{-1}=\\begin{bmatrix}R^T&-R^T\\mathbf t\\\\\\mathbf 0^T&1\\end{bmatrix}\\;(3.8)'],
-    setup(S) { const k = K(), sc = S.three.scene; const grid = sc.children.find(o => o.type === 'GridHelper'); if (grid) grid.scale.set(2.5, 2.5, 2.5); S.fA = k.frame(1); sc.add(S.fA); S.fB = k.frame(0.8); sc.add(S.fB); S.a1 = arrowObj(0xf2a516); S.a2 = arrowObj(0x4cc2ff); S.a3 = arrowObj(0x6fe39b); sc.add(S.a1, S.a2, S.a3); S.pt = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); sc.add(S.pt); S.three.label('{A}', [0, 0, 0], '', [0, 0, -0.2]); S.three.label('{B}', S.fB, '', [0, 0, -0.2]); S.three.label('p', S.pt, '', [0.1, 0, 0.1]); },
+    setup(S) { const k = K(), sc = S.three.scene; const grid = sc.children.find(o => o.type === 'GridHelper'); if (grid) grid.scale.set(2.5, 2.5, 2.5); S.fA = k.frame(1); sc.add(S.fA); S.fB = k.frame(0.8); sc.add(S.fB); S.a1 = arrowObj(0xf2a516); S.a2 = arrowObj(0x1f9bd7); S.a3 = arrowObj(0x2da44e); sc.add(S.a1, S.a2, S.a3); S.pt = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); sc.add(S.pt); S.three.label('{A}', [0, 0, 0], '', [0, 0, -0.2]); S.three.label('{B}', S.fB, '', [0, 0, -0.2]); S.three.label('p', S.pt, '', [0.1, 0, 0.1]); },
     draw(S) {
       const p = S.p, k = K(), R = { x: M.rotX, y: M.rotY, z: M.rotZ }[p.ax](p.th * D2R), t = [p.tx, p.ty, p.tz], T = M.homog(R, t); k.applyT(S.fB, T);
       const pb = [p.px, p.py, p.pz], ph = M.mat.mulVec(T, [...pb, 1]), pa = ph.slice(0, 3), Ti = M.invT(T), back = M.mat.mulVec(Ti, ph).slice(0, 3);
@@ -2294,8 +2294,8 @@
       S.rob.update(q); S.rob.frames.forEach((f, i) => (f.visible = S.p.frames || i === 0 || i === 3));
       const p = M.pof(T[3]), e = M.rpyFromR(M.Rof(T[3]));
       S.set('p', vfmt(p, 4)); S.set('rpy', vfmt([e.gamma * R2D, e.beta * R2D, e.alpha * R2D], 1)); S.set('var', q.map((v, i) => tbl[i].type === 'R' ? M.fmt(v * R2D, 1) + '°' : M.fmt(v, 3) + ' m').join(', '));
-      const rows = S.T.map((r, i) => ({ cells: [i + 1, M.fmt(r.a, 3), M.fmt(r.alpha, 1) + '°', r.type === 'P' ? `<b style="color:#f2a516">${M.fmt(r.d, 3)}*</b>` : M.fmt(r.d, 3), r.type === 'R' ? `<b style="color:#f2a516">${M.fmt(r.theta, 1)}°*</b>` : M.fmt(r.theta, 1) + '°', r.type], hl: i === +S.p.link - 1 }));
-      RIL.setHTML(S.panel('tbl'), RIL.ui.kv(rows, ['Link i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i', 'Joint']) + '<p style="margin:.3em 0;color:#8fa3c4">* joint variable</p>' + A.map((Ai, i) => mat(Ai, 3, `A<sub>${i + 1}</sub> =`)).join('') + mat(T[3], 4, '<sup>0</sup>T<sub>3</sub> ='), S, 'tbl');
+      const rows = S.T.map((r, i) => ({ cells: [i + 1, M.fmt(r.a, 3), M.fmt(r.alpha, 1) + '°', r.type === 'P' ? `<b style="color:#9a5b00">${M.fmt(r.d, 3)}*</b>` : M.fmt(r.d, 3), r.type === 'R' ? `<b style="color:#9a5b00">${M.fmt(r.theta, 1)}°*</b>` : M.fmt(r.theta, 1) + '°', r.type], hl: i === +S.p.link - 1 }));
+      RIL.setHTML(S.panel('tbl'), RIL.ui.kv(rows, ['Link i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i', 'Joint']) + '<p style="margin:.3em 0;color:#57606a">* joint variable</p>' + A.map((Ai, i) => mat(Ai, 3, `A<sub>${i + 1}</sub> =`)).join('') + mat(T[3], 4, '<sup>0</sup>T<sub>3</sub> ='), S, 'tbl');
     }
   });
 
@@ -2320,7 +2320,7 @@
       if (S.running) { const l = S.trail[S.trail.length - 1]; if (!l || M.v3.norm(M.v3.sub(l, p)) > 0.005) { S.trail.push(p); if (S.trail.length > 400) S.trail.shift(); if (S.trail.length > 1) k.updateLine(S.line, S.trail); } }
       S.set('p', vfmt(p, 4)); S.set('rpy', vfmt([e.gamma * R2D, e.beta * R2D, e.alpha * R2D], 1)); S.set('z', vfmt([T6[0][2], T6[1][2], T6[2][2]], 3)); S.set('reach', M.v3.norm(M.v3.sub(p, [0, 0, 0.4])));
       const i = +S.p.show; const rows = tb.map((L, j) => ({ cells: [j + 1, M.fmt(L.a, 3), M.fmt(L.alpha * R2D, 0) + '°', M.fmt(L.d, 3), `θ${j + 1}${L.offset ? ' + ' + M.fmt(L.offset * R2D, 0) + '°' : ''} = ${M.fmt((q[j] + (L.offset || 0)) * R2D, 1)}°`], hl: j === i - 1 }));
-      RIL.setHTML(S.panel('m'), RIL.ui.kv(rows, ['i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i']) + mat(A[i - 1], 4, `A<sub>${i}</sub> =`) + mat(T6, 4, '<sup>0</sup>T<sub>6</sub> =') + '<p style="margin:.3em 0 0;color:#8fa3c4">Educational 6R model (elbow arm with spherical wrist, Spong-type DH); not a specific manufacturer\'s robot.</p>', S, 'm');
+      RIL.setHTML(S.panel('m'), RIL.ui.kv(rows, ['i', 'a_i (m)', 'α_i', 'd_i (m)', 'θ_i']) + mat(A[i - 1], 4, `A<sub>${i}</sub> =`) + mat(T6, 4, '<sup>0</sup>T<sub>6</sub> =') + '<p style="margin:.3em 0 0;color:#57606a">Educational 6R model (elbow arm with spherical wrist, Spong-type DH); not a specific manufacturer\'s robot.</p>', S, 'm');
     }
   });
 })();
@@ -2333,7 +2333,7 @@
   const RIL = window.RIL, M = RIL.M, D = RIL.draw, C = RIL.C, D2R = M.D2R, R2D = M.R2D, PI = Math.PI;
   const K = () => RIL.three;
   const ellipse = (S, V, cxw, cyw, J, scale, col) => { // velocity ellipse: image of unit joint-velocity circle
-    const pts = []; for (let k = 0; k <= 60; k++) { const a = 2 * PI * k / 60, q = [Math.cos(a), Math.sin(a)]; const v = M.mat.mulVec(J, q); pts.push([V.X(cxw + v[0] * scale), V.Y(cyw + v[1] * scale)]); } D.poly(S, pts, 'rgba(196,164,255,.12)', col || C.violet, 1.5);
+    const pts = []; for (let k = 0; k <= 60; k++) { const a = 2 * PI * k / 60, q = [Math.cos(a), Math.sin(a)]; const v = M.mat.mulVec(J, q); pts.push([V.X(cxw + v[0] * scale), V.Y(cyw + v[1] * scale)]); } D.poly(S, pts, 'rgba(130,80,223,.12)', col || C.violet, 1.5);
   };
 
   /* ================= Forward kinematics, 2-DOF planar (Topic III.5A) ================= */
@@ -2354,9 +2354,9 @@
     step(S) { if (S.auto) { S.setParam('t1', +(40 * Math.sin(0.5 * S.t) + 30).toFixed(1), true); S.setParam('t2', +(60 * Math.sin(0.8 * S.t) + 40).toFixed(1), true); } },
     draw(S) {
       D.clear(S); const p = S.p, Lt = p.l1 + p.l2; const V = S.V = D.fit(S, [-Lt * 1.1, Lt * 1.1], [-Lt * 1.1, Lt * 1.1], 24); D.axes2(S, V, [-Lt * 1.1, Lt * 1.1], [-Lt * 1.1, Lt * 1.1], Lt > 1 ? 0.2 : 0.1);
-      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(76,194,255,.25)', 1); D.circle(S, V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, null, 'rgba(76,194,255,.25)', 1);
+      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(11,127,193,.25)', 1); D.circle(S, V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, null, 'rgba(11,127,193,.25)', 1);
       const t1 = p.t1 * D2R, t2 = p.t2 * D2R, f = M.planar2R.fk(p.l1, p.l2, t1, t2);
-      if (p.trace) { const l = S.trail[S.trail.length - 1]; if (!l || Math.hypot(l[0] - f.x, l[1] - f.y) > 0.003) { S.trail.push([f.x, f.y]); if (S.trail.length > 600) S.trail.shift(); } D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(242,165,22,.6)', 1.5, false); }
+      if (p.trace) { const l = S.trail[S.trail.length - 1]; if (!l || Math.hypot(l[0] - f.x, l[1] - f.y) > 0.003) { S.trail.push([f.x, f.y]); if (S.trail.length > 600) S.trail.shift(); } D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(199,119,0,.6)', 1.5, false); }
       D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 14 });
       if (p.frames) { D.frame2(S, V.X(0), V.Y(0), 0, 36, '{0}'); D.frame2(S, V.X(f.ex), V.Y(f.ey), t1, 30, '{1}'); D.frame2(S, V.X(f.x), V.Y(f.y), t1 + t2, 30, '{2}'); }
       const g = S.ctx; g.strokeStyle = C.green; g.lineWidth = 1.5; g.beginPath(); g.arc(V.X(0), V.Y(0), 40, 0, -t1, t1 > 0); g.stroke(); D.text(S, 'θ₁', V.X(0) + 46 * Math.cos(t1 / 2), V.Y(0) - 46 * Math.sin(t1 / 2), { size: 11, color: C.green });
@@ -2396,9 +2396,9 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, Lt = p.l1 + p.l2, R = Math.max(1.0, Lt * 1.1); const V = S.V = D.fit(S, [-R, R], [-R, R], 20); D.axes2(S, V, [-R, R], [-R, R], 0.2);
-      const g = S.ctx; g.fillStyle = 'rgba(76,194,255,.07)'; g.beginPath(); g.arc(V.X(0), V.Y(0), Lt * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, 0, 2 * PI, true); g.fill(); D.text(S, 'reachable workspace |l₁ − l₂| ≤ r ≤ l₁ + l₂', V.X(0) - Lt * V.s * 0.6, V.Y(0) + Lt * V.s + 14, { size: 10.5, color: C.cyan });
+      const g = S.ctx; g.fillStyle = 'rgba(87,96,106,.07)'; g.beginPath(); g.arc(V.X(0), V.Y(0), Lt * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), Math.abs(p.l1 - p.l2) * V.s, 0, 2 * PI, true); g.fill(); D.text(S, 'reachable workspace |l₁ − l₂| ≤ r ≤ l₁ + l₂', V.X(0) - Lt * V.s * 0.6, V.Y(0) + Lt * V.s + 14, { size: 10.5, color: C.cyan });
       const r = S.ik || M.planar2R.ik(p.l1, p.l2, p.x, p.y);
-      if (r.reachable) r.sols.forEach((s, i) => { const f = M.planar2R.fk(p.l1, p.l2, s.t1, s.t2); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, i === +p.br ? 'rgba(242,165,22,.5)' : 'rgba(196,164,255,.5)', 2, false); D.circle(S, V.X(f.ex), V.Y(f.ey), 4, null, i ? C.violet : C.amber, 1.5); });
+      if (r.reachable) r.sols.forEach((s, i) => { const f = M.planar2R.fk(p.l1, p.l2, s.t1, s.t2); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, i === +p.br ? 'rgba(199,119,0,.5)' : 'rgba(130,80,223,.5)', 2, false); D.circle(S, V.X(f.ex), V.Y(f.ey), 4, null, i ? C.violet : C.amber, 1.5); });
       const f = M.planar2R.fk(p.l1, p.l2, S.q[0], S.q[1]); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 13 });
       D.circle(S, V.X(p.x), V.Y(p.y), 9, null, r.reachable ? C.green : C.red, 2.5); D.line(S, V.X(p.x) - 13, V.Y(p.y), V.X(p.x) + 13, V.Y(p.y), r.reachable ? C.green : C.red, 1.5); D.line(S, V.X(p.x), V.Y(p.y) - 13, V.X(p.x), V.Y(p.y) + 13, r.reachable ? C.green : C.red, 1.5);
       if (!r.reachable) D.text(S, `Target unreachable: |c₂| = ${M.fmt(Math.abs(r.D), 3)} > 1 — ${Math.hypot(p.x, p.y) > Lt ? 'beyond maximum reach' : 'inside the inner hole'}. ${p.meth === 'num' ? 'DLS returns the closest pose.' : ''}`, 16, 22, { size: 12.5, weight: 700, color: C.red });
@@ -2437,7 +2437,7 @@
       const det = p.l1 * p.l2 * Math.sin(S.q[1]); const man = Math.sqrt(Math.abs(M.mat.det(M.mat.mul(r.J, M.mat.T(r.J)))));
       if (Math.abs(det) < 0.01) D.text(S, 'Near singularity: det J ≈ 0 — the ellipse collapses to a line', 16, 22, { size: 12.5, weight: 700, color: C.red });
       S.set('v', `(${M.fmt(r.v[0], 4)}, ${M.fmt(r.v[1], 4)})`); S.set('sp', Math.hypot(...r.v)); S.set('w', r.qd[0] + r.qd[1]); S.set('qd', `(${M.fmt(r.qd[0], 4)}, ${M.fmt(r.qd[1], 4)})`); S.set('det', det, Math.abs(det) < 0.01 ? 'bad' : ''); S.set('man', man);
-      RIL.setHTML(S.panel('m'), (p.mode === 'fwd' ? RIL.ui.vec(r.v, 4, 'ẋ =') + RIL.ui.matrix(r.J, 4, '= J =') + RIL.ui.vec(r.qd, 3, '·') : RIL.ui.vec(r.qd, 4, 'θ̇ =') + (r.Ji ? RIL.ui.matrix(r.Ji, 3, '= J⁻¹ =') : '<span>J singular</span>') + RIL.ui.vec(r.v, 3, '·')) + `<p style="margin:.4em 0 0;color:#8fa3c4">J computed at θ = (${M.fmt(S.q[0] * R2D, 1)}°, ${M.fmt(S.q[1] * R2D, 1)}°); columns are the tip velocities produced by unit rate of each joint.</p>`, S, 'm');
+      RIL.setHTML(S.panel('m'), (p.mode === 'fwd' ? RIL.ui.vec(r.v, 4, 'ẋ =') + RIL.ui.matrix(r.J, 4, '= J =') + RIL.ui.vec(r.qd, 3, '·') : RIL.ui.vec(r.qd, 4, 'θ̇ =') + (r.Ji ? RIL.ui.matrix(r.Ji, 3, '= J⁻¹ =') : '<span>J singular</span>') + RIL.ui.vec(r.v, 3, '·')) + `<p style="margin:.4em 0 0;color:#57606a">J computed at θ = (${M.fmt(S.q[0] * R2D, 1)}°, ${M.fmt(S.q[1] * R2D, 1)}°); columns are the tip velocities produced by unit rate of each joint.</p>`, S, 'm');
     }
   });
 
@@ -2495,10 +2495,10 @@
       D.clear(S); const p = S.p, L = [p.L1, p.L2, p.L3], Lt = L[0] + L[1] + L[2], V = D.fit(S, [-Lt * 1.08, Lt * 1.08], [-Lt * 1.08, Lt * 1.08], 20); D.axes2(S, V, [-Lt * 1.08, Lt * 1.08], [-Lt * 1.08, Lt * 1.08], 0.2);
       const key = JSON.stringify(p); if (S._k !== key) { const r = M.rng(5), pts = []; let rmin = Infinity; for (let i = 0; i < p.n; i++) { const th = [p.lim1, p.lim2, p.lim3].map(l => (r() * 2 - 1) * l * D2R); const f = M.planarFK(L, th); pts.push([f.x, f.y]); rmin = Math.min(rmin, Math.hypot(f.x, f.y)); } S.pts = pts; S.rmin = rmin;
         const G = 60, cell = 2 * Lt / G, occ = new Set(); pts.forEach(q => occ.add(Math.floor((q[0] + Lt) / cell) + ',' + Math.floor((q[1] + Lt) / cell))); S.area = occ.size * cell * cell; S._k = key; }
-      const g = S.ctx; g.fillStyle = 'rgba(242,165,22,.45)'; S.pts.forEach(q => g.fillRect(V.X(q[0]) - 1, V.Y(q[1]) - 1, 2, 2));
+      const g = S.ctx; g.fillStyle = 'rgba(199,119,0,.45)'; S.pts.forEach(q => g.fillRect(V.X(q[0]) - 1, V.Y(q[1]) - 1, 2, 2));
       const full = p.lim1 >= 180 && p.lim2 >= 180 && p.lim3 >= 180; const din = Math.abs(L[0] - L[1]) + L[2], dout = L[0] + L[1] - L[2];
       if (full && dout > din) { D.circle(S, V.X(0), V.Y(0), din * V.s, null, C.green, 2); D.circle(S, V.X(0), V.Y(0), dout * V.s, null, C.green, 2); D.text(S, 'dexterous annulus', V.X(0) + dout * V.s * 0.7, V.Y(0) - dout * V.s * 0.72, { size: 11, color: C.green }); }
-      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(76,194,255,.6)', 1.5, 1);
+      D.circle(S, V.X(0), V.Y(0), Lt * V.s, null, 'rgba(11,127,193,.6)', 1.5, 1);
       const f = M.planarFK(L, S.pose); D.arm(S, V, f.pts, { w: 10 });
       S.set('rmax', Lt); S.set('rmin', S.rmin); S.set('dex', full && dout > din ? `${M.fmt(din, 3)} ≤ r ≤ ${M.fmt(dout, 3)}` : 'none / limited by joint ranges'); S.set('area', S.area);
     }
@@ -2535,8 +2535,8 @@
     draw(S) {
       D.clear(S); const p = S.p, l1 = 0.5, l2 = 0.35, V = armView(S, l1 + l2), t = Math.min(S.tt || 0, p.tf);
       const j1 = traj(p.meth, p.a0, p.af, p.tf, t, p.Vf), j2 = traj(p.meth, p.b0, p.bf, p.tf, t, p.Vf);
-      [[p.a0, p.b0, 'rgba(143,163,196,.4)'], [p.af, p.bf, 'rgba(111,227,155,.5)']].forEach(([a, b, c]) => { const f = M.planar2R.fk(l1, l2, a * D2R, b * D2R); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, c, 3, false); });
-      const path = []; for (let k = 0; k <= 60; k++) { const tt = p.tf * k / 60; const f = M.planar2R.fk(l1, l2, traj(p.meth, p.a0, p.af, p.tf, tt, p.Vf).q * D2R, traj(p.meth, p.b0, p.bf, p.tf, tt, p.Vf).q * D2R); path.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, path, null, 'rgba(242,165,22,.7)', 2, false);
+      [[p.a0, p.b0, 'rgba(87,96,106,.4)'], [p.af, p.bf, 'rgba(26,155,75,.5)']].forEach(([a, b, c]) => { const f = M.planar2R.fk(l1, l2, a * D2R, b * D2R); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, c, 3, false); });
+      const path = []; for (let k = 0; k <= 60; k++) { const tt = p.tf * k / 60; const f = M.planar2R.fk(l1, l2, traj(p.meth, p.a0, p.af, p.tf, tt, p.Vf).q * D2R, traj(p.meth, p.b0, p.bf, p.tf, tt, p.Vf).q * D2R); path.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, path, null, 'rgba(199,119,0,.7)', 2, false);
       const f = M.planar2R.fk(l1, l2, j1.q * D2R, j2.q * D2R); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
       D.text(S, `t = ${M.fmt(t, 2)} s of ${p.tf} s — tool path (amber) is curved: joint-space planning does not control the Cartesian path`, 14, 20, { size: 11.5 });
       const key = JSON.stringify(p); if (S._plotted !== key) { const P = [[], []], Vv = [[], []], A = [[], []]; let vmax = 0, amax = 0; for (let k = 0; k <= 200; k++) { const tt = p.tf * k / 200; [traj(p.meth, p.a0, p.af, p.tf, tt, p.Vf), traj(p.meth, p.b0, p.bf, p.tf, tt, p.Vf)].forEach((r, i) => { P[i].push([tt, r.q]); Vv[i].push([tt, r.qd]); A[i].push([tt, r.qdd]); if (!i) { vmax = Math.max(vmax, Math.abs(r.qd)); amax = Math.max(amax, Math.abs(r.qdd)); } }); }
@@ -2577,8 +2577,8 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, V = armView(S, 0.9); const L = this.L;
-      const g = S.ctx; g.fillStyle = 'rgba(76,194,255,.06)'; g.beginPath(); g.arc(V.X(0), V.Y(0), (L[0] + L[1]) * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), (L[0] - L[1]) * V.s, 0, 2 * PI, true); g.fill();
-      const qa = this.ikq(S, p.x0, p.y0, [0, 0]), qb = this.ikq(S, p.xf, p.yf, [0, 0]); const jp = []; for (let k = 0; k <= 40; k++) { const u = k / 40; const f = M.planar2R.fk(...L, qa[0] + (qb[0] - qa[0]) * u, qa[1] + (qb[1] - qa[1]) * u); jp.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, jp, null, 'rgba(196,164,255,.7)', 1.5, false);
+      const g = S.ctx; g.fillStyle = 'rgba(87,96,106,.07)'; g.beginPath(); g.arc(V.X(0), V.Y(0), (L[0] + L[1]) * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), (L[0] - L[1]) * V.s, 0, 2 * PI, true); g.fill();
+      const qa = this.ikq(S, p.x0, p.y0, [0, 0]), qb = this.ikq(S, p.xf, p.yf, [0, 0]); const jp = []; for (let k = 0; k <= 40; k++) { const u = k / 40; const f = M.planar2R.fk(...L, qa[0] + (qb[0] - qa[0]) * u, qa[1] + (qb[1] - qa[1]) * u); jp.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, jp, null, 'rgba(130,80,223,.7)', 1.5, false);
       D.line(S, V.X(p.x0), V.Y(p.y0), V.X(p.xf), V.Y(p.yf), C.green, 2.5);
       D.poly(S, (S.trail || []).map(q => [V.X(q[0]), V.Y(q[1])]), null, C.amber, 2, false);
       const f = M.planar2R.fk(...L, ...(S.q || [0, 0])); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
@@ -2614,8 +2614,8 @@
       D.clear(S); const p = S.p, m = this.mt(p); const t = Math.min(S.tt || 0, p.mode === 'min' ? m.tf : p.tf);
       const prof = (k, tt) => k === 'trap' ? M.traj.lspb(0, p.Dq, p.tf, p.V, tt) : k === 'min' ? this.profMin(p, tt) : k === 'cubic' ? M.traj.cubic(0, p.Dq, p.tf, tt) : M.traj.quintic(0, p.Dq, p.tf, tt);
       const r = prof(p.mode, t); const x0 = 60, x1 = S.W - 60, y = S.H * 0.45;
-      D.rect(S, x0 - 10, y + 16, x1 - x0 + 20, 10, '#3b4f75'); for (let k = 0; k <= 6; k++) { const xx = x0 + (x1 - x0) * k / 6; D.line(S, xx, y + 26, xx, y + 34, C.muted, 1); D.text(S, M.fmt(p.Dq * k / 6, 0) + '°', xx, y + 46, { size: 10, align: 'center', color: C.muted }); }
-      const cxp = x0 + (x1 - x0) * r.q / p.Dq; D.rect(S, cxp - 26, y - 22, 52, 38, '#6f86ad', '#c9d6ec', 1.5, 5); D.arrow(S, cxp, y - 34, cxp + M.clamp(r.qd, -200, 200) * 1.2, y - 34, C.amber, 2.5); D.arrow(S, cxp, y - 50, cxp + M.clamp(r.qdd, -400, 400) * 0.4, y - 50, C.red, 2);
+      D.rect(S, x0 - 10, y + 16, x1 - x0 + 20, 10, '#6e7781'); for (let k = 0; k <= 6; k++) { const xx = x0 + (x1 - x0) * k / 6; D.line(S, xx, y + 26, xx, y + 34, C.muted, 1); D.text(S, M.fmt(p.Dq * k / 6, 0) + '°', xx, y + 46, { size: 10, align: 'center', color: C.muted }); }
+      const cxp = x0 + (x1 - x0) * r.q / p.Dq; D.rect(S, cxp - 26, y - 22, 52, 38, '#6e7781', '#8c959f', 1.5, 5); D.arrow(S, cxp, y - 34, cxp + M.clamp(r.qd, -200, 200) * 1.2, y - 34, C.amber, 2.5); D.arrow(S, cxp, y - 50, cxp + M.clamp(r.qdd, -400, 400) * 0.4, y - 50, C.red, 2);
       D.text(S, 'velocity', cxp + 4, y - 38, { size: 10, color: C.amber }); D.text(S, 'acceleration', cxp + 4, y - 54, { size: 10, color: C.red });
       D.text(S, `t = ${M.fmt(t, 2)} s   q = ${M.fmt(r.q, 2)}°   q̇ = ${M.fmt(r.qd, 2)}°/s   q̈ = ${M.fmt(r.qdd, 2)}°/s²`, 16, 24, { size: 12.5, weight: 650 });
       const key = JSON.stringify([p.Dq, p.tf, p.V, p.Vmax, p.amax]); if (S._k !== key) { const tfm = Math.max(p.tf, m.tf); const V = [[], [], [], []], A = [[], [], [], []]; ['trap', 'min', 'cubic', 'quintic'].forEach((k, i) => { const tt = k === 'min' ? m.tf : p.tf; for (let j = 0; j <= 240; j++) { const ti = tfm * j / 240; const rr = ti <= tt ? prof(k, ti) : { qd: 0, qdd: 0 }; V[i].push([ti, rr.qd]); A[i].push([ti, rr.qdd]); } }); S.chart('v').setAll(V); S.chart('a').setAll(A); S._k = key; }
@@ -2676,7 +2676,7 @@
     step(S, dt) { S.x = M.rk4(this.f(S), S.x, 0, dt); const p = S.p, en = M.planar2R.energy(p.m1, p.m2, p.l1, p.l2, [S.x[0], S.x[1]], [S.x[2], S.x[3]], p.grav ? M.g0 : 0); if (S.E0 === null) S.E0 = en.E; if (S.frameCount % 2 === 0) { S.chart('c').push(S.t, [S.x[0], S.x[1]]); S.chart('e').push(S.t, [en.K, en.P, en.E]); } },
     draw(S) {
       D.clear(S); const p = S.p, V = (() => { const R = (p.l1 + p.l2) * 1.1; const v = D.fit(S, [-R, R], [-R, R], 18); D.axes2(S, v, [-R, R], [-R, R], 0.2); return v; })();
-      const f = M.planar2R.fk(p.l1, p.l2, S.x[0], S.x[1]); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 8 }); D.circle(S, V.X(f.ex), V.Y(f.ey), 6 + 4 * p.m1, C.amber, '#fff', 1); D.circle(S, V.X(f.x), V.Y(f.y), 6 + 4 * p.m2, C.amber, '#fff', 1);
+      const f = M.planar2R.fk(p.l1, p.l2, S.x[0], S.x[1]); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 8 }); D.circle(S, V.X(f.ex), V.Y(f.ey), 6 + 4 * p.m1, C.amber, '#24292f', 1); D.circle(S, V.X(f.x), V.Y(f.y), 6 + 4 * p.m2, C.amber, '#24292f', 1);
       const d = M.planar2R.dynamics(p.m1, p.m2, p.l1, p.l2, [S.x[0], S.x[1]], [S.x[2], S.x[3]], p.grav ? M.g0 : 0); const qdd = this.f(S)(0, S.x).slice(2);
       const en = M.planar2R.energy(p.m1, p.m2, p.l1, p.l2, [S.x[0], S.x[1]], [S.x[2], S.x[3]], p.grav ? M.g0 : 0);
       S.set('q', `${M.fmt(S.x[0] * R2D, 1)}, ${M.fmt(S.x[1] * R2D, 1)}`); S.set('qd', `${M.fmt(S.x[2], 3)}, ${M.fmt(S.x[3], 3)}`); S.set('qdd', `${M.fmt(qdd[0], 3)}, ${M.fmt(qdd[1], 3)}`); S.set('E', en.E); S.set('dE', S.E0 === null ? 0 : en.E - S.E0);
@@ -2708,11 +2708,11 @@
     step(S) { const c = this.calc(S); if (S.frameCount % 2 === 0) { S.chart('c').push(S.t, [c.K, c.P, c.K - c.P]); S.chart('t').push(S.t, c.tau); } },
     draw(S) {
       D.clear(S); const p = S.p, c = this.calc(S), st = c.st; const R = p.l * 1.8, V = D.fit(S, [-R, R], [-R, R], 18); D.axes2(S, V, [-R, R], [-R, R], 0.2);
-      if (p.mod === 'one') { const e = [p.l * Math.cos(st.q[0]), p.l * Math.sin(st.q[0])]; D.link(S, V.X(0), V.Y(0), V.X(e[0]), V.Y(e[1]), 14, '#8aa0c6'); D.joint(S, V.X(0), V.Y(0), 9); D.circle(S, V.X(e[0] / 2), V.Y(e[1] / 2), 5, C.amber); D.arrow(S, V.X(e[0] / 2), V.Y(e[1] / 2), V.X(e[0] / 2), V.Y(e[1] / 2) + 40, C.violet, 2); D.text(S, 'mg at l_c = l/2', V.X(e[0] / 2) + 8, V.Y(e[1] / 2) + 40, { size: 11, color: C.violet }); }
+      if (p.mod === 'one') { const e = [p.l * Math.cos(st.q[0]), p.l * Math.sin(st.q[0])]; D.link(S, V.X(0), V.Y(0), V.X(e[0]), V.Y(e[1]), 14, '#9aa4af'); D.joint(S, V.X(0), V.Y(0), 9); D.circle(S, V.X(e[0] / 2), V.Y(e[1] / 2), 5, C.amber); D.arrow(S, V.X(e[0] / 2), V.Y(e[1] / 2), V.X(e[0] / 2), V.Y(e[1] / 2) + 40, C.violet, 2); D.text(S, 'mg at l_c = l/2', V.X(e[0] / 2) + 8, V.Y(e[1] / 2) + 40, { size: 11, color: C.violet }); }
       else { const f = M.planar2R.fk(c.l1, c.l2, ...st.q); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 8 }); D.circle(S, V.X(f.ex), V.Y(f.ey), 9, C.amber); D.circle(S, V.X(f.x), V.Y(f.y), 9, C.amber); }
       S.set('K', c.K); S.set('P', c.P); S.set('L', c.K - c.P); S.set('tau', p.mod === 'one' ? M.fmt(c.tau[0], 4) : `(${M.fmt(c.tau[0], 3)}, ${M.fmt(c.tau[1], 3)})`); S.set('hold', p.mod === 'one' ? M.fmt(c.hold[0], 4) : `(${M.fmt(c.hold[0], 3)}, ${M.fmt(c.hold[1], 3)})`); S.set('in', p.mod === 'one' ? M.fmt(c.inr[0], 4) : `(${M.fmt(c.inr[0], 3)}, ${M.fmt(c.inr[1], 3)})`);
       const html = p.mod === 'one' ? `<div class="mono">q = θ = ${M.fmt(st.q[0] * R2D, 2)}°, θ̇ = ${M.fmt(st.qd[0], 3)} rad/s, θ̈ = ${M.fmt(st.qdd[0], 3)} rad/s²<br>K = ½ I_O θ̇², I_O = ml²/3 = ${M.fmt(c.I, 4)} kg·m² → K = ${M.fmt(c.K, 4)} J<br>P = m g l_c sin θ = ${M.fmt(c.P, 4)} J<br>∂L/∂θ̇ = I_O θ̇ → d/dt = I_O θ̈ = ${M.fmt(c.inr[0], 4)} N·m;  ∂L/∂θ = −m g l_c cos θ<br>τ = I_O θ̈ + m g l_c cos θ = ${M.fmt(c.inr[0], 4)} + ${M.fmt(c.hold[0], 4)} = <b>${M.fmt(c.tau[0], 4)} N·m</b>  (3.30)</div>`
-        : RIL.ui.matrix(c.M, 4, 'M(q) =') + RIL.ui.vec(st.qdd, 3, 'q̈ =') + RIL.ui.vec(c.cq, 4, 'C q̇ =') + RIL.ui.vec(c.hold, 4, 'G =') + RIL.ui.vec(c.tau, 4, 'τ = Mq̈ + Cq̇ + G =') + '<p style="margin:.3em 0 0;color:#8fa3c4">Set A = 0, θ₁ = 0°, θ₂ = 90°, m = 1, l = 0.5 to compare with Example 3.12 (which uses l₂ = 0.3 m and θ̈ = (1, 1)).</p>';
+        : RIL.ui.matrix(c.M, 4, 'M(q) =') + RIL.ui.vec(st.qdd, 3, 'q̈ =') + RIL.ui.vec(c.cq, 4, 'C q̇ =') + RIL.ui.vec(c.hold, 4, 'G =') + RIL.ui.vec(c.tau, 4, 'τ = Mq̈ + Cq̇ + G =') + '<p style="margin:.3em 0 0;color:#57606a">Set A = 0, θ₁ = 0°, θ₂ = 90°, m = 1, l = 0.5 to compare with Example 3.12 (which uses l₂ = 0.3 m and θ̈ = (1, 1)).</p>';
       RIL.setHTML(S.panel('d'), html, S, 'd');
     }
   });
@@ -2754,13 +2754,13 @@
     draw(S) {
       D.clear(S); const p = S.p;
       if (p.mode === 'pid') {
-        const cx = S.W * 0.3, cy = S.H * 0.55, R = Math.min(130, S.H * 0.35); D.circle(S, cx, cy, R + 14, null, '#3a5384', 1);
-        const ref = (S.ref ? S.ref[0] : 0); D.line(S, cx, cy, cx + Math.cos(-ref) * (R + 10), cy + Math.sin(-ref) * (R + 10), 'rgba(111,227,155,.7)', 2, [6, 4]); D.link(S, cx, cy, cx + Math.cos(-S.q[0]) * R, cy + Math.sin(-S.q[0]) * R, 16, '#8aa0c6'); D.joint(S, cx, cy, 12);
+        const cx = S.W * 0.3, cy = S.H * 0.55, R = Math.min(130, S.H * 0.35); D.circle(S, cx, cy, R + 14, null, '#8c959f', 1);
+        const ref = (S.ref ? S.ref[0] : 0); D.line(S, cx, cy, cx + Math.cos(-ref) * (R + 10), cy + Math.sin(-ref) * (R + 10), 'rgba(26,155,75,.7)', 2, [6, 4]); D.link(S, cx, cy, cx + Math.cos(-S.q[0]) * R, cy + Math.sin(-S.q[0]) * R, 16, '#9aa4af'); D.joint(S, cx, cy, 12);
         D.text(S, 'dashed: desired; link: actual (single joint, motor side)', 14, 22, { size: 11.5, color: C.muted });
         const J = p.J * 1e-4, B = 1e-4, wn = Math.sqrt(p.Kp / J), z = (B + p.Kd) / (2 * Math.sqrt(p.Kp * J)); S.set('wn', wn); S.set('z', z); S.set('e', ((S.ref ? S.ref[0] : 0) - S.q[0]) * R2D); S.set('ess', p.Ki > 0 ? 0 : -p.dist / Math.max(1e-9, p.Kp) * R2D); S.set('mp', S.peak > 0 ? Math.max(0, (S.peak - p.step * D2R) / (p.step * D2R) * 100) : 0); S.set('u', S.u ? S.u[0] : 0);
         D.box(S, S.W * 0.58, 30, Math.min(300, S.W * 0.38), 'Closed loop J ë + (B + K_d) ė + K_p e = τ_d', [['ωₙ', M.fmt(wn, 2) + ' rad/s'], ['ζ', M.fmt(z, 3)], ['2 % settling ≈ 4/(ζωₙ)', M.fmt(4 / (z * wn), 3) + ' s'], ['Steady error (P/PD)', M.fmt(-p.dist / Math.max(1e-9, p.Kp) * R2D, 3) + '°']]);
       } else {
-        const V = armView(S, 0.85), f = M.planar2R.fk(0.5, 0.3, ...S.q); if (S.ref) { const fr = M.planar2R.fk(0.5, 0.3, ...S.ref); D.poly(S, [[V.X(0), V.Y(0)], [V.X(fr.ex), V.Y(fr.ey)], [V.X(fr.x), V.Y(fr.y)]], null, 'rgba(111,227,155,.6)', 3, false); }
+        const V = armView(S, 0.85), f = M.planar2R.fk(0.5, 0.3, ...S.q); if (S.ref) { const fr = M.planar2R.fk(0.5, 0.3, ...S.ref); D.poly(S, [[V.X(0), V.Y(0)], [V.X(fr.ex), V.Y(fr.ey)], [V.X(fr.x), V.Y(fr.y)]], null, 'rgba(26,155,75,.6)', 3, false); }
         D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 }); D.text(S, 'green: desired configuration; arm: actual (full nonlinear dynamics)', 14, 22, { size: 11.5, color: C.muted });
         const Kp = p.Kp * 100, Kd = p.Kd * 100; S.set('wn', Math.sqrt(Kp)); S.set('z', Kd / (2 * Math.sqrt(Kp))); S.set('e', S.ref ? `(${M.fmt((S.ref[0] - S.q[0]) * R2D, 3)}, ${M.fmt((S.ref[1] - S.q[1]) * R2D, 3)})` : '—'); S.set('ess', p.err ? 'non-zero (model error)' : '≈ 0 (exact model)'); S.set('mp', '—'); S.set('u', S.u ? `(${M.fmt(S.u[0], 2)}, ${M.fmt(S.u[1], 2)})` : '—');
       }
@@ -2791,8 +2791,8 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, V = S.V = armView(S, 0.85), f = M.planar2R.fk(0.5, 0.3, ...S.q);
-      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(242,165,22,.6)', 1.5, false); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
-      D.spring(S, V.X(f.x), V.Y(f.y), V.X(p.tx), V.Y(p.ty), 7, 5, 'rgba(76,194,255,.7)');
+      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(199,119,0,.6)', 1.5, false); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
+      D.spring(S, V.X(f.x), V.Y(f.y), V.X(p.tx), V.Y(p.ty), 7, 5, 'rgba(11,127,193,.7)');
       D.circle(S, V.X(p.tx), V.Y(p.ty), 9, null, C.green, 2.5); D.text(S, 'target', V.X(p.tx) + 12, V.Y(p.ty) - 8, { size: 11, color: C.green });
       const reach = Math.hypot(p.tx, p.ty) <= 0.8 && Math.hypot(p.tx, p.ty) >= 0.2; if (!reach) D.text(S, 'Target outside the workspace — the arm stretches towards it (boundary singularity)', 14, 22, { size: 12, color: C.red, weight: 700 });
       S.set('xd', `(${M.fmt(p.tx, 3)}, ${M.fmt(p.ty, 3)})`); S.set('x', `(${M.fmt(f.x, 3)}, ${M.fmt(f.y, 3)})`); S.set('e', Math.hypot(p.tx - f.x, p.ty - f.y) * 1000); S.set('tau', S.tau ? `(${M.fmt(S.tau[0], 2)}, ${M.fmt(S.tau[1], 2)})` : '—'); S.set('F', S.F ? `(${M.fmt(S.F[0], 2)}, ${M.fmt(S.F[1], 2)})` : '—');
@@ -2842,17 +2842,17 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, y = H * 0.52, X = f => 40 + f * (W - 80), L = +p.lvl;
-      const hl = lv => L === lv; D.rect(S, X(0), y, X(1) - X(0), 14, '#22355c', hl(0) ? C.amber : '#3a5384', hl(0) ? 2 : 1, 4);
+      const hl = lv => L === lv; D.rect(S, X(0), y, X(1) - X(0), 14, '#c9d1d9', hl(0) ? C.amber : '#8c959f', hl(0) ? 2 : 1, 4);
       const st = [[0.04, 'Feeder', 1, C.text], [0.28, 'CNC machine', 1, C.cyan], [0.45, 'Robot', 1, C.green], [0.6, 'Vision', 1, C.violet], [0.75, 'Reject\ndiverter', 0, C.red], [0.9, 'Packing', 0, C.amber]];
       st.forEach(([f, n, lvl, col]) => { const x = X(f); const bw2 = Math.min(84, (S.W - 80) * 0.13); D.block(S, x - bw2 / 2, y - 96, bw2, 42, n, { stroke: hl(lvl) || hl(0) ? C.amber : col, size: 10.5 }); });
-      if (S.mach) { const pr = S.mach.t / p.tm; D.rect(S, X(0.28) - 36, y - 48, 72, 6, '#22355c'); D.rect(S, X(0.3) - 36, y - 48, 72 * Math.min(1, pr), 6, C.cyan); }
-      if (S.robotT > 0) { const a = PI * (1 - S.robotT / 1.2); D.link(S, X(0.45), y - 54, X(0.45) + Math.cos(a) * 34, y - 54 - Math.sin(a) * 20, 6, C.green, '#fff'); }
-      [0.2, 0.43, 0.58, 0.88].forEach((f, i) => { const x = X(f); D.rect(S, x - 4, y + 18, 8, 14, hl(0) ? C.amber : '#4cc2ff'); D.text(S, 'PE' + (i + 1), x, y + 46, { size: 10, align: 'center', color: C.muted }); });
-      S.parts.forEach(q => D.rect(S, X(q.x) - 9, y - 16, 18, 16, q.st === 'raw' ? '#8a6a3a' : q.def && q.insp ? C.red : '#9fb3d1', '#fff', 1, 2));
-      S.flash.forEach(f => { D.circle(S, X(f.x), y - 120, 6 + 10 * (0.6 - f.t), null, f.col, 2); D.line(S, X(f.x), y - 112, W / 2, 40, `rgba(242,165,22,${f.t})`, 1, [3, 3]); });
+      if (S.mach) { const pr = S.mach.t / p.tm; D.rect(S, X(0.28) - 36, y - 48, 72, 6, '#c9d1d9'); D.rect(S, X(0.3) - 36, y - 48, 72 * Math.min(1, pr), 6, C.cyan); }
+      if (S.robotT > 0) { const a = PI * (1 - S.robotT / 1.2); D.link(S, X(0.45), y - 54, X(0.45) + Math.cos(a) * 34, y - 54 - Math.sin(a) * 20, 6, C.green, '#24292f'); }
+      [0.2, 0.43, 0.58, 0.88].forEach((f, i) => { const x = X(f); D.rect(S, x - 4, y + 18, 8, 14, hl(0) ? C.amber : '#0b7fc1'); D.text(S, 'PE' + (i + 1), x, y + 46, { size: 10, align: 'center', color: C.muted }); });
+      S.parts.forEach(q => D.rect(S, X(q.x) - 9, y - 16, 18, 16, q.st === 'raw' ? '#8a6a3a' : q.def && q.insp ? C.red : '#a8b1bb', '#24292f', 1, 2));
+      S.flash.forEach(f => { D.circle(S, X(f.x), y - 120, 6 + 10 * (0.6 - f.t), null, f.col, 2); D.line(S, X(f.x), y - 112, W / 2, 40, `rgba(199,119,0,${f.t})`, 1, [3, 3]); });
       D.block(S, W / 2 - 60, 16, 120, 34, 'PLC (level 1)', { stroke: hl(1) ? C.amber : C.green, size: 11 }); D.block(S, W - 150, 16, 130, 34, 'SCADA / MES / ERP', { stroke: L >= 2 ? C.amber : C.violet, size: 10.5 }); D.line(S, W / 2 + 60, 33, W - 150, 33, C.violet, 1.5, [4, 3]);
       // pyramid
-      const px = 40, py = H - 18; PYR.slice().reverse().forEach((r, i) => { const w = 240 - i * 40, x = px + (240 - w) / 2, yy = py - (i + 1) * 18; D.rect(S, x, yy, w, 16, hl(i) ? C.amber : '#13264a', '#3a5384', 1, 2); D.text(S, r[0].split(' – ')[0], x + w / 2, yy + 12, { size: 9.5, align: 'center', color: hl(i) ? '#0e1d38' : C.muted, weight: 650 }); });
+      const px = 40, py = H - 18; PYR.slice().reverse().forEach((r, i) => { const w = 240 - i * 40, x = px + (240 - w) / 2, yy = py - (i + 1) * 18; D.rect(S, x, yy, w, 16, hl(i) ? C.amber : '#eef1f4', '#8c959f', 1, 2); D.text(S, r[0].split(' – ')[0], x + w / 2, yy + 12, { size: 9.5, align: 'center', color: hl(i) ? '#2b3440' : C.muted, weight: 650 }); });
       D.text(S, `${PYR[4 - L][0]}: ${PYR[4 - L][1]} (${PYR[4 - L][2]})`, 300, H - 30, { size: 11.5, color: C.amber });
       const fault = { none: '', sensor: 'FAULT: PE1 stuck OFF — PLC never sees the part, machine waits (line starves)', machine: 'FAULT: machine down — PLC holds upstream parts (sensor-based interlock)', jam: 'FAULT: packing jam — PE4 blocked, PLC stops feeding downstream' }[p.fault];
       if (fault) D.text(S, fault, 16, H * 0.25, { size: 12, weight: 700, color: C.red });
@@ -2888,7 +2888,7 @@
       if (S.Q.motor) S.boxes.forEach(b => { b.x += 0.08 * dt; if (b.x > 1.05) b.x = -0.05; });
     },
     draw(S) {
-      D.clear(S); const p = S.p, W = S.W, H = S.H, I = S.I, Q = S.Q, m = S.mem; const on = C.green, off = '#3b4f75';
+      D.clear(S); const p = S.p, W = S.W, H = S.H, I = S.I, Q = S.Q, m = S.mem; const on = C.green, off = '#6e7781';
       // architecture
       const ax = 16, ay = 16, bw = Math.min(110, W * 0.11); const PH = ['input scan', 'program execution', 'output update', 'communication / housekeeping'];
       const blocks = [['Power\nsupply', null], ['Input\nmodule', 0], ['CPU\n+ memory', 1], ['Output\nmodule', 2], ['Comms\n(fieldbus)', 3]];
@@ -2901,23 +2901,23 @@
       // ladder
       const lx = Math.max(250, W * 0.36), lw = W - lx - 16, ly = ay + 6, rh = Math.min(58, (H - 120) / 4); D.line(S, lx, ly, lx, ly + 4 * rh, C.text, 3); D.line(S, lx + lw, ly, lx + lw, ly + 4 * rh, C.text, 3);
       const contact = (x, y, lbl, closed, nc) => { D.line(S, x, y - 9, x, y + 9, closed ? on : C.text, 2); D.line(S, x + 12, y - 9, x + 12, y + 9, closed ? on : C.text, 2); if (nc) D.line(S, x - 2, y + 9, x + 14, y - 9, closed ? on : C.text, 1.5); D.text(S, lbl, x + 6, y - 14, { size: 9.5, align: 'center', color: C.muted }); };
-      const coil = (x, y, lbl, v) => { D.circle(S, x, y, 10, v ? 'rgba(111,227,155,.35)' : null, v ? on : C.text, 2); D.text(S, lbl, x, y - 16, { size: 9.5, align: 'center', color: C.muted }); };
+      const coil = (x, y, lbl, v) => { D.circle(S, x, y, 10, v ? 'rgba(26,155,75,.35)' : null, v ? on : C.text, 2); D.text(S, lbl, x, y - 16, { size: 9.5, align: 'center', color: C.muted }); };
       const wire = (x1, x2, y, v) => D.line(S, x1, y, x2, y, v ? on : C.text, v ? 3 : 1.5);
       // rung 1: (Start || Latch) && Stop && Estop -> Latch(M0.0)
       let y = ly + rh * 0.5; const c1 = lx + 30, c2 = lx + lw * 0.32, c3 = lx + lw * 0.5, cE = lx + lw - 30; const branch = I.start || m.latch;
       wire(lx, c1, y, true); contact(c1, y, 'I0.0 Start', I.start); D.line(S, c1 - 8, y, c1 - 8, y + 22, C.text, 1.5); D.line(S, c1 - 8, y + 22, c1 + 20, y + 22, m.latch ? on : C.text, 1.5); contact(c1 + 22, y + 22, 'M0.0', m.latch); D.line(S, c1 + 34, y + 22, c1 + 44, y + 22, C.text, 1.5); D.line(S, c1 + 44, y + 22, c1 + 44, y, C.text, 1.5);
       wire(c1 + 12, c2, y, branch); contact(c2, y, 'I0.1 Stop', I.stop, true); wire(c2 + 12, c3, y, branch && I.stop); contact(c3, y, 'I0.2 E-stop', I.estop, true); wire(c3 + 12, cE - 10, y, branch && I.stop && I.estop); coil(cE, y, 'M0.0 Run latch', m.latch); wire(cE + 10, lx + lw, y, false);
       // rung 2: M0.0 && I0.3 -> TON T1
-      y = ly + rh * 1.6; wire(lx, c1, y, true); contact(c1, y, 'M0.0', m.latch); wire(c1 + 12, c2, y, m.latch); contact(c2, y, 'I0.3 Part', I.pe); wire(c2 + 12, cE - 40, y, m.latch && I.pe); D.rect(S, cE - 40, y - 14, 60, 28, '#13264a', m.t1 > 0 ? on : C.text, 1.5, 3); D.text(S, `TON T1 ${M.fmt(m.t1, 1)}/${p.ptime}s`, cE - 10, y + 4, { size: 9.5, align: 'center' });
+      y = ly + rh * 1.6; wire(lx, c1, y, true); contact(c1, y, 'M0.0', m.latch); wire(c1 + 12, c2, y, m.latch); contact(c2, y, 'I0.3 Part', I.pe); wire(c2 + 12, cE - 40, y, m.latch && I.pe); D.rect(S, cE - 40, y - 14, 60, 28, '#eef1f4', m.t1 > 0 ? on : C.text, 1.5, 3); D.text(S, `TON T1 ${M.fmt(m.t1, 1)}/${p.ptime}s`, cE - 10, y + 4, { size: 9.5, align: 'center' });
       // rung 3: M0.0 && (!I0.3 || T1.DN) -> Q0.0
       y = ly + rh * 2.6; wire(lx, c1, y, true); contact(c1, y, 'M0.0', m.latch); wire(c1 + 12, c2, y, m.latch); contact(c2, y, 'I0.3', !I.pe, true); D.line(S, c2 - 8, y, c2 - 8, y + 20, C.text, 1.5); D.line(S, c2 - 8, y + 20, c2 + 20, y + 20, C.text, 1.5); contact(c2 + 22, y + 20, 'T1.DN', m.t1dn); D.line(S, c2 + 34, y + 20, c2 + 44, y + 20, C.text, 1.5); D.line(S, c2 + 44, y + 20, c2 + 44, y, C.text, 1.5);
       wire(c2 + 12, cE - 10, y, Q.motor); coil(cE, y, 'Q0.0 Conveyor', Q.motor);
       // rung 4: T1.DN -> CTU C1
-      y = ly + rh * 3.5; wire(lx, c1, y, true); contact(c1, y, 'T1.DN', m.t1dn); wire(c1 + 12, cE - 40, y, m.t1dn); D.rect(S, cE - 40, y - 14, 60, 28, '#13264a', C.text, 1.5, 3); D.text(S, `CTU C1 = ${m.c1}`, cE - 10, y + 4, { size: 9.5, align: 'center' });
+      y = ly + rh * 3.5; wire(lx, c1, y, true); contact(c1, y, 'T1.DN', m.t1dn); wire(c1 + 12, cE - 40, y, m.t1dn); D.rect(S, cE - 40, y - 14, 60, 28, '#eef1f4', C.text, 1.5, 3); D.text(S, `CTU C1 = ${m.c1}`, cE - 10, y + 4, { size: 9.5, align: 'center' });
       // conveyor with boxes
-      const cy = H - 34, cx0 = lx, cx1 = W - 16; D.rect(S, cx0, cy, cx1 - cx0, 10, '#22355c', '#3a5384', 1, 3); const pe = cx0 + 0.6 * (cx1 - cx0); D.rect(S, pe - 3, cy - 30, 6, 30, I.pe ? C.green : '#4cc2ff'); D.text(S, 'photo-eye', pe, cy + 24, { size: 10, align: 'center', color: C.muted });
-      S.boxes.forEach(b => D.rect(S, cx0 + b.x * (cx1 - cx0) - 12, cy - 22, 24, 22, '#8a6a3a', '#fff', 1, 2));
-      D.circle(S, cx0 - 14, cy + 5, 9, Q.motor ? C.green : off, '#fff', 1); D.text(S, 'M', cx0 - 14, cy + 9, { size: 10, align: 'center', weight: 700 });
+      const cy = H - 34, cx0 = lx, cx1 = W - 16; D.rect(S, cx0, cy, cx1 - cx0, 10, '#c9d1d9', '#8c959f', 1, 3); const pe = cx0 + 0.6 * (cx1 - cx0); D.rect(S, pe - 3, cy - 30, 6, 30, I.pe ? C.green : '#0b7fc1'); D.text(S, 'photo-eye', pe, cy + 24, { size: 10, align: 'center', color: C.muted });
+      S.boxes.forEach(b => D.rect(S, cx0 + b.x * (cx1 - cx0) - 12, cy - 22, 24, 22, '#8a6a3a', '#24292f', 1, 2));
+      D.circle(S, cx0 - 14, cy + 5, 9, Q.motor ? C.green : off, '#24292f', 1); D.text(S, 'M', cx0 - 14, cy + 9, { size: 10, align: 'center', weight: 700 });
       const Tprog = p.ninst * p.tins / 1000, Tscan = M.auto.plcScan(p.tio / 2, Tprog, p.tio / 2, p.tc), resp = M.auto.plcResponse(p.tf, Tscan, p.tout);
       S.set('scan', Tscan); S.set('resp', resp); S.set('phase', PH[S.ph]); S.set('mot', Q.motor ? 'ON' : 'OFF', Q.motor ? 'ok' : ''); S.set('tmr', `${M.fmt(m.t1, 2)} / ${p.ptime}`); S.set('cnt', m.c1);
     }
@@ -2953,9 +2953,9 @@
     draw(S) {
       D.clear(S); const W = S.W, H = S.H, o = S.oee || { A: 1, P: 1, Q: 1 }; const st = S.state;
       const mk = [['Machining centre', st === 'running' ? C.green : st === 'BREAKDOWN' ? C.red : C.amber, `vib ${M.fmt(S.vib || 0, 1)} mm/s`], ['Robot cell', st === 'running' ? C.green : C.amber, `${S.good + S.bad} parts`], ['Vision inspection', C.green, `${S.bad} rejected`]];
-      const bw = Math.min(170, (W - 80) / 3); mk.forEach(([n, col, info], i) => { const x = 20 + i * (bw + 20); D.block(S, x, H - 110, bw, 60, n + '\n' + info, { stroke: col }); D.circle(S, x + bw - 10, H - 100, 5, col); D.line(S, x + bw / 2, H - 110, W / 2, 110, 'rgba(76,194,255,.4)', 1, [4, 4]); for (let k = 0; k < 2; k++) { const f = ((S.t * 0.8 + k / 2 + i / 3) % 1); D.circle(S, x + bw / 2 + (W / 2 - x - bw / 2) * f, H - 110 + (110 - H + 110) * f, 3, C.cyan); } });
+      const bw = Math.min(170, (W - 80) / 3); mk.forEach(([n, col, info], i) => { const x = 20 + i * (bw + 20); D.block(S, x, H - 110, bw, 60, n + '\n' + info, { stroke: col }); D.circle(S, x + bw - 10, H - 100, 5, col); D.line(S, x + bw / 2, H - 110, W / 2, 110, 'rgba(11,127,193,.4)', 1, [4, 4]); for (let k = 0; k < 2; k++) { const f = ((S.t * 0.8 + k / 2 + i / 3) % 1); D.circle(S, x + bw / 2 + (W / 2 - x - bw / 2) * f, H - 110 + (110 - H + 110) * f, 3, C.cyan); } });
       D.block(S, W / 2 - 110, 50, 220, 60, 'Edge / cloud: digital twin\nMES · analytics · OPC UA / MQTT', { stroke: C.violet });
-      const gx = W - 200; [['A', o.A], ['P', o.P], ['Q', o.Q], ['OEE', o.A * o.P * o.Q]].forEach(([n, v], i) => { const y = 40 + i * 26; D.text(S, n, gx, y + 12, { size: 12, weight: 700 }); D.rect(S, gx + 40, y, 140, 16, '#13264a'); D.rect(S, gx + 40, y, 140 * v, 16, n === 'OEE' ? C.amber : C.cyan); D.text(S, M.fmt(v * 100, 1) + ' %', gx + 176, y + 12, { size: 11, align: 'right', color: '#0e1d38', weight: 700 }); });
+      const gx = W - 200; [['A', o.A], ['P', o.P], ['Q', o.Q], ['OEE', o.A * o.P * o.Q]].forEach(([n, v], i) => { const y = 40 + i * 26; D.text(S, n, gx, y + 12, { size: 12, weight: 700 }); D.rect(S, gx + 40, y, 140, 16, '#eef1f4'); D.rect(S, gx + 40, y, 140 * v, 16, n === 'OEE' ? C.amber : C.cyan); D.text(S, M.fmt(v * 100, 1) + ' %', gx + 176, y + 12, { size: 11, align: 'right', color: '#2b3440', weight: 700 }); });
       D.text(S, `State: ${st}`, 20, 30, { size: 14, weight: 800, color: st === 'running' ? C.green : st === 'BREAKDOWN' ? C.red : C.amber });
       (S.events || []).forEach((e, i) => D.text(S, e, 20, 52 + i * 15, { size: 10.5, color: C.muted }));
       S.set('A', o.A * 100); S.set('P', o.P * 100); S.set('Q', o.Q * 100); S.set('OEE', o.A * o.P * o.Q * 100); S.set('st', st, st === 'running' ? 'ok' : 'bad'); S.set('vib', S.vib || 0);
@@ -2980,10 +2980,10 @@
     const k = K(), T3 = THREE, sc = S.three.scene, tb = k.ROBOTS.sixR.table;
     const cell = { S, q: HOME.slice(), queue: [], cur: null, held: null, parts: [], log: [], err: '', speed: 1, open: 1, line: 0 };
     cell.rob = new k.DHRobot(sc, tb, { radius: 0.04, frames: false }); cell.rob.update(cell.q);
-    const ped = k.cyl(0.13, 0.04, 0x22355c); ped.position.z = 0.02; sc.add(ped);
+    const ped = k.cyl(0.13, 0.04, 0x57606a); ped.position.z = 0.02; sc.add(ped);
     cell.box = (w, d, h, color, x, y, z, pick) => { const m = k.box(w, d, h, color); m.position.set(x, y, z); if (pick) m.traverse(q => (q.userData.pick = pick)); sc.add(m); return m; };
     cell.part = (x, y, z, color = 0xc98a3a, size = [0.06, 0.06, 0.06], name = 'part') => { const m = k.box(...size, color); m.material = m.material.clone(); m.position.set(x, y, z); m.userData.size = size; m.userData.name = name; sc.add(m); cell.parts.push(m); return m; };
-    cell.conveyor = (x0, x1, y, h = 0.1, w = 0.18, pick = 'conveyor') => { const len = x1 - x0; const bed = cell.box(len, w, h, 0x2a3b5e, (x0 + x1) / 2, y, h / 2, pick); const belt = k.box(len, w * 0.92, 0.008, 0x1a1f2b); belt.position.set((x0 + x1) / 2, y, h + 0.004); sc.add(belt); const marks = []; for (let i = 0; i < Math.floor(len / 0.1); i++) { const mk = k.box(0.01, w * 0.9, 0.009, 0x5a6f96); mk.position.set(x0 + i * 0.1, y, h + 0.005); sc.add(mk); marks.push(mk); } return { x0, x1, y, h, marks, objs: [bed, belt, ...marks], run: true, v: 0.12, step(dt) { if (!this.run) return; marks.forEach(m => { m.position.x += this.v * dt; if (m.position.x > x1) m.position.x -= len; }); } }; };
+    cell.conveyor = (x0, x1, y, h = 0.1, w = 0.18, pick = 'conveyor') => { const len = x1 - x0; const bed = cell.box(len, w, h, 0x8c959f, (x0 + x1) / 2, y, h / 2, pick); const belt = k.box(len, w * 0.92, 0.008, 0x3d444d); belt.position.set((x0 + x1) / 2, y, h + 0.004); sc.add(belt); const marks = []; for (let i = 0; i < Math.floor(len / 0.1); i++) { const mk = k.box(0.01, w * 0.9, 0.009, 0x8c959f); mk.position.set(x0 + i * 0.1, y, h + 0.005); sc.add(mk); marks.push(mk); } return { x0, x1, y, h, marks, objs: [bed, belt, ...marks], run: true, v: 0.12, step(dt) { if (!this.run) return; marks.forEach(m => { m.position.x += this.v * dt; if (m.position.x > x1) m.position.x -= len; }); } }; };
     cell.ik = (p, yaw = 0, seed) => {
       const tgt = { p: [p[0], p[1], p[2] + TOOL], R: Rdown(yaw) }; const base = Math.atan2(p[1], p[0]);
       const seeds = [seed, [base, 40 * D2R, -90 * D2R, 0, -40 * D2R, base - yaw], [base, 20 * D2R, -70 * D2R, 0, -50 * D2R, base - yaw]].filter(Boolean);
@@ -3035,13 +3035,13 @@
     setup(S) {
       const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.2, x1: 0.75, y0: 0.4, y1: 0.75, z: 0.1 }] }); const k = K();
       c.rob.group.traverse(o => (o.userData.pick = 'robot'));
-      S.conv = c.conveyor(-0.9, 0.85, -0.55); c.box(0.55, 0.35, 0.1, 0x3b4f75, 0.47, 0.57, 0.05, 'table');
-      S.eye = c.box(0.04, 0.04, 0.12, 0x4cc2ff, 0.6, -0.68, 0.16, 'sensor'); S.beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.26, 6), new THREE.MeshBasicMaterial({ color: 0xff4040 })); S.beam.position.set(0.6, -0.55, 0.15); THREE && (S.beam.rotation.x = 0); S.three.scene.add(S.beam);
+      S.conv = c.conveyor(-0.9, 0.85, -0.55); c.box(0.55, 0.35, 0.1, 0x6e7781, 0.47, 0.57, 0.05, 'table');
+      S.eye = c.box(0.04, 0.04, 0.12, 0x1f9bd7, 0.6, -0.68, 0.16, 'sensor'); S.beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.26, 6), new THREE.MeshBasicMaterial({ color: 0xff4040 })); S.beam.position.set(0.6, -0.55, 0.15); THREE && (S.beam.rotation.x = 0); S.three.scene.add(S.beam);
       const f = c.fence(-0.85, 1.0, -0.95, 0.95); f.panel(1.0, -0.95, 1.0, 0.95, 'fence'); f.panel(-0.85, 0.95, 1.0, 0.95, 'fence'); f.panel(-0.85, -0.95, -0.85, -0.7, 'fence'); f.panel(-0.85, -0.4, -0.85, 0.95, 'fence'); f.panel(-0.85, -0.95, 0.3, -0.95, 'fence');
-      S.door = f.panel(0.3, -0.95, 1.0, -0.95, 'door'); S.door.material = S.door.material.clone(); S.door.material.color.set(0x6fe39b); S.door.material.opacity = 0.15;
+      S.door = f.panel(0.3, -0.95, 1.0, -0.95, 'door'); S.door.material = S.door.material.clone(); S.door.material.color.set(0x2da44e); S.door.material.opacity = 0.15;
       S.lc = [-0.7, -0.4].map(y => c.box(0.03, 0.03, 0.4, 0xc4a4ff, -0.85, y, 0.2, 'curtain')); S.lcBeams = []; for (let i = 0; i < 6; i++) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.002, 0.002, 0.3, 4), new THREE.MeshBasicMaterial({ color: 0xc4a4ff, transparent: true, opacity: 0.6 })); b.position.set(-0.85, -0.55, 0.06 + i * 0.06); S.three.scene.add(b); S.lcBeams.push(b); }
-      c.box(0.3, 0.2, 0.7, 0x1d2b48, -0.5, 1.2, 0.35, 'panel'); const est = c.box(0.05, 0.02, 0.05, 0xe5484d, -0.5, 1.095, 0.6, 'panel');
-      S.tower = [0xe5484d, 0xf2a516, 0x30a46c].map((col, i) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.06, 16), new THREE.MeshStandardMaterial({ color: col, emissive: 0x000000 })); m.rotation.x = PI / 2; m.position.set(1.15, -1.1, 0.95 - i * 0.065); m.userData.pick = 'tower'; S.three.scene.add(m); return m; }); c.box(0.02, 0.02, 0.8, 0x8fa3c4, 1.15, -1.1, 0.4, 'tower');
+      c.box(0.3, 0.2, 0.7, 0xd0d7de, -0.5, 1.2, 0.35, 'panel'); const est = c.box(0.05, 0.02, 0.05, 0xe5484d, -0.5, 1.095, 0.6, 'panel');
+      S.tower = [0xe5484d, 0xf2a516, 0x30a46c].map((col, i) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.06, 16), new THREE.MeshStandardMaterial({ color: col, emissive: 0x000000 })); m.rotation.x = PI / 2; m.position.set(1.15, -1.1, 0.95 - i * 0.065); m.userData.pick = 'tower'; S.three.scene.add(m); return m; }); c.box(0.02, 0.02, 0.8, 0x8c959f, 1.15, -1.1, 0.4, 'tower');
       const L = S.three.label.bind(S.three); S.lbls = [L('Robot', [0, 0, 1.05]), L('Infeed conveyor', [-0.6, -0.55, 0.2]), L('Photo-eye DI1', S.eye, '', [0, 0, 0.12]), L('Door (interlock DI2)', [0.65, -0.95, 0.95]), L('Light curtain DI3', [-0.85, -0.55, 0.5]), L('Control panel / PLC', [-0.5, 1.2, 0.8]), L('Outfeed table', [0.47, 0.57, 0.18]), L('Signal tower', [1.15, -1.1, 1.05])];
       S.three.onPick(n => { S.sel = n; });
       S.n = 0; S.safe = true; S.doorOpen = false; S.lcBroken = false; S.stopReq = false;
@@ -3057,15 +3057,15 @@
       dyn(c); c.update(dt);
     },
     draw(S) {
-      const c = S.cell; c.render(); S.door.material.color.set(S.doorOpen ? 0xe5484d : 0x6fe39b); S.door.position.z = S.doorOpen ? 0.95 : 0.45;
-      S.lcBeams.forEach(b => (b.material.color.set(S.lcBroken ? 0xe5484d : 0xc4a4ff))); S.beam.material.color.set(S.DI1 ? 0x6fe39b : 0xff4040);
+      const c = S.cell; c.render(); S.door.material.color.set(S.doorOpen ? 0xe5484d : 0x2da44e); S.door.position.z = S.doorOpen ? 0.95 : 0.45;
+      S.lcBeams.forEach(b => (b.material.color.set(S.lcBroken ? 0xe5484d : 0xc4a4ff))); S.beam.material.color.set(S.DI1 ? 0x2da44e : 0xff4040);
       const state = !S.safe ? 'PROTECTIVE STOP (reset required)' : S.stopReq ? 'cycle stop requested' : c.busy() ? 'automatic – running' : 'automatic – waiting for part';
       S.tower.forEach((m, i) => m.material.emissive.set(i === 0 ? (!S.safe ? 0xaa0000 : 0) : i === 1 ? (S.safe && !c.busy() ? 0x885500 : 0) : (S.safe && c.busy() ? 0x007733 : 0)));
       S.lbls.forEach(l => (l.visible = S.p.labels));
       S.set('state', state, S.safe ? 'ok' : 'bad'); S.set('step', c.cur ? (c.cur.label || '—') : 'idle'); S.set('n', S.n); S.set('sel', S.sel ? WC[S.sel][0] : '— (click a component)');
       const io = [['DI1', 'Part present (photo-eye)', S.DI1], ['DI2', 'Door closed (interlock)', !S.doorOpen], ['DI3', 'Light curtain clear', !S.lcBroken], ['DI4', 'Gripper closed', !!c.held], ['DO1', 'Gripper close command', c.open < 0.5], ['DO2', 'Conveyor run', S.conv.run], ['DO3', 'Tower green (auto running)', S.safe && c.busy()], ['DO4', 'Robot servo power (safety relay)', S.safe]];
-      RIL.setHTML(S.panel('io'), RIL.ui.kv(io.map(r => [r[0], r[1], `<b style="color:${r[2] ? '#6fe39b' : '#8fa3c4'}">${r[2] ? 'ON' : 'OFF'}</b>`]), ['Signal', 'Meaning', 'State']), S, 'io');
-      RIL.setHTML(S.panel('info'), S.sel ? `<b style="color:#fff">${WC[S.sel][0]}</b><p style="margin:.3em 0 0">${WC[S.sel][1]}</p>` : '<p style="margin:0">Click a component in the 3D view.</p>', S, 'inf');
+      RIL.setHTML(S.panel('io'), RIL.ui.kv(io.map(r => [r[0], r[1], `<b style="color:${r[2] ? '#1a9b4b' : '#57606a'}">${r[2] ? 'ON' : 'OFF'}</b>`]), ['Signal', 'Meaning', 'State']), S, 'io');
+      RIL.setHTML(S.panel('info'), S.sel ? `<b style="color:#1f2328">${WC[S.sel][0]}</b><p style="margin:.3em 0 0">${WC[S.sel][1]}</p>` : '<p style="margin:0">Click a component in the 3D view.</p>', S, 'inf');
     }
   });
 
@@ -3078,12 +3078,12 @@
     controls: [{ id: 'app', type: 'select', label: 'Application', string: true, value: 'pal', options: [['pal', 'Palletising from a conveyor'], ['weld', 'Spot welding along a seam'], ['tend', 'Machine tending (CNC load/unload)'], ['paint', 'Painting (continuous path)']] }, { id: 'ovr', label: 'Speed override', min: 10, max: 200, step: 5, value: 100, unit: '%' }],
     readouts: [{ id: 'app', label: 'Task' }, { id: 'step', label: 'Current motion' }, { id: 'motion', label: 'Motion type' }, { id: 'ct', label: 'Last cycle time', unit: 's' }, { id: 'n', label: 'Cycles completed' }],
     panels: [{ id: 't', title: 'Industrial robot types and industrial versus collaborative robots (Section 4.4, Table 4.3)', wide: true }],
-    setup(S) { S.cell = makeCell(S, { surfaces: [{ x0: 0.25, x1: 0.75, y0: 0.3, y1: 0.8, z: 0.08 }] }); S.extra = []; S.sparks = K().points([[0, 0, -1]], 0xffd07a, 0.03, 0.9); S.three.scene.add(S.sparks); S.spray = K().points([[0, 0, -1]], 0x4cc2ff, 0.02, 0.6); S.three.scene.add(S.spray); },
+    setup(S) { S.cell = makeCell(S, { surfaces: [{ x0: 0.25, x1: 0.75, y0: 0.3, y1: 0.8, z: 0.08 }] }); S.extra = []; S.sparks = K().points([[0, 0, -1]], 0xffd07a, 0.03, 0.9); S.three.scene.add(S.sparks); S.spray = K().points([[0, 0, -1]], 0x1f9bd7, 0.02, 0.6); S.three.scene.add(S.spray); },
     reset(S) { const c = S.cell, sc = S.three.scene; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => sc.remove(m)); c.parts = []; S.extra.forEach(m => sc.remove(m)); S.extra = []; S.n = 0; S.tc = 0; S.t0 = S.t; S.welds = [];
       const add = m => { S.extra.push(m); return m; }; const k = K(); const box = (w, d, h, col, x, y, z) => { const m = add(k.box(w, d, h, col)); m.position.set(x, y, z); sc.add(m); return m; };
       S.conv = null; if (S.p.app === 'pal') { S.conv = c.conveyor(-0.8, 0.7, -0.5); S.extra.push(...S.conv.objs); box(0.5, 0.5, 0.08, 0x8a6a3a, 0.5, 0.55, 0.04); }
-      if (S.p.app === 'weld') { const pan = box(0.5, 0.02, 0.3, 0x9fb3d1, 0.55, 0.2, 0.25); box(0.06, 0.4, 0.2, 0x3b4f75, 0.55, 0.25, 0.1); S.weldPts = [0, 1, 2, 3, 4, 5].map(i => [0.35 + i * 0.08, 0.18, 0.32]); }
-      if (S.p.app === 'tend') { box(0.4, 0.4, 0.45, 0x3b4f75, 0.1, 0.65, 0.225); S.mDoor = box(0.3, 0.02, 0.2, 0x6fe39b, 0.1, 0.44, 0.35); box(0.3, 0.3, 0.08, 0x2a3b5e, 0.55, -0.35, 0.04); for (let i = 0; i < 3; i++) c.part(0.47 + i * 0.08, -0.35, 0.11, 0x9fb3d1, [0.05, 0.05, 0.06]); }
+      if (S.p.app === 'weld') { const pan = box(0.5, 0.02, 0.3, 0xa8b1bb, 0.55, 0.2, 0.25); box(0.06, 0.4, 0.2, 0x6e7781, 0.55, 0.25, 0.1); S.weldPts = [0, 1, 2, 3, 4, 5].map(i => [0.35 + i * 0.08, 0.18, 0.32]); }
+      if (S.p.app === 'tend') { box(0.4, 0.4, 0.45, 0x6e7781, 0.1, 0.65, 0.225); S.mDoor = box(0.3, 0.02, 0.2, 0x2da44e, 0.1, 0.44, 0.35); box(0.3, 0.3, 0.08, 0x8c959f, 0.55, -0.35, 0.04); for (let i = 0; i < 3; i++) c.part(0.47 + i * 0.08, -0.35, 0.11, 0xa8b1bb, [0.05, 0.05, 0.06]); }
       if (S.p.app === 'paint') { box(0.02, 0.6, 0.45, 0xd6dde8, 0.7, 0, 0.32); }
     },
     onControl(S, id) { if (id === 'app') S.reset(); },
@@ -3137,10 +3137,10 @@ LOOP:
     panels: [{ id: 'ed', title: 'Program editor', wide: true }],
     stepFrames: 30,
     setup(S) {
-      S.cell = makeCell(S, { surfaces: [{ x0: 0.15, x1: 0.55, y0: 0.3, y1: 0.6, z: 0.1 }, { x0: 0.4, x1: 0.7, y0: -0.4, y1: -0.1, z: 0.1 }] }); S.cell.box(0.3, 0.3, 0.1, 0x3b4f75, 0.55, -0.25, 0.05); S.cell.box(0.4, 0.3, 0.1, 0x3b4f75, 0.35, 0.45, 0.05);
-      Object.entries(POINTS).forEach(([n, p]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), new THREE.MeshBasicMaterial({ color: 0x6fe39b })); m.position.set(...p); S.three.scene.add(m); S.three.label(n, p, 'dim', [0, 0, 0.05]); });
+      S.cell = makeCell(S, { surfaces: [{ x0: 0.15, x1: 0.55, y0: 0.3, y1: 0.6, z: 0.1 }, { x0: 0.4, x1: 0.7, y0: -0.4, y1: -0.1, z: 0.1 }] }); S.cell.box(0.3, 0.3, 0.1, 0x6e7781, 0.55, -0.25, 0.05); S.cell.box(0.4, 0.3, 0.1, 0x6e7781, 0.35, 0.45, 0.05);
+      Object.entries(POINTS).forEach(([n, p]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), new THREE.MeshBasicMaterial({ color: 0x2da44e })); m.position.set(...p); S.three.scene.add(m); S.three.label(n, p, 'dim', [0, 0, 0.05]); });
       S.trace = []; S.line = K().polyline([[0, 0, 0]], 0xf2a516); S.three.scene.add(S.line);
-      const ed = S.panel('ed'); ed.innerHTML = `<div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px"><div><textarea spellcheck="false" style="width:100%;height:290px;background:#0a1528;color:#dbe5f5;border:1px solid #3a5384;border-radius:6px;font:12.5px/1.45 ui-monospace,Consolas,monospace;padding:8px"></textarea></div><div><div class="lines" style="font:12px/1.45 ui-monospace,Consolas,monospace;max-height:290px;overflow:auto"></div></div></div><p style="margin:.4em 0 0;color:#8fa3c4">Points (base frame, mm): ${Object.entries(POINTS).map(([n, p]) => `${n} = (${p.map(v => Math.round(v * 1000)).join(', ')})`).join('; ')}; HOME = joint zero pose. Instructions: MOVJ, MOVL, + OFFSET(dx,dy,dz), V=mm/s, SET/RESET/PULSE DO[n], WAIT DI[n]=ON, WAIT seconds, SPEED %, label:, GOTO label, END.</p>`;
+      const ed = S.panel('ed'); ed.innerHTML = `<div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px"><div><textarea spellcheck="false" style="width:100%;height:290px;background:#ffffff;color:#1f2328;border:1px solid #d0d7de;border-radius:6px;font:12.5px/1.45 ui-monospace,Consolas,monospace;padding:8px"></textarea></div><div><div class="lines" style="font:12px/1.45 ui-monospace,Consolas,monospace;max-height:290px;overflow:auto"></div></div></div><p style="margin:.4em 0 0;color:#57606a">Points (base frame, mm): ${Object.entries(POINTS).map(([n, p]) => `${n} = (${p.map(v => Math.round(v * 1000)).join(', ')})`).join('; ')}; HOME = joint zero pose. Instructions: MOVJ, MOVL, + OFFSET(dx,dy,dz), V=mm/s, SET/RESET/PULSE DO[n], WAIT DI[n]=ON, WAIT seconds, SPEED %, label:, GOTO label, END.</p>`;
       S.ta = ed.querySelector('textarea'); S.ta.value = DEFPROG; S.linesEl = ed.querySelector('.lines'); S.ta.addEventListener('keydown', e => e.stopPropagation());
       this.load(S);
     },
@@ -3171,7 +3171,7 @@ LOOP:
     draw(S) {
       const c = S.cell; c.render(); if (!S.prog) return; const ins = S.curIns; const p = c.tcp();
       S.set('line', ins ? ins.line + 1 : '—'); S.set('instr', ins ? ins.s : '—'); S.set('tcp', p.map(v => Math.round(v * 1000)).join(', ')); S.set('io', `DO1 ${S.DO[1] ? 'ON' : 'OFF'}, DI1 ${c.parts.some(m => Math.hypot(m.position.x - POINTS.P1[0], m.position.y - POINTS.P1[1]) < 0.03) ? 'ON' : 'OFF'}`); S.set('err', c.err || S.msg || S.waiting || (S.pc >= S.prog.length ? 'program ended' : 'running'), (c.err || /error|not found/.test(S.msg)) ? 'bad' : '');
-      const cl = ins ? ins.line : -1; if (S._cl !== cl || S.renderLines) { S._cl = cl; S.renderLines = false; S.linesEl.innerHTML = S.src.map((l, i) => `<div style="padding:0 6px;border-radius:3px;${i === cl ? 'background:#f2a516;color:#0e1d38;font-weight:700' : 'color:#9fb3d1'}">${String(i + 1).padStart(2, ' ')}  ${l.replace(/&/g, '&amp;').replace(/</g, '&lt;') || '&nbsp;'}</div>`).join(''); }
+      const cl = ins ? ins.line : -1; if (S._cl !== cl || S.renderLines) { S._cl = cl; S.renderLines = false; S.linesEl.innerHTML = S.src.map((l, i) => `<div style="padding:0 6px;border-radius:3px;${i === cl ? 'background:#fff1d6;color:#7a4b00;font-weight:700' : 'color:#57606a'}">${String(i + 1).padStart(2, ' ')}  ${l.replace(/&/g, '&amp;').replace(/</g, '&lt;') || '&nbsp;'}</div>`).join(''); }
     }
   });
 
@@ -3185,7 +3185,7 @@ LOOP:
     readouts: [{ id: 'mode', label: 'Mode / state' }, { id: 'q', label: 'Joint angles θ₁…θ₆', unit: '°' }, { id: 'p', label: 'TCP (x, y, z)', unit: 'mm' }, { id: 'v', label: 'TCP speed', unit: 'mm/s' }, { id: 'pts', label: 'Taught points' }],
     panels: [{ id: 'tp', title: 'Teach pendant', wide: true }],
     setup(S) {
-      S.cell = makeCell(S); S.cell.box(0.3, 0.3, 0.1, 0x3b4f75, 0.55, 0, 0.05); S.cell.part(0.55, 0, 0.13);
+      S.cell = makeCell(S); S.cell.box(0.3, 0.3, 0.1, 0x6e7781, 0.55, 0, 0.05); S.cell.part(0.55, 0, 0.13);
       S.pts = []; S.jog = null; S.mode = 'T1'; S.frame = 'joint'; S.ovr = 25; S.en = false; S.estop = false; S.inc = false; S.lastP = S.cell.tcp(); S.vtcp = 0;
       const pnl = S.panel('tp'); const key = (id, l) => `<button type="button" data-jog="${id}" style="min-width:58px">${l}</button>`;
       pnl.innerHTML = `<div class="pendant" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
@@ -3196,9 +3196,9 @@ LOOP:
         <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-inc> Incremental step (1° / 1 mm per press)</label></div>
         <div><div data-keys style="display:grid;grid-template-columns:auto auto auto;gap:6px;align-items:center"></div></div>
         <div><div class="ctl-btns" style="flex-wrap:wrap"><button type="button" data-a="rec">Record point</button><button type="button" data-a="grip">Gripper open/close</button><button type="button" data-a="home">Home</button><button type="button" data-a="run">Run program</button><button type="button" data-a="clr">Clear points</button></div>
-        <button type="button" data-a="estop" style="margin-top:10px;background:#c62828;color:#fff;border:3px solid #ffd07a;border-radius:50%;width:84px;height:84px;font-weight:800">E-STOP</button> <button type="button" data-a="reset">Reset</button>
-        <div data-list style="margin-top:8px;font:12px ui-monospace,monospace;color:#9fb3d1"></div></div></div>`;
-      const keys = pnl.querySelector('[data-keys]'); S.drawKeys = () => { const labs = S.frame === 'joint' ? ['J1', 'J2', 'J3', 'J4', 'J5', 'J6'] : S.frame === 'world' ? ['X', 'Y', 'Z', 'Rz (yaw)', '—', '—'] : ['Tool x', 'Tool y', 'Tool z', 'Rz (yaw)', '—', '—']; keys.innerHTML = labs.map((l, i) => l === '—' ? '' : `${key(i + '-', '− ' + l)}<span style="text-align:center;color:#8fa3c4;font-size:12px">${l}</span>${key(i + '+', '+ ' + l)}`).join(''); bindJog(); };
+        <button type="button" data-a="estop" style="margin-top:10px;background:#c62828;color:#fff;border:3px solid #b07d00;border-radius:50%;width:84px;height:84px;font-weight:800">E-STOP</button> <button type="button" data-a="reset">Reset</button>
+        <div data-list style="margin-top:8px;font:12px ui-monospace,monospace;color:#57606a"></div></div></div>`;
+      const keys = pnl.querySelector('[data-keys]'); S.drawKeys = () => { const labs = S.frame === 'joint' ? ['J1', 'J2', 'J3', 'J4', 'J5', 'J6'] : S.frame === 'world' ? ['X', 'Y', 'Z', 'Rz (yaw)', '—', '—'] : ['Tool x', 'Tool y', 'Tool z', 'Rz (yaw)', '—', '—']; keys.innerHTML = labs.map((l, i) => l === '—' ? '' : `${key(i + '-', '− ' + l)}<span style="text-align:center;color:#57606a;font-size:12px">${l}</span>${key(i + '+', '+ ' + l)}`).join(''); bindJog(); };
       const bindJog = () => keys.querySelectorAll('[data-jog]').forEach(b => { const [ax, sg] = [+b.dataset.jog[0], b.dataset.jog[1] === '+' ? 1 : -1]; b.onpointerdown = e => { e.preventDefault(); if (S.inc) { S.jog = { ax, sg, once: true }; } else S.jog = { ax, sg }; S.play && S.play(); }; b.onpointerup = b.onpointerleave = () => { if (!S.inc) S.jog = null; }; });
       const sync = () => { pnl.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === S.mode)); pnl.querySelectorAll('[data-frame]').forEach(b => b.setAttribute('aria-pressed', b.dataset.frame === S.frame)); pnl.querySelector('[data-list]').innerHTML = S.pts.map((p, i) => `P${i + 1}: (${p.p.map(v => Math.round(v * 1000)).join(', ')}) grip ${p.g < 0.5 ? 'closed' : 'open'}`).join('<br>') || 'No points taught yet.'; };
       S.sync = sync;
@@ -3241,10 +3241,10 @@ LOOP:
     controls: [{ id: 'v', label: 'Conveyor speed', min: 0.02, max: 0.15, step: 0.005, value: 0.06, unit: 'm/s' }, { id: 'lat', label: 'Image-to-grasp latency', min: 0, max: 3, step: 0.05, value: 1.6, unit: 's' }, { id: 'track', type: 'toggle', label: 'Conveyor tracking compensation', value: true }],
     readouts: [{ id: 'ph', label: 'Phase' }, { id: 'px', label: 'Detected centroid (u, v)', unit: 'px' }, { id: 'ang', label: 'Detected orientation', unit: '°' }, { id: 'rb', label: 'Robot target (x, y)', unit: 'mm' }, { id: 'shift', label: 'Conveyor shift v_c·Δt', unit: 'mm' }, { id: 'n', label: 'Picked / missed' }],
     setup(S) {
-      const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.1, x1: 0.5, y0: 0.35, y1: 0.75, z: 0.1 }] }); S.conv = c.conveyor(-0.9, 0.9, -0.45, 0.1, 0.24); c.box(0.4, 0.4, 0.1, 0x3b4f75, 0.3, 0.55, 0.05);
-      const cam = c.box(0.08, 0.08, 0.06, 0x1d2b48, -0.3, -0.45, 0.85); const pole = c.box(0.02, 0.02, 0.8, 0x8fa3c4, -0.3, -0.75, 0.4); S.three.label('camera {C}', [-0.3, -0.45, 0.95], '');
-      const fp = new THREE.Mesh(new THREE.PlaneGeometry(0.256, 0.205), new THREE.MeshBasicMaterial({ color: 0x4cc2ff, transparent: true, opacity: 0.18 })); fp.position.set(-0.3, -0.45, 0.106); S.three.scene.add(fp);
-      S.fov = K().polyline([[-0.3, -0.45, 0.82], [-0.428, -0.55, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.428, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.55, 0.106]], 0x4cc2ff); S.three.scene.add(S.fov);
+      const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.1, x1: 0.5, y0: 0.35, y1: 0.75, z: 0.1 }] }); S.conv = c.conveyor(-0.9, 0.9, -0.45, 0.1, 0.24); c.box(0.4, 0.4, 0.1, 0x6e7781, 0.3, 0.55, 0.05);
+      const cam = c.box(0.08, 0.08, 0.06, 0xd0d7de, -0.3, -0.45, 0.85); const pole = c.box(0.02, 0.02, 0.8, 0x8c959f, -0.3, -0.75, 0.4); S.three.label('camera {C}', [-0.3, -0.45, 0.95], '');
+      const fp = new THREE.Mesh(new THREE.PlaneGeometry(0.256, 0.205), new THREE.MeshBasicMaterial({ color: 0x1f9bd7, transparent: true, opacity: 0.18 })); fp.position.set(-0.3, -0.45, 0.106); S.three.scene.add(fp);
+      S.fov = K().polyline([[-0.3, -0.45, 0.82], [-0.428, -0.55, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.428, -0.35, 0.106], [-0.3, -0.45, 0.82], [-0.172, -0.55, 0.106]], 0x1f9bd7); S.three.scene.add(S.fov);
       S.n = 0; S.miss = 0; S.spawn = 0; S.det = null;
     },
     reset(S) { const c = S.cell; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => S.three.scene.remove(m)); c.parts = []; S.n = 0; S.miss = 0; S.det = null; S.spawn = 0; },
@@ -3272,8 +3272,8 @@ LOOP:
     camera: { position: [1.6, -1.9, 1.4], target: [0.4, 0.05, 0.15] },
     controls: [{ id: 'err', label: 'Robot positioning error (lateral)', min: 0, max: 4, step: 0.1, value: 0.8, unit: 'mm' }, { id: 'chamf', label: 'Chamfer width', min: 0.2, max: 3, step: 0.1, value: 1.5, unit: 'mm' }, { id: 'rcc', type: 'toggle', label: 'Remote-centre-compliance (RCC) wrist', value: true }],
     readouts: [{ id: 'st', label: 'Assembly step' }, { id: 'F', label: 'Lateral contact force (last insertion)', unit: 'N' }, { id: 'res', label: 'Last insertion result' }, { id: 'n', label: 'Assemblies completed / retries' }],
-    setup(S) { const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.3, x1: 0.7, y0: -0.15, y1: 0.15, z: 0.1 }, { x0: 0.1, x1: 0.5, y0: -0.6, y1: -0.3, z: 0.1 }] }); c.box(0.4, 0.3, 0.1, 0x3b4f75, 0.5, 0, 0.05); c.box(0.4, 0.3, 0.1, 0x2a3b5e, 0.3, -0.45, 0.05); S.three.label('fixture', [0.5, 0.12, 0.15], 'dim'); S.three.label('feeder tray', [0.3, -0.6, 0.15], 'dim'); S.n = 0; S.retry = 0; S.F = 0; S.res = '—'; },
-    reset(S) { const c = S.cell; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => S.three.scene.remove(m)); c.parts = []; S.F = S.F || 0; S.res = S.res || '—'; S.parts = { base: c.part(0.2, -0.45, 0.115, 0x6f86ad, [0.12, 0.08, 0.03], 'base'), p1: c.part(0.33, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), p2: c.part(0.38, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), cov: c.part(0.3, -0.52, 0.11, 0x4cc2ff, [0.12, 0.08, 0.02], 'cover') }; S.seq = null; },
+    setup(S) { const c = S.cell = makeCell(S, { surfaces: [{ x0: 0.3, x1: 0.7, y0: -0.15, y1: 0.15, z: 0.1 }, { x0: 0.1, x1: 0.5, y0: -0.6, y1: -0.3, z: 0.1 }] }); c.box(0.4, 0.3, 0.1, 0x6e7781, 0.5, 0, 0.05); c.box(0.4, 0.3, 0.1, 0x8c959f, 0.3, -0.45, 0.05); S.three.label('fixture', [0.5, 0.12, 0.15], 'dim'); S.three.label('feeder tray', [0.3, -0.6, 0.15], 'dim'); S.n = 0; S.retry = 0; S.F = 0; S.res = '—'; },
+    reset(S) { const c = S.cell; c.clear(); c.q = HOME.slice(); c.held = null; c.parts.forEach(m => S.three.scene.remove(m)); c.parts = []; S.F = S.F || 0; S.res = S.res || '—'; S.parts = { base: c.part(0.2, -0.45, 0.115, 0x6f86ad, [0.12, 0.08, 0.03], 'base'), p1: c.part(0.33, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), p2: c.part(0.38, -0.42, 0.13, 0xd4b07a, [0.02, 0.02, 0.06], 'peg'), cov: c.part(0.3, -0.52, 0.11, 0x1f9bd7, [0.12, 0.08, 0.02], 'cover') }; S.seq = null; },
     insert(S) { const e = S.p.err * (0.5 + Math.random()), ch = S.p.chamf, k = S.p.rcc ? 4 : 25; const ok = e <= ch; S.F = ok ? k * e : k * ch * 3; S.res = ok ? `inserted (misalignment ${M.fmt(e, 2)} mm absorbed by chamfer${S.p.rcc ? ' and RCC' : ''})` : `jammed (misalignment ${M.fmt(e, 2)} mm > chamfer) — retry`; if (!ok) S.retry++; return ok; },
     plan(S) {
       const c = S.cell, P = S.parts; const fx = [0.5, 0, 0.115];
@@ -3294,7 +3294,7 @@ LOOP:
     controls: [{ id: 'rate', label: 'Carton arrival rate', min: 2, max: 20, step: 0.5, value: 8, unit: 'per min' }, { id: 'ovr', label: 'Robot speed override', min: 30, max: 200, step: 5, value: 100, unit: '%' }, { id: 'vout', label: 'Outfeed conveyor speed', min: 0.05, max: 0.3, step: 0.01, value: 0.15, unit: 'm/s' }],
     readouts: [{ id: 'q', label: 'Cartons waiting on infeed' }, { id: 'tr', label: 'Cartons transferred' }, { id: 'pal', label: 'Cartons on pallet' }, { id: 'th', label: 'Throughput (measured)', unit: 'per min' }, { id: 'ct', label: 'Robot transfer cycle time', unit: 's' }, { id: 'agv', label: 'AGV' }],
     setup(S) {
-      const c = S.cell = makeCell(S); S.inC = c.conveyor(-1.0, 0.75, -0.5, 0.1, 0.2); const k = K(); S.outBed = c.box(0.2, 1.4, 0.1, 0x2a3b5e, 0.55, 0.65, 0.05); S.pallet = c.box(0.4, 0.4, 0.06, 0x8a6a3a, 0.55, 1.6, 0.03); S.agv = c.box(0.5, 0.5, 0.12, 0xf2a516, 0.55, 2.6, 0.06);
+      const c = S.cell = makeCell(S); S.inC = c.conveyor(-1.0, 0.75, -0.5, 0.1, 0.2); const k = K(); S.outBed = c.box(0.2, 1.4, 0.1, 0x8c959f, 0.55, 0.65, 0.05); S.pallet = c.box(0.4, 0.4, 0.06, 0x8a6a3a, 0.55, 1.6, 0.03); S.agv = c.box(0.5, 0.5, 0.12, 0xf2a516, 0.55, 2.6, 0.06);
       S.three.label('infeed', [-0.7, -0.5, 0.2], 'dim'); S.three.label('outfeed', [0.55, 0.6, 0.2], 'dim'); S.three.label('pallet / AGV', [0.55, 1.6, 0.25], 'dim');
       S.tr = 0; S.onPal = 0; S.spawn = 0; S.t0 = 0; S.agvState = 'waiting'; S.lastCycle = 0; S.cycStart = 0;
     },
@@ -3346,7 +3346,7 @@ LOOP:
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, R = S.R = {}; const sel = S.sel;
-      const mx = W * 0.28, my = 30, mw = Math.min(W * 0.44, 380), mh = 210; D.rect(S, mx, my, mw, mh, 'rgba(19,38,74,.5)', C.amber, 1.5, 10); D.text(S, 'Microcontroller', mx + 10, my + 16, { size: 11.5, color: C.amber, weight: 700 });
+      const mx = W * 0.28, my = 30, mw = Math.min(W * 0.44, 380), mh = 210; D.rect(S, mx, my, mw, mh, 'rgba(255,255,255,.9)', C.amber, 1.5, 10); D.text(S, 'Microcontroller', mx + 10, my + 16, { size: 11.5, color: C.amber, weight: 700 });
       const b = (k, x, y, w, h, lbl) => { R[k] = D.block(S, x, y, w, h, lbl, { active: sel === k, size: 10.5 }); };
       const cw = (mw - 40) / 3; b('cpu', mx + 10, my + 28, cw, 50, 'CPU core'); b('flash', mx + 20 + cw, my + 28, cw, 50, 'Flash\n(program)'); b('ram', mx + 30 + 2 * cw, my + 28, cw, 50, 'RAM\n(data)');
       b('adc', mx + 10, my + 100, cw, 44, 'ADC'); b('gpio', mx + 20 + cw, my + 100, cw, 44, 'GPIO'); b('tim', mx + 30 + 2 * cw, my + 100, cw, 44, 'Timer/PWM'); b('uart', mx + 20 + cw, my + 156, cw, 40, 'UART');
@@ -3393,14 +3393,14 @@ LOOP:
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, o = S.out || {}; const cx = W / 2 - 90, cy = 30, cw = 180, ch = H - 60;
-      D.rect(S, cx, cy, cw, ch, '#141c2c', '#8fa3c4', 2, 6); D.text(S, 'MCU', cx + cw / 2, cy + 22, { size: 14, weight: 800, align: 'center' }); D.text(S, '32-bit · 12-bit ADC · timers', cx + cw / 2, cy + 40, { size: 10, align: 'center', color: C.muted });
+      D.rect(S, cx, cy, cw, ch, '#f6f8fa', '#57606a', 2, 6); D.text(S, 'MCU', cx + cw / 2, cy + 22, { size: 14, weight: 800, align: 'center' }); D.text(S, '32-bit · 12-bit ADC · timers', cx + cw / 2, cy + 40, { size: 10, align: 'center', color: C.muted });
       const pinsL = [['DI0', +p.di0, 'switch'], ['DI1', +p.di1, 'switch'], ['AI0', p.ai0 / 3.3, 'pot'], ['AI1', p.ai1 / 3.3, 'sensor']]; const pinsR = [['DO0', o.DO0, 'led'], ['DO1', o.DO1, 'led'], ['PWM0', (o.PWM0 || 0) / 100, 'motor'], ['PWM1', (o.PWM1 || 0) / 100, 'dim']];
       const sp = (ch - 80) / 4;
-      pinsL.forEach(([n, v, t], i) => { const y = cy + 70 + i * sp; D.line(S, cx - 50, y, cx, y, v > 0.5 || (t !== 'switch' && v > 0) ? C.amber : C.muted, 2); D.text(S, n, cx + 8, y + 4, { size: 11, weight: 700 }); const x = cx - 130; if (t === 'switch') { D.rect(S, x, y - 12, 70, 24, '#1d2b48', C.cyan, 1, 4); D.text(S, v ? 'ON (0 V→1)' : 'OFF', x + 35, y + 4, { size: 10, align: 'center', color: v ? C.green : C.muted }); } else { D.circle(S, x + 34, y, 16, '#1d2b48', C.cyan, 1.5); D.line(S, x + 34, y, x + 34 + Math.cos(-PI * 0.75 + v * PI * 1.5) * 13, y + Math.sin(-PI * 0.75 + v * PI * 1.5) * 13, C.amber, 2); D.text(S, `${M.fmt(v * 3.3, 2)} V → ${S.A ? S.A[i - 2] : 0}`, x - 10, y + 30, { size: 10, color: C.muted }); } });
+      pinsL.forEach(([n, v, t], i) => { const y = cy + 70 + i * sp; D.line(S, cx - 50, y, cx, y, v > 0.5 || (t !== 'switch' && v > 0) ? C.amber : C.muted, 2); D.text(S, n, cx + 8, y + 4, { size: 11, weight: 700 }); const x = cx - 130; if (t === 'switch') { D.rect(S, x, y - 12, 70, 24, '#f6f8fa', C.cyan, 1, 4); D.text(S, v ? 'ON (0 V→1)' : 'OFF', x + 35, y + 4, { size: 10, align: 'center', color: v ? C.green : C.muted }); } else { D.circle(S, x + 34, y, 16, '#f6f8fa', C.cyan, 1.5); D.line(S, x + 34, y, x + 34 + Math.cos(-PI * 0.75 + v * PI * 1.5) * 13, y + Math.sin(-PI * 0.75 + v * PI * 1.5) * 13, C.amber, 2); D.text(S, `${M.fmt(v * 3.3, 2)} V → ${S.A ? S.A[i - 2] : 0}`, x - 10, y + 30, { size: 10, color: C.muted }); } });
       pinsR.forEach(([n, v, t], i) => { const y = cy + 70 + i * sp; D.line(S, cx + cw, y, cx + cw + 50, y, v > 0 ? C.amber : C.muted, 2); D.text(S, n, cx + cw - 8, y + 4, { size: 11, weight: 700, align: 'right' }); const x = cx + cw + 60;
-        if (t === 'led') { D.circle(S, x + 12, y, 10, v ? '#ff5050' : '#3b1f25', '#fff', 1); if (v) D.circle(S, x + 12, y, 18, 'rgba(255,80,80,.18)'); }
-        else if (t === 'dim') { D.circle(S, x + 12, y, 10, `rgba(255,208,122,${0.15 + 0.85 * v})`, '#fff', 1); D.text(S, `${M.fmt(v * 100, 0)} %`, x + 30, y + 4, { size: 10, color: C.muted }); }
-        else { D.circle(S, x + 18, y, 16, '#1d2b48', C.green, 1.5); for (let k = 0; k < 3; k++) { const a = S.ang + k * 2 * PI / 3; D.line(S, x + 18, y, x + 18 + Math.cos(a) * 13, y + Math.sin(a) * 13, C.green, 3); } D.text(S, `${M.fmt(S.mot || 0, 0)} rpm`, x + 40, y + 4, { size: 10, color: C.muted }); } });
+        if (t === 'led') { D.circle(S, x + 12, y, 10, v ? '#e5484d' : '#f5d0d3', '#24292f', 1); if (v) D.circle(S, x + 12, y, 18, 'rgba(229,72,77,.18)'); }
+        else if (t === 'dim') { D.circle(S, x + 12, y, 10, `rgba(191,135,0,${0.15 + 0.85 * v})`, '#24292f', 1); D.text(S, `${M.fmt(v * 100, 0)} %`, x + 30, y + 4, { size: 10, color: C.muted }); }
+        else { D.circle(S, x + 18, y, 16, '#f6f8fa', C.green, 1.5); for (let k = 0; k < 3; k++) { const a = S.ang + k * 2 * PI / 3; D.line(S, x + 18, y, x + 18 + Math.cos(a) * 13, y + Math.sin(a) * 13, C.green, 3); } D.text(S, `${M.fmt(S.mot || 0, 0)} rpm`, x + 40, y + 4, { size: 10, color: C.muted }); } });
       (S.prog || []).forEach(([n], i) => D.text(S, `${i + 1}: ${S.p['r' + i]}`, cx + 10, cy + ch - 70 + i * 15, { size: 9.5, color: C.cyan }));
       S.set('in', `${+p.di1}${+p.di0}b`); S.set('adc', S.A ? `${S.A[0]}, ${S.A[1]}` : '—'); S.set('out', `${o.DO1 || 0}${o.DO0 || 0}b`); S.set('pwm', `${M.fmt(o.PWM0 || 0, 1)}, ${M.fmt(o.PWM1 || 0, 1)}`); S.set('ccr', `${Math.round((o.PWM0 || 0) * 10)}, ${Math.round((o.PWM1 || 0) * 10)}`); S.set('err', S.err, /OK/.test(S.err) ? 'ok' : 'bad');
     }
@@ -3442,8 +3442,8 @@ LOOP:
       if (sc === 'conv') { inTxt = S.state ? 'beam blocked (part present)' : 'beam clear'; adc = `GPIO = ${S.state}`; decTxt = S.state ? (S.timer > 1.5 ? 'dwell done → run' : `stop, dwell ${M.fmt(S.timer || 0, 1)}/1.5 s`) : 'run'; actTxt = S.act ? 'conveyor running' : 'conveyor stopped'; ckt = 'pull-up 10 kΩ to 3.3 V; NPN output pulls low when blocked'; }
       // actuator picture
       const ax = 16 + 4 * (bw + 14) + bw / 2, ay = y + 90;
-      if (sc === 'dist') { D.link(S, ax, ay, ax + Math.cos(PI - S.ang * M.D2R) * 50, ay - Math.sin(PI - S.ang * M.D2R) * 50, 8, '#e9eef7'); D.joint(S, ax, ay, 8); }
-      else if (sc === 'conv') { const x0 = 40, x1 = W - 40, cy = H - 40; D.rect(S, x0, cy, x1 - x0, 8, '#22355c'); (S.boxes || []).forEach(b => D.rect(S, x0 + b * (x1 - x0) - 12, cy - 22, 24, 22, '#8a6a3a', '#fff', 1, 2)); D.rect(S, x0 + 0.6 * (x1 - x0) - 3, cy - 32, 6, 32, S.state ? C.green : C.cyan); }
+      if (sc === 'dist') { D.link(S, ax, ay, ax + Math.cos(PI - S.ang * M.D2R) * 50, ay - Math.sin(PI - S.ang * M.D2R) * 50, 8, '#c9d1d9'); D.joint(S, ax, ay, 8); }
+      else if (sc === 'conv') { const x0 = 40, x1 = W - 40, cy = H - 40; D.rect(S, x0, cy, x1 - x0, 8, '#c9d1d9'); (S.boxes || []).forEach(b => D.rect(S, x0 + b * (x1 - x0) - 12, cy - 22, 24, 22, '#8a6a3a', '#24292f', 1, 2)); D.rect(S, x0 + 0.6 * (x1 - x0) - 3, cy - 32, 6, 32, S.state ? C.green : C.cyan); }
       else { for (let k = 0; k < 3; k++) { const a = S.t * 8 * S.act + k * 2 * PI / 3; D.line(S, ax, ay, ax + Math.cos(a) * 26, ay + Math.sin(a) * 26, C.cyan, 5); } D.circle(S, ax, ay, 6, C.text); }
       D.text(S, SC[sc], 16, 26, { size: 13, weight: 700 }); D.text(S, ckt, 16, H - 12, { size: 11, color: C.muted });
       S.set('in', inTxt); S.set('adc', adc); S.set('dec', decTxt); S.set('act', actTxt, S.act > 0.5 ? 'ok' : ''); S.set('ckt', ckt);
@@ -3476,7 +3476,7 @@ LOOP:
       if (p.mode === 'timer') { D.text(S, `f = f_clk/((PSC+1)(ARR+1)) = ${p.fclk} MHz/(${p.PSC + 1}·${p.ARR + 1}) = ${M.fmt(r.f, 2)} Hz;  D = CCR/(ARR+1) = ${p.CCR}/${p.ARR + 1}`, 16, 24, { size: 12 }); const cy = H - 60, cw = W - 80; const cnt = ((S.t * 2) % 1); D.poly(S, [[40, cy + 30], [40 + cw * cnt, cy + 30 - 30 * cnt]], null, C.cyan, 2, false); D.line(S, 40, cy + 30 - 30 * Math.min(1, p.CCR / (p.ARR + 1)), 40 + cw, cy + 30 - 30 * Math.min(1, p.CCR / (p.ARR + 1)), C.amber, 1, [4, 3]); D.text(S, 'counter 0 → ARR (cyan), compare level CCR (amber): output high while counter < CCR', 40, cy + 50, { size: 10.5, color: C.muted }); }
       // motor current ripple: Δi/I ≈ (1−D)·T/τ_e (small-ripple estimate with τ_e = 2 ms)
       const rip = r.D > 0 ? Math.min(400, (1 - r.D) * T / 2e-3 * 100) : 0;
-      D.circle(S, W - 80, H - 90, 30, '#1d2b48', C.green, 2); for (let k = 0; k < 3; k++) { const a = S.t * S.w / 60 * 0.3 + k * 2 * PI / 3; D.line(S, W - 80, H - 90, W - 80 + Math.cos(a) * 24, H - 90 + Math.sin(a) * 24, C.green, 4); }
+      D.circle(S, W - 80, H - 90, 30, '#f6f8fa', C.green, 2); for (let k = 0; k < 3; k++) { const a = S.t * S.w / 60 * 0.3 + k * 2 * PI / 3; D.line(S, W - 80, H - 90, W - 80 + Math.cos(a) * 24, H - 90 + Math.sin(a) * 24, C.green, 4); }
       S.set('f', r.f); S.set('D', r.D * 100); S.set('ton', r.D * T * 1e6); S.set('toff', (1 - r.D) * T * 1e6); S.set('vavg', r.D * p.Vdc); S.set('bits', p.mode === 'timer' ? r.bits : '—'); S.set('n', S.w); S.set('rip', rip);
     }
   });
@@ -3506,8 +3506,8 @@ LOOP:
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, fr = this.frame(S), n = fr.bits.length, k = Math.min(S.k, n);
       D.block(S, 16, 30, 120, 60, 'Transmitter\n' + ({ uart: 'MCU UART', spi: 'SPI master', i2c: 'I²C master', can: 'CAN node A' })[p.bus], { stroke: C.amber }); D.block(S, W - 136, 30, 120, 60, 'Receiver\n' + ({ uart: 'PC / HMI', spi: 'SPI ADC (slave)', i2c: `IMU @0x${Math.round(p.addr).toString(16)}`, can: 'CAN node B' })[p.bus], { stroke: C.cyan });
-      const wires = fr.lines.length; for (let i = 0; i < wires; i++) { const y = 46 + i * (40 / Math.max(1, wires)); D.line(S, 136, y, W - 136, y, '#3a5384', 2); D.text(S, fr.lines[i], W / 2, y - 3, { size: 9.5, align: 'center', color: C.muted }); }
-      for (let j = 0; j < Math.min(k, n); j++) { const f = (S.k - j - (S.acc)) / 6; if (f < 0 || f > 1) continue; D.circle(S, 136 + f * (W - 272), 46, 7, fr.bits[j].v ? C.amber : C.cyan, '#fff', 1); D.text(S, String(fr.bits[j].v), 136 + f * (W - 272), 50, { size: 9, align: 'center', color: '#0e1d38', weight: 700 }); }
+      const wires = fr.lines.length; for (let i = 0; i < wires; i++) { const y = 46 + i * (40 / Math.max(1, wires)); D.line(S, 136, y, W - 136, y, '#8c959f', 2); D.text(S, fr.lines[i], W / 2, y - 3, { size: 9.5, align: 'center', color: C.muted }); }
+      for (let j = 0; j < Math.min(k, n); j++) { const f = (S.k - j - (S.acc)) / 6; if (f < 0 || f > 1) continue; D.circle(S, 136 + f * (W - 272), 46, 7, fr.bits[j].v ? C.amber : C.cyan, '#24292f', 1); D.text(S, String(fr.bits[j].v), 136 + f * (W - 272), 50, { size: 9, align: 'center', color: '#2b3440', weight: 700 }); }
       // waveforms
       const x0 = 40, x1 = W - 20, bw = (x1 - x0) / Math.max(n, 12), y0 = 130; const lvl = (y, v) => y + (v ? 0 : 26);
       const trace = (name, vals, y, col) => { D.text(S, name, 4, y + 18, { size: 10, color: C.muted }); const pts = []; vals.forEach((v, j) => { if (j >= k) return; pts.push([x0 + j * bw, lvl(y, v)], [x0 + (j + 1) * bw, lvl(y, v)]); }); if (pts.length) D.poly(S, pts, null, col, 2, false); };
@@ -3601,15 +3601,15 @@ LOOP:
       D.text(S, 'Optics (not to scale)', ox, oy - 8, { size: 11, color: C.muted }); const ly = oy + 120; D.line(S, ox + 20, ly - 70, ox + 20, ly + 70, C.cyan, 3); D.text(S, 'object plane (FOV W)', ox + 4, ly + 90, { size: 10, color: C.muted });
       const lx = ox + lw * 0.72; const g = S.ctx; g.strokeStyle = C.amber; g.lineWidth = 2; g.beginPath(); g.ellipse(lx, ly, 6, 40, 0, 0, 2 * PI); g.stroke(); D.text(S, `lens f = ${p.f} mm`, lx - 30, ly - 48, { size: 10.5, color: C.amber });
       const sx = ox + lw - 4; D.line(S, sx, ly - 70 * m * 6, sx, ly + 70 * m * 6, C.green, 4); D.text(S, 'sensor', sx - 30, ly + 70 * m * 6 + 14, { size: 10, color: C.green });
-      D.line(S, ox + 20, ly - 70, sx, ly + 70 * m * 6, 'rgba(255,255,255,.35)', 1); D.line(S, ox + 20, ly + 70, sx, ly - 70 * m * 6, 'rgba(255,255,255,.35)', 1);
+      D.line(S, ox + 20, ly - 70, sx, ly + 70 * m * 6, 'rgba(36,41,47,.35)', 1); D.line(S, ox + 20, ly + 70, sx, ly - 70 * m * 6, 'rgba(36,41,47,.35)', 1);
       D.text(S, `u = ${M.fmt(u, 1)} mm`, (ox + 20 + lx) / 2 - 30, ly + 12, { size: 11 }); D.text(S, `v = ${M.fmt(v, 2)} mm`, (lx + sx) / 2 - 20, ly + 12, { size: 11 });
       D.text(S, LIGHT[p.light], ox, H - 14, { size: 12, weight: 650, color: C.amber });
       // image
-      const ix = ox + lw + 20, iw = W - ix - 16, ih = iw * 0.8 > H - 140 ? H - 140 : iw * 0.8, iw2 = ih / 0.8; drawImg(S, S.img, ix, 20, iw2, ih); D.rect(S, ix, 20, iw2, ih, null, '#3a5384', 1);
+      const ix = ox + lw + 20, iw = W - ix - 16, ih = iw * 0.8 > H - 140 ? H - 140 : iw * 0.8, iw2 = ih / 0.8; drawImg(S, S.img, ix, 20, iw2, ih); D.rect(S, ix, 20, iw2, ih, null, '#8c959f', 1);
       D.text(S, `${Math.round(p.N)} × ${S.img.h} pixels, 8-bit`, ix, ih + 36, { size: 11, color: C.muted });
       // zoom on scratch area
       const zx = Math.floor((SCRATCH.x0 + 15 + p.W / 2) / (p.W / p.N)), zy = Math.floor((p.W * 0.4 - (SCRATCH.y0 + 7)) / (p.W / p.N)); const n = 8, cs = Math.min(13, (H - ih - 60) / n);
-      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const xx = M.clamp(zx + i, 0, S.img.w - 1), yy = M.clamp(zy + j, 0, S.img.h - 1), v2 = Math.round(S.img.d[yy * S.img.w + xx]); D.rect(S, ix + 240 + i * cs * 2.2, ih + 26 + j * cs, cs * 2.2, cs, `rgb(${v2},${v2},${v2})`, '#22355c', 0.5); D.text(S, String(v2), ix + 240 + i * cs * 2.2 + cs * 1.1, ih + 26 + j * cs + cs * 0.75, { size: Math.max(7, cs * 0.6), align: 'center', color: v2 > 128 ? '#000' : '#fff' }); }
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const xx = M.clamp(zx + i, 0, S.img.w - 1), yy = M.clamp(zy + j, 0, S.img.h - 1), v2 = Math.round(S.img.d[yy * S.img.w + xx]); D.rect(S, ix + 240 + i * cs * 2.2, ih + 26 + j * cs, cs * 2.2, cs, `rgb(${v2},${v2},${v2})`, '#c9d1d9', 0.5); D.text(S, String(v2), ix + 240 + i * cs * 2.2 + cs * 1.1, ih + 26 + j * cs + cs * 0.75, { size: Math.max(7, cs * 0.6), align: 'center', color: v2 > 128 ? '#000' : '#24292f' }); }
       D.text(S, '8 × 8 pixel values near the scratch', ix + 240, ih + 20, { size: 10, color: C.muted });
       const rs = p.W / p.N; S.set('m', m); S.set('u', u); S.set('v', v); S.set('rs', rs); S.set('def', 0.5 / rs, 0.5 / rs >= 2 ? 'ok' : 'bad'); S.set('mean', `${M.fmt(S.mean, 1)}, ${M.fmt(S.sat * 100, 1)} % saturated`);
     }
@@ -3650,11 +3650,11 @@ LOOP:
       const show = k => k === 0 ? r.img : k === 1 ? r.sm : k === 2 ? r.B : k === 3 ? r.E : k >= 4 ? r.B : r.img;
       const mapFor = k => k === 2 || k === 4 ? (v => v ? [242, 242, 242] : [14, 20, 36]) : k === 6 ? null : null;
       if (st === 4) drawImg(S, r.B, big.x, big.y, big.w, big.h, v => v ? [80, 110, 160] : [14, 20, 36]); else if (st >= 5) drawImg(S, r.img, big.x, big.y, big.w, big.h); else drawImg(S, show(st), big.x, big.y, big.w, big.h, mapFor(st));
-      if (st === 4 || st === 6) r.blobs.forEach((b, i) => { const [x0, y0, x1, y1] = b.bbox; if (st === 6) { D.rect(S, big.x + x0 * sx, big.y + y0 * sx, (x1 - x0 + 1) * sx, (y1 - y0 + 1) * sx, null, b.cls.startsWith('circ') ? C.cyan : b.cls.startsWith('rect') ? C.amber : C.violet, 2.5); D.text(S, `#${i + 1} ${b.cls}${b.holes ? `, ${b.holes} hole${b.holes > 1 ? 's' : ''}` : ''}`, big.x + x0 * sx, big.y + y0 * sx - 5, { size: 11, weight: 700, color: '#fff' }); }
+      if (st === 4 || st === 6) r.blobs.forEach((b, i) => { const [x0, y0, x1, y1] = b.bbox; if (st === 6) { D.rect(S, big.x + x0 * sx, big.y + y0 * sx, (x1 - x0 + 1) * sx, (y1 - y0 + 1) * sx, null, b.cls.startsWith('circ') ? C.cyan : b.cls.startsWith('rect') ? C.amber : C.violet, 2.5); D.text(S, `#${i + 1} ${b.cls}${b.holes ? `, ${b.holes} hole${b.holes > 1 ? 's' : ''}` : ''}`, big.x + x0 * sx, big.y + y0 * sx - 5, { size: 11, weight: 700, color: '#24292f' }); }
         const cx = big.x + (b.cx + 0.5) * sx, cy = big.y + (b.cy + 0.5) * sx; D.circle(S, cx, cy, 4, C.red); const L = Math.sqrt(b.area) * sx * 0.7; D.line(S, cx - Math.cos(b.theta) * L, cy - Math.sin(b.theta) * L, cx + Math.cos(b.theta) * L, cy + Math.sin(b.theta) * L, C.red, 2); });
       if (st === 5) r.corners.forEach(c => D.circle(S, big.x + (c.x + 0.5) * sx, big.y + (c.y + 0.5) * sx, 4, null, C.amber, 2));
       D.text(S, `${st + 1}. ${STAGES[st]}`, big.x + 6, big.y + big.h + 18, { size: 12.5, weight: 700, color: C.amber });
-      for (let k = 0; k < 7; k++) { const x = 16 + k * (th + 6), y = H - th * 0.8 - 8; if (k === 4) drawImg(S, r.B, x, y, th, th * 0.8, v => v ? [80, 110, 160] : [14, 20, 36]); else drawImg(S, k >= 5 ? r.img : show(k), x, y, th, th * 0.8, mapFor(k)); D.rect(S, x, y, th, th * 0.8, null, k === st ? C.amber : '#3a5384', k === st ? 2.5 : 1); }
+      for (let k = 0; k < 7; k++) { const x = 16 + k * (th + 6), y = H - th * 0.8 - 8; if (k === 4) drawImg(S, r.B, x, y, th, th * 0.8, v => v ? [80, 110, 160] : [14, 20, 36]); else drawImg(S, k >= 5 ? r.img : show(k), x, y, th, th * 0.8, mapFor(k)); D.rect(S, x, y, th, th * 0.8, null, k === st ? C.amber : '#8c959f', k === st ? 2.5 : 1); }
       S.set('T', r.T); S.set('n', r.blobs.length); S.set('c', r.corners.length); S.set('st', STAGES[st]);
       RIL.setHTML(S.panel('f'), '<div class="table-scroll">' + RIL.ui.kv(r.blobs.map((b, i) => [i + 1, b.area, `(${M.fmt(b.cx, 1)}, ${M.fmt(b.cy, 1)})`, M.fmt(b.theta * M.R2D, 1) + '°', `${b.bbox[2] - b.bbox[0] + 1} × ${b.bbox[3] - b.bbox[1] + 1}`, b.perimeter, M.fmt(b.circularity, 3), b.holes, M.fmt(b.rect, 3), b.cls]), ['#', 'Area m₀₀ (px)', 'Centroid (x̄, ȳ)', 'Orientation θ', 'Bounding box', 'Perimeter (px)', 'Circularity 4πA/P²', 'Holes', 'Rectangularity A_filled/(L₁L₂)', 'Rule-based class']) + '</div>', S, 'f');
     }
@@ -3698,14 +3698,14 @@ LOOP:
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, X = f => 30 + f * (W - 60), y = H * 0.6;
-      D.rect(S, X(0), y, X(1) - X(0), 16, '#22355c', '#3a5384', 1, 3); D.rect(S, X(0.45) - 18, 18, 36, 26, '#1d2b48', C.cyan, 1.5, 4); D.line(S, X(0.45), 44, X(0.45) - 40, y - 4, 'rgba(76,194,255,.4)', 1); D.line(S, X(0.45), 44, X(0.45) + 40, y - 4, 'rgba(76,194,255,.4)', 1); D.text(S, 'camera + ' + (p.light === 'dark' ? 'dark-field ring' : 'ring light'), X(0.45), 14, { size: 10, align: 'center', color: C.cyan });
-      D.rect(S, X(0.72) - 30, y - 70, 18, 40, '#3b4f75'); D.rect(S, X(0.72) - 14, y + 30, 60, 50, 'rgba(255,123,123,.15)', C.red, 1.5, 4); D.text(S, 'reject bin', X(0.72) + 16, y + 96, { size: 10, align: 'center', color: C.red }); D.text(S, 'pusher', X(0.72) - 21, y - 76, { size: 10, align: 'center', color: C.muted });
-      S.parts.forEach(q => { const px = X(q.x), py = y - 10 + (q.y || 0) * 200; const w = q.w * 0.6; D.rect(S, px - w / 2, py - 11, w, 22, q.done ? (q.res.accept ? '#6fe39b' : '#ff7b7b') : '#9fb3d1', '#fff', 1, 2); D.circle(S, px + 9, py, 3.5, '#0e1d38'); if (q.holes === 2) D.circle(S, px - 9, py, 3.5, '#0e1d38'); if (q.scratch) D.line(S, px - w / 2 + 4, py - 6, px - 2, py + 3, '#ffe', 1); });
+      D.rect(S, X(0), y, X(1) - X(0), 16, '#c9d1d9', '#8c959f', 1, 3); D.rect(S, X(0.45) - 18, 18, 36, 26, '#f6f8fa', C.cyan, 1.5, 4); D.line(S, X(0.45), 44, X(0.45) - 40, y - 4, 'rgba(11,127,193,.4)', 1); D.line(S, X(0.45), 44, X(0.45) + 40, y - 4, 'rgba(11,127,193,.4)', 1); D.text(S, 'camera + ' + (p.light === 'dark' ? 'dark-field ring' : 'ring light'), X(0.45), 14, { size: 10, align: 'center', color: C.cyan });
+      D.rect(S, X(0.72) - 30, y - 70, 18, 40, '#6e7781'); D.rect(S, X(0.72) - 14, y + 30, 60, 50, 'rgba(209,36,47,.15)', C.red, 1.5, 4); D.text(S, 'reject bin', X(0.72) + 16, y + 96, { size: 10, align: 'center', color: C.red }); D.text(S, 'pusher', X(0.72) - 21, y - 76, { size: 10, align: 'center', color: C.muted });
+      S.parts.forEach(q => { const px = X(q.x), py = y - 10 + (q.y || 0) * 200; const w = q.w * 0.6; D.rect(S, px - w / 2, py - 11, w, 22, q.done ? (q.res.accept ? '#1a9b4b' : '#d1242f') : '#a8b1bb', '#24292f', 1, 2); D.circle(S, px + 9, py, 3.5, '#2b3440'); if (q.holes === 2) D.circle(S, px - 9, py, 3.5, '#2b3440'); if (q.scratch) D.line(S, px - w / 2 + 4, py - 6, px - 2, py + 3, '#fff8c5', 1); });
       if (S.cap) { const r = S.cap.r; drawImg(S, r.img, W - 200, 60, 180, 144); D.rect(S, W - 200, 60, 180, 144, null, C.cyan, 1.5); D.text(S, 'captured image', W - 200, 54, { size: 10.5, color: C.muted }); D.text(S, r.accept ? 'ACCEPT' : 'REJECT: ' + r.why, W - 200, 222, { size: 12, weight: 800, color: r.accept ? C.green : C.red }); }
       const steps = ['1 arrive', '2 capture', '3 process', '4 features', '5 classify', '6 accept/reject', '7 sort']; steps.forEach((s, i) => D.text(S, s, 16 + i * Math.min(100, (W - 240) / 7), H - 14, { size: 10.5, color: C.muted }));
       const L = S.last; if (L) { S.set('last', L.bad ? `defective (${L.dk})` : 'good', L.bad ? 'bad' : 'ok'); S.set('meas', `${M.fmt(L.res.width, 2)} mm / ${L.res.holes} / ${L.res.scr}`); S.set('dec', L.res.accept ? 'accept' : 'reject — ' + L.res.why, L.res.accept ? 'ok' : 'bad'); }
       const cm = S.cm; S.set('acc', `${cm.gg + cm.bg} / ${cm.gb + cm.bb}`); S.set('esc', cm.bg, cm.bg ? 'bad' : ''); S.set('fr', cm.gb, cm.gb ? 'bad' : '');
-      RIL.setHTML(S.panel('cm'), RIL.ui.kv([['True: good', cm.gg, cm.gb], ['True: defective', cm.bg, cm.bb]], ['', 'Decision: accept', 'Decision: reject']) + `<p style="margin:.3em 0 0;color:#8fa3c4">Accuracy ${M.fmt((cm.gg + cm.bb) / Math.max(1, cm.gg + cm.gb + cm.bg + cm.bb) * 100, 1)} % over ${S.n} parts.</p>`, S, 'cm');
+      RIL.setHTML(S.panel('cm'), RIL.ui.kv([['True: good', cm.gg, cm.gb], ['True: defective', cm.bg, cm.bb]], ['', 'Decision: accept', 'Decision: reject']) + `<p style="margin:.3em 0 0;color:#57606a">Accuracy ${M.fmt((cm.gg + cm.bb) / Math.max(1, cm.gg + cm.gb + cm.bg + cm.bb) * 100, 1)} % over ${S.n} parts.</p>`, S, 'cm');
     }
   });
 
@@ -3753,14 +3753,14 @@ LOOP:
     },
     draw(S) {
       D.clear(S); const V = S.V = D.fit(S, [0, GW * CELL], [0, GH * CELL], 12); const s = CELL * V.s;
-      for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) { const k = y * GW + x; if (S.truth[k]) D.rect(S, V.X(x * CELL), V.Y((y + 1) * CELL), s, s, S.map[k] ? 'rgba(255,123,123,.85)' : '#3b4f75'); }
-      const g = S.ctx; g.strokeStyle = 'rgba(143,163,196,.07)'; g.lineWidth = 1; g.beginPath(); for (let x = 0; x <= GW; x++) { g.moveTo(V.X(x * CELL), V.Y(0)); g.lineTo(V.X(x * CELL), V.Y(GH * CELL)); } for (let y = 0; y <= GH; y++) { g.moveTo(V.X(0), V.Y(y * CELL)); g.lineTo(V.X(GW * CELL), V.Y(y * CELL)); } g.stroke();
-      (S.rays || []).forEach(([a, d]) => D.line(S, V.X(S.pose[0]), V.Y(S.pose[1]), V.X(S.pose[0] + Math.cos(a) * d), V.Y(S.pose[1] + Math.sin(a) * d), 'rgba(76,194,255,.35)', 1));
+      for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) { const k = y * GW + x; if (S.truth[k]) D.rect(S, V.X(x * CELL), V.Y((y + 1) * CELL), s, s, S.map[k] ? 'rgba(209,36,47,.85)' : '#6e7781'); }
+      const g = S.ctx; g.strokeStyle = 'rgba(87,96,106,.07)'; g.lineWidth = 1; g.beginPath(); for (let x = 0; x <= GW; x++) { g.moveTo(V.X(x * CELL), V.Y(0)); g.lineTo(V.X(x * CELL), V.Y(GH * CELL)); } for (let y = 0; y <= GH; y++) { g.moveTo(V.X(0), V.Y(y * CELL)); g.lineTo(V.X(GW * CELL), V.Y(y * CELL)); } g.stroke();
+      (S.rays || []).forEach(([a, d]) => D.line(S, V.X(S.pose[0]), V.Y(S.pose[1]), V.X(S.pose[0] + Math.cos(a) * d), V.Y(S.pose[1] + Math.sin(a) * d), 'rgba(11,127,193,.35)', 1));
       if (S.path) D.poly(S, [[V.X(S.pose[0]), V.Y(S.pose[1])], ...S.path.map(q => [V.X(q[0]), V.Y(q[1])])], null, C.green, 2.5, false);
-      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(242,165,22,.6)', 1.5, false);
+      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(199,119,0,.6)', 1.5, false);
       D.circle(S, V.X(S.goal[0]), V.Y(S.goal[1]), 9, null, C.green, 3); D.text(S, 'goal', V.X(S.goal[0]) + 12, V.Y(S.goal[1]) - 8, { size: 11, color: C.green });
-      const rob = (P, col, a) => { const [x, y, th] = P; D.circle(S, V.X(x), V.Y(y), 0.18 * V.s, a ? null : col, col, 2); D.line(S, V.X(x), V.Y(y), V.X(x + Math.cos(th) * 0.25), V.Y(y + Math.sin(th) * 0.25), a ? col : '#0e1d38', 3); };
-      rob(S.odo, 'rgba(196,164,255,.8)', true); rob(S.pose, C.amber);
+      const rob = (P, col, a) => { const [x, y, th] = P; D.circle(S, V.X(x), V.Y(y), 0.18 * V.s, a ? null : col, col, 2); D.line(S, V.X(x), V.Y(y), V.X(x + Math.cos(th) * 0.25), V.Y(y + Math.sin(th) * 0.25), a ? col : '#2b3440', 3); };
+      rob(S.odo, 'rgba(130,80,223,.8)', true); rob(S.pose, C.amber);
       const e = Math.hypot(S.odo[0] - S.pose[0], S.odo[1] - S.pose[1]); const L = S.path ? S.path.reduce((a, q, i, arr) => i ? a + Math.hypot(q[0] - arr[i - 1][0], q[1] - arr[i - 1][1]) : 0, 0) : 0;
       S.set('st', S.state, /reached/.test(S.state) ? 'ok' : /no path/.test(S.state) ? 'bad' : ''); S.set('pose', `${M.fmt(S.pose[0], 2)}, ${M.fmt(S.pose[1], 2)}, ${M.fmt(S.pose[2] * M.R2D, 1)}`); S.set('odo', e); S.set('w', `${M.fmt(S.wR, 2)}, ${M.fmt(S.wL, 2)}`); S.set('vw', S.kin ? `${M.fmt(S.kin.v, 3)}, ${M.fmt(S.kin.w, 3)}` : '0, 0'); S.set('rp', `${M.fmt(L, 2)} m / ${S.replans}`);
     }

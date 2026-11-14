@@ -27,7 +27,7 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, R = S.R = {}; const sel = S.sel;
-      const mx = W * 0.28, my = 30, mw = Math.min(W * 0.44, 380), mh = 210; D.rect(S, mx, my, mw, mh, 'rgba(19,38,74,.5)', C.amber, 1.5, 10); D.text(S, 'Microcontroller', mx + 10, my + 16, { size: 11.5, color: C.amber, weight: 700 });
+      const mx = W * 0.28, my = 30, mw = Math.min(W * 0.44, 380), mh = 210; D.rect(S, mx, my, mw, mh, 'rgba(255,255,255,.9)', C.amber, 1.5, 10); D.text(S, 'Microcontroller', mx + 10, my + 16, { size: 11.5, color: C.amber, weight: 700 });
       const b = (k, x, y, w, h, lbl) => { R[k] = D.block(S, x, y, w, h, lbl, { active: sel === k, size: 10.5 }); };
       const cw = (mw - 40) / 3; b('cpu', mx + 10, my + 28, cw, 50, 'CPU core'); b('flash', mx + 20 + cw, my + 28, cw, 50, 'Flash\n(program)'); b('ram', mx + 30 + 2 * cw, my + 28, cw, 50, 'RAM\n(data)');
       b('adc', mx + 10, my + 100, cw, 44, 'ADC'); b('gpio', mx + 20 + cw, my + 100, cw, 44, 'GPIO'); b('tim', mx + 30 + 2 * cw, my + 100, cw, 44, 'Timer/PWM'); b('uart', mx + 20 + cw, my + 156, cw, 40, 'UART');
@@ -74,14 +74,14 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, o = S.out || {}; const cx = W / 2 - 90, cy = 30, cw = 180, ch = H - 60;
-      D.rect(S, cx, cy, cw, ch, '#141c2c', '#8fa3c4', 2, 6); D.text(S, 'MCU', cx + cw / 2, cy + 22, { size: 14, weight: 800, align: 'center' }); D.text(S, '32-bit · 12-bit ADC · timers', cx + cw / 2, cy + 40, { size: 10, align: 'center', color: C.muted });
+      D.rect(S, cx, cy, cw, ch, '#f6f8fa', '#57606a', 2, 6); D.text(S, 'MCU', cx + cw / 2, cy + 22, { size: 14, weight: 800, align: 'center' }); D.text(S, '32-bit · 12-bit ADC · timers', cx + cw / 2, cy + 40, { size: 10, align: 'center', color: C.muted });
       const pinsL = [['DI0', +p.di0, 'switch'], ['DI1', +p.di1, 'switch'], ['AI0', p.ai0 / 3.3, 'pot'], ['AI1', p.ai1 / 3.3, 'sensor']]; const pinsR = [['DO0', o.DO0, 'led'], ['DO1', o.DO1, 'led'], ['PWM0', (o.PWM0 || 0) / 100, 'motor'], ['PWM1', (o.PWM1 || 0) / 100, 'dim']];
       const sp = (ch - 80) / 4;
-      pinsL.forEach(([n, v, t], i) => { const y = cy + 70 + i * sp; D.line(S, cx - 50, y, cx, y, v > 0.5 || (t !== 'switch' && v > 0) ? C.amber : C.muted, 2); D.text(S, n, cx + 8, y + 4, { size: 11, weight: 700 }); const x = cx - 130; if (t === 'switch') { D.rect(S, x, y - 12, 70, 24, '#1d2b48', C.cyan, 1, 4); D.text(S, v ? 'ON (0 V→1)' : 'OFF', x + 35, y + 4, { size: 10, align: 'center', color: v ? C.green : C.muted }); } else { D.circle(S, x + 34, y, 16, '#1d2b48', C.cyan, 1.5); D.line(S, x + 34, y, x + 34 + Math.cos(-PI * 0.75 + v * PI * 1.5) * 13, y + Math.sin(-PI * 0.75 + v * PI * 1.5) * 13, C.amber, 2); D.text(S, `${M.fmt(v * 3.3, 2)} V → ${S.A ? S.A[i - 2] : 0}`, x - 10, y + 30, { size: 10, color: C.muted }); } });
+      pinsL.forEach(([n, v, t], i) => { const y = cy + 70 + i * sp; D.line(S, cx - 50, y, cx, y, v > 0.5 || (t !== 'switch' && v > 0) ? C.amber : C.muted, 2); D.text(S, n, cx + 8, y + 4, { size: 11, weight: 700 }); const x = cx - 130; if (t === 'switch') { D.rect(S, x, y - 12, 70, 24, '#f6f8fa', C.cyan, 1, 4); D.text(S, v ? 'ON (0 V→1)' : 'OFF', x + 35, y + 4, { size: 10, align: 'center', color: v ? C.green : C.muted }); } else { D.circle(S, x + 34, y, 16, '#f6f8fa', C.cyan, 1.5); D.line(S, x + 34, y, x + 34 + Math.cos(-PI * 0.75 + v * PI * 1.5) * 13, y + Math.sin(-PI * 0.75 + v * PI * 1.5) * 13, C.amber, 2); D.text(S, `${M.fmt(v * 3.3, 2)} V → ${S.A ? S.A[i - 2] : 0}`, x - 10, y + 30, { size: 10, color: C.muted }); } });
       pinsR.forEach(([n, v, t], i) => { const y = cy + 70 + i * sp; D.line(S, cx + cw, y, cx + cw + 50, y, v > 0 ? C.amber : C.muted, 2); D.text(S, n, cx + cw - 8, y + 4, { size: 11, weight: 700, align: 'right' }); const x = cx + cw + 60;
-        if (t === 'led') { D.circle(S, x + 12, y, 10, v ? '#ff5050' : '#3b1f25', '#fff', 1); if (v) D.circle(S, x + 12, y, 18, 'rgba(255,80,80,.18)'); }
-        else if (t === 'dim') { D.circle(S, x + 12, y, 10, `rgba(255,208,122,${0.15 + 0.85 * v})`, '#fff', 1); D.text(S, `${M.fmt(v * 100, 0)} %`, x + 30, y + 4, { size: 10, color: C.muted }); }
-        else { D.circle(S, x + 18, y, 16, '#1d2b48', C.green, 1.5); for (let k = 0; k < 3; k++) { const a = S.ang + k * 2 * PI / 3; D.line(S, x + 18, y, x + 18 + Math.cos(a) * 13, y + Math.sin(a) * 13, C.green, 3); } D.text(S, `${M.fmt(S.mot || 0, 0)} rpm`, x + 40, y + 4, { size: 10, color: C.muted }); } });
+        if (t === 'led') { D.circle(S, x + 12, y, 10, v ? '#e5484d' : '#f5d0d3', '#24292f', 1); if (v) D.circle(S, x + 12, y, 18, 'rgba(229,72,77,.18)'); }
+        else if (t === 'dim') { D.circle(S, x + 12, y, 10, `rgba(191,135,0,${0.15 + 0.85 * v})`, '#24292f', 1); D.text(S, `${M.fmt(v * 100, 0)} %`, x + 30, y + 4, { size: 10, color: C.muted }); }
+        else { D.circle(S, x + 18, y, 16, '#f6f8fa', C.green, 1.5); for (let k = 0; k < 3; k++) { const a = S.ang + k * 2 * PI / 3; D.line(S, x + 18, y, x + 18 + Math.cos(a) * 13, y + Math.sin(a) * 13, C.green, 3); } D.text(S, `${M.fmt(S.mot || 0, 0)} rpm`, x + 40, y + 4, { size: 10, color: C.muted }); } });
       (S.prog || []).forEach(([n], i) => D.text(S, `${i + 1}: ${S.p['r' + i]}`, cx + 10, cy + ch - 70 + i * 15, { size: 9.5, color: C.cyan }));
       S.set('in', `${+p.di1}${+p.di0}b`); S.set('adc', S.A ? `${S.A[0]}, ${S.A[1]}` : '—'); S.set('out', `${o.DO1 || 0}${o.DO0 || 0}b`); S.set('pwm', `${M.fmt(o.PWM0 || 0, 1)}, ${M.fmt(o.PWM1 || 0, 1)}`); S.set('ccr', `${Math.round((o.PWM0 || 0) * 10)}, ${Math.round((o.PWM1 || 0) * 10)}`); S.set('err', S.err, /OK/.test(S.err) ? 'ok' : 'bad');
     }
@@ -123,8 +123,8 @@
       if (sc === 'conv') { inTxt = S.state ? 'beam blocked (part present)' : 'beam clear'; adc = `GPIO = ${S.state}`; decTxt = S.state ? (S.timer > 1.5 ? 'dwell done → run' : `stop, dwell ${M.fmt(S.timer || 0, 1)}/1.5 s`) : 'run'; actTxt = S.act ? 'conveyor running' : 'conveyor stopped'; ckt = 'pull-up 10 kΩ to 3.3 V; NPN output pulls low when blocked'; }
       // actuator picture
       const ax = 16 + 4 * (bw + 14) + bw / 2, ay = y + 90;
-      if (sc === 'dist') { D.link(S, ax, ay, ax + Math.cos(PI - S.ang * M.D2R) * 50, ay - Math.sin(PI - S.ang * M.D2R) * 50, 8, '#e9eef7'); D.joint(S, ax, ay, 8); }
-      else if (sc === 'conv') { const x0 = 40, x1 = W - 40, cy = H - 40; D.rect(S, x0, cy, x1 - x0, 8, '#22355c'); (S.boxes || []).forEach(b => D.rect(S, x0 + b * (x1 - x0) - 12, cy - 22, 24, 22, '#8a6a3a', '#fff', 1, 2)); D.rect(S, x0 + 0.6 * (x1 - x0) - 3, cy - 32, 6, 32, S.state ? C.green : C.cyan); }
+      if (sc === 'dist') { D.link(S, ax, ay, ax + Math.cos(PI - S.ang * M.D2R) * 50, ay - Math.sin(PI - S.ang * M.D2R) * 50, 8, '#c9d1d9'); D.joint(S, ax, ay, 8); }
+      else if (sc === 'conv') { const x0 = 40, x1 = W - 40, cy = H - 40; D.rect(S, x0, cy, x1 - x0, 8, '#c9d1d9'); (S.boxes || []).forEach(b => D.rect(S, x0 + b * (x1 - x0) - 12, cy - 22, 24, 22, '#8a6a3a', '#24292f', 1, 2)); D.rect(S, x0 + 0.6 * (x1 - x0) - 3, cy - 32, 6, 32, S.state ? C.green : C.cyan); }
       else { for (let k = 0; k < 3; k++) { const a = S.t * 8 * S.act + k * 2 * PI / 3; D.line(S, ax, ay, ax + Math.cos(a) * 26, ay + Math.sin(a) * 26, C.cyan, 5); } D.circle(S, ax, ay, 6, C.text); }
       D.text(S, SC[sc], 16, 26, { size: 13, weight: 700 }); D.text(S, ckt, 16, H - 12, { size: 11, color: C.muted });
       S.set('in', inTxt); S.set('adc', adc); S.set('dec', decTxt); S.set('act', actTxt, S.act > 0.5 ? 'ok' : ''); S.set('ckt', ckt);
@@ -157,7 +157,7 @@
       if (p.mode === 'timer') { D.text(S, `f = f_clk/((PSC+1)(ARR+1)) = ${p.fclk} MHz/(${p.PSC + 1}·${p.ARR + 1}) = ${M.fmt(r.f, 2)} Hz;  D = CCR/(ARR+1) = ${p.CCR}/${p.ARR + 1}`, 16, 24, { size: 12 }); const cy = H - 60, cw = W - 80; const cnt = ((S.t * 2) % 1); D.poly(S, [[40, cy + 30], [40 + cw * cnt, cy + 30 - 30 * cnt]], null, C.cyan, 2, false); D.line(S, 40, cy + 30 - 30 * Math.min(1, p.CCR / (p.ARR + 1)), 40 + cw, cy + 30 - 30 * Math.min(1, p.CCR / (p.ARR + 1)), C.amber, 1, [4, 3]); D.text(S, 'counter 0 → ARR (cyan), compare level CCR (amber): output high while counter < CCR', 40, cy + 50, { size: 10.5, color: C.muted }); }
       // motor current ripple: Δi/I ≈ (1−D)·T/τ_e (small-ripple estimate with τ_e = 2 ms)
       const rip = r.D > 0 ? Math.min(400, (1 - r.D) * T / 2e-3 * 100) : 0;
-      D.circle(S, W - 80, H - 90, 30, '#1d2b48', C.green, 2); for (let k = 0; k < 3; k++) { const a = S.t * S.w / 60 * 0.3 + k * 2 * PI / 3; D.line(S, W - 80, H - 90, W - 80 + Math.cos(a) * 24, H - 90 + Math.sin(a) * 24, C.green, 4); }
+      D.circle(S, W - 80, H - 90, 30, '#f6f8fa', C.green, 2); for (let k = 0; k < 3; k++) { const a = S.t * S.w / 60 * 0.3 + k * 2 * PI / 3; D.line(S, W - 80, H - 90, W - 80 + Math.cos(a) * 24, H - 90 + Math.sin(a) * 24, C.green, 4); }
       S.set('f', r.f); S.set('D', r.D * 100); S.set('ton', r.D * T * 1e6); S.set('toff', (1 - r.D) * T * 1e6); S.set('vavg', r.D * p.Vdc); S.set('bits', p.mode === 'timer' ? r.bits : '—'); S.set('n', S.w); S.set('rip', rip);
     }
   });
@@ -187,8 +187,8 @@
     draw(S) {
       D.clear(S); const p = S.p, W = S.W, H = S.H, fr = this.frame(S), n = fr.bits.length, k = Math.min(S.k, n);
       D.block(S, 16, 30, 120, 60, 'Transmitter\n' + ({ uart: 'MCU UART', spi: 'SPI master', i2c: 'I²C master', can: 'CAN node A' })[p.bus], { stroke: C.amber }); D.block(S, W - 136, 30, 120, 60, 'Receiver\n' + ({ uart: 'PC / HMI', spi: 'SPI ADC (slave)', i2c: `IMU @0x${Math.round(p.addr).toString(16)}`, can: 'CAN node B' })[p.bus], { stroke: C.cyan });
-      const wires = fr.lines.length; for (let i = 0; i < wires; i++) { const y = 46 + i * (40 / Math.max(1, wires)); D.line(S, 136, y, W - 136, y, '#3a5384', 2); D.text(S, fr.lines[i], W / 2, y - 3, { size: 9.5, align: 'center', color: C.muted }); }
-      for (let j = 0; j < Math.min(k, n); j++) { const f = (S.k - j - (S.acc)) / 6; if (f < 0 || f > 1) continue; D.circle(S, 136 + f * (W - 272), 46, 7, fr.bits[j].v ? C.amber : C.cyan, '#fff', 1); D.text(S, String(fr.bits[j].v), 136 + f * (W - 272), 50, { size: 9, align: 'center', color: '#0e1d38', weight: 700 }); }
+      const wires = fr.lines.length; for (let i = 0; i < wires; i++) { const y = 46 + i * (40 / Math.max(1, wires)); D.line(S, 136, y, W - 136, y, '#8c959f', 2); D.text(S, fr.lines[i], W / 2, y - 3, { size: 9.5, align: 'center', color: C.muted }); }
+      for (let j = 0; j < Math.min(k, n); j++) { const f = (S.k - j - (S.acc)) / 6; if (f < 0 || f > 1) continue; D.circle(S, 136 + f * (W - 272), 46, 7, fr.bits[j].v ? C.amber : C.cyan, '#24292f', 1); D.text(S, String(fr.bits[j].v), 136 + f * (W - 272), 50, { size: 9, align: 'center', color: '#2b3440', weight: 700 }); }
       // waveforms
       const x0 = 40, x1 = W - 20, bw = (x1 - x0) / Math.max(n, 12), y0 = 130; const lvl = (y, v) => y + (v ? 0 : 26);
       const trace = (name, vals, y, col) => { D.text(S, name, 4, y + 18, { size: 10, color: C.muted }); const pts = []; vals.forEach((v, j) => { if (j >= k) return; pts.push([x0 + j * bw, lvl(y, v)], [x0 + (j + 1) * bw, lvl(y, v)]); }); if (pts.length) D.poly(S, pts, null, col, 2, false); };

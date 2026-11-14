@@ -26,8 +26,8 @@
     draw(S) {
       D.clear(S); const p = S.p, l1 = 0.5, l2 = 0.35, V = armView(S, l1 + l2), t = Math.min(S.tt || 0, p.tf);
       const j1 = traj(p.meth, p.a0, p.af, p.tf, t, p.Vf), j2 = traj(p.meth, p.b0, p.bf, p.tf, t, p.Vf);
-      [[p.a0, p.b0, 'rgba(143,163,196,.4)'], [p.af, p.bf, 'rgba(111,227,155,.5)']].forEach(([a, b, c]) => { const f = M.planar2R.fk(l1, l2, a * D2R, b * D2R); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, c, 3, false); });
-      const path = []; for (let k = 0; k <= 60; k++) { const tt = p.tf * k / 60; const f = M.planar2R.fk(l1, l2, traj(p.meth, p.a0, p.af, p.tf, tt, p.Vf).q * D2R, traj(p.meth, p.b0, p.bf, p.tf, tt, p.Vf).q * D2R); path.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, path, null, 'rgba(242,165,22,.7)', 2, false);
+      [[p.a0, p.b0, 'rgba(87,96,106,.4)'], [p.af, p.bf, 'rgba(26,155,75,.5)']].forEach(([a, b, c]) => { const f = M.planar2R.fk(l1, l2, a * D2R, b * D2R); D.poly(S, [[V.X(0), V.Y(0)], [V.X(f.ex), V.Y(f.ey)], [V.X(f.x), V.Y(f.y)]], null, c, 3, false); });
+      const path = []; for (let k = 0; k <= 60; k++) { const tt = p.tf * k / 60; const f = M.planar2R.fk(l1, l2, traj(p.meth, p.a0, p.af, p.tf, tt, p.Vf).q * D2R, traj(p.meth, p.b0, p.bf, p.tf, tt, p.Vf).q * D2R); path.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, path, null, 'rgba(199,119,0,.7)', 2, false);
       const f = M.planar2R.fk(l1, l2, j1.q * D2R, j2.q * D2R); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
       D.text(S, `t = ${M.fmt(t, 2)} s of ${p.tf} s — tool path (amber) is curved: joint-space planning does not control the Cartesian path`, 14, 20, { size: 11.5 });
       const key = JSON.stringify(p); if (S._plotted !== key) { const P = [[], []], Vv = [[], []], A = [[], []]; let vmax = 0, amax = 0; for (let k = 0; k <= 200; k++) { const tt = p.tf * k / 200; [traj(p.meth, p.a0, p.af, p.tf, tt, p.Vf), traj(p.meth, p.b0, p.bf, p.tf, tt, p.Vf)].forEach((r, i) => { P[i].push([tt, r.q]); Vv[i].push([tt, r.qd]); A[i].push([tt, r.qdd]); if (!i) { vmax = Math.max(vmax, Math.abs(r.qd)); amax = Math.max(amax, Math.abs(r.qdd)); } }); }
@@ -68,8 +68,8 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, V = armView(S, 0.9); const L = this.L;
-      const g = S.ctx; g.fillStyle = 'rgba(76,194,255,.06)'; g.beginPath(); g.arc(V.X(0), V.Y(0), (L[0] + L[1]) * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), (L[0] - L[1]) * V.s, 0, 2 * PI, true); g.fill();
-      const qa = this.ikq(S, p.x0, p.y0, [0, 0]), qb = this.ikq(S, p.xf, p.yf, [0, 0]); const jp = []; for (let k = 0; k <= 40; k++) { const u = k / 40; const f = M.planar2R.fk(...L, qa[0] + (qb[0] - qa[0]) * u, qa[1] + (qb[1] - qa[1]) * u); jp.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, jp, null, 'rgba(196,164,255,.7)', 1.5, false);
+      const g = S.ctx; g.fillStyle = 'rgba(87,96,106,.07)'; g.beginPath(); g.arc(V.X(0), V.Y(0), (L[0] + L[1]) * V.s, 0, 2 * PI); g.arc(V.X(0), V.Y(0), (L[0] - L[1]) * V.s, 0, 2 * PI, true); g.fill();
+      const qa = this.ikq(S, p.x0, p.y0, [0, 0]), qb = this.ikq(S, p.xf, p.yf, [0, 0]); const jp = []; for (let k = 0; k <= 40; k++) { const u = k / 40; const f = M.planar2R.fk(...L, qa[0] + (qb[0] - qa[0]) * u, qa[1] + (qb[1] - qa[1]) * u); jp.push([V.X(f.x), V.Y(f.y)]); } D.poly(S, jp, null, 'rgba(130,80,223,.7)', 1.5, false);
       D.line(S, V.X(p.x0), V.Y(p.y0), V.X(p.xf), V.Y(p.yf), C.green, 2.5);
       D.poly(S, (S.trail || []).map(q => [V.X(q[0]), V.Y(q[1])]), null, C.amber, 2, false);
       const f = M.planar2R.fk(...L, ...(S.q || [0, 0])); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
@@ -105,8 +105,8 @@
       D.clear(S); const p = S.p, m = this.mt(p); const t = Math.min(S.tt || 0, p.mode === 'min' ? m.tf : p.tf);
       const prof = (k, tt) => k === 'trap' ? M.traj.lspb(0, p.Dq, p.tf, p.V, tt) : k === 'min' ? this.profMin(p, tt) : k === 'cubic' ? M.traj.cubic(0, p.Dq, p.tf, tt) : M.traj.quintic(0, p.Dq, p.tf, tt);
       const r = prof(p.mode, t); const x0 = 60, x1 = S.W - 60, y = S.H * 0.45;
-      D.rect(S, x0 - 10, y + 16, x1 - x0 + 20, 10, '#3b4f75'); for (let k = 0; k <= 6; k++) { const xx = x0 + (x1 - x0) * k / 6; D.line(S, xx, y + 26, xx, y + 34, C.muted, 1); D.text(S, M.fmt(p.Dq * k / 6, 0) + '°', xx, y + 46, { size: 10, align: 'center', color: C.muted }); }
-      const cxp = x0 + (x1 - x0) * r.q / p.Dq; D.rect(S, cxp - 26, y - 22, 52, 38, '#6f86ad', '#c9d6ec', 1.5, 5); D.arrow(S, cxp, y - 34, cxp + M.clamp(r.qd, -200, 200) * 1.2, y - 34, C.amber, 2.5); D.arrow(S, cxp, y - 50, cxp + M.clamp(r.qdd, -400, 400) * 0.4, y - 50, C.red, 2);
+      D.rect(S, x0 - 10, y + 16, x1 - x0 + 20, 10, '#6e7781'); for (let k = 0; k <= 6; k++) { const xx = x0 + (x1 - x0) * k / 6; D.line(S, xx, y + 26, xx, y + 34, C.muted, 1); D.text(S, M.fmt(p.Dq * k / 6, 0) + '°', xx, y + 46, { size: 10, align: 'center', color: C.muted }); }
+      const cxp = x0 + (x1 - x0) * r.q / p.Dq; D.rect(S, cxp - 26, y - 22, 52, 38, '#6e7781', '#8c959f', 1.5, 5); D.arrow(S, cxp, y - 34, cxp + M.clamp(r.qd, -200, 200) * 1.2, y - 34, C.amber, 2.5); D.arrow(S, cxp, y - 50, cxp + M.clamp(r.qdd, -400, 400) * 0.4, y - 50, C.red, 2);
       D.text(S, 'velocity', cxp + 4, y - 38, { size: 10, color: C.amber }); D.text(S, 'acceleration', cxp + 4, y - 54, { size: 10, color: C.red });
       D.text(S, `t = ${M.fmt(t, 2)} s   q = ${M.fmt(r.q, 2)}°   q̇ = ${M.fmt(r.qd, 2)}°/s   q̈ = ${M.fmt(r.qdd, 2)}°/s²`, 16, 24, { size: 12.5, weight: 650 });
       const key = JSON.stringify([p.Dq, p.tf, p.V, p.Vmax, p.amax]); if (S._k !== key) { const tfm = Math.max(p.tf, m.tf); const V = [[], [], [], []], A = [[], [], [], []]; ['trap', 'min', 'cubic', 'quintic'].forEach((k, i) => { const tt = k === 'min' ? m.tf : p.tf; for (let j = 0; j <= 240; j++) { const ti = tfm * j / 240; const rr = ti <= tt ? prof(k, ti) : { qd: 0, qdd: 0 }; V[i].push([ti, rr.qd]); A[i].push([ti, rr.qdd]); } }); S.chart('v').setAll(V); S.chart('a').setAll(A); S._k = key; }
@@ -167,7 +167,7 @@
     step(S, dt) { S.x = M.rk4(this.f(S), S.x, 0, dt); const p = S.p, en = M.planar2R.energy(p.m1, p.m2, p.l1, p.l2, [S.x[0], S.x[1]], [S.x[2], S.x[3]], p.grav ? M.g0 : 0); if (S.E0 === null) S.E0 = en.E; if (S.frameCount % 2 === 0) { S.chart('c').push(S.t, [S.x[0], S.x[1]]); S.chart('e').push(S.t, [en.K, en.P, en.E]); } },
     draw(S) {
       D.clear(S); const p = S.p, V = (() => { const R = (p.l1 + p.l2) * 1.1; const v = D.fit(S, [-R, R], [-R, R], 18); D.axes2(S, v, [-R, R], [-R, R], 0.2); return v; })();
-      const f = M.planar2R.fk(p.l1, p.l2, S.x[0], S.x[1]); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 8 }); D.circle(S, V.X(f.ex), V.Y(f.ey), 6 + 4 * p.m1, C.amber, '#fff', 1); D.circle(S, V.X(f.x), V.Y(f.y), 6 + 4 * p.m2, C.amber, '#fff', 1);
+      const f = M.planar2R.fk(p.l1, p.l2, S.x[0], S.x[1]); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 8 }); D.circle(S, V.X(f.ex), V.Y(f.ey), 6 + 4 * p.m1, C.amber, '#24292f', 1); D.circle(S, V.X(f.x), V.Y(f.y), 6 + 4 * p.m2, C.amber, '#24292f', 1);
       const d = M.planar2R.dynamics(p.m1, p.m2, p.l1, p.l2, [S.x[0], S.x[1]], [S.x[2], S.x[3]], p.grav ? M.g0 : 0); const qdd = this.f(S)(0, S.x).slice(2);
       const en = M.planar2R.energy(p.m1, p.m2, p.l1, p.l2, [S.x[0], S.x[1]], [S.x[2], S.x[3]], p.grav ? M.g0 : 0);
       S.set('q', `${M.fmt(S.x[0] * R2D, 1)}, ${M.fmt(S.x[1] * R2D, 1)}`); S.set('qd', `${M.fmt(S.x[2], 3)}, ${M.fmt(S.x[3], 3)}`); S.set('qdd', `${M.fmt(qdd[0], 3)}, ${M.fmt(qdd[1], 3)}`); S.set('E', en.E); S.set('dE', S.E0 === null ? 0 : en.E - S.E0);
@@ -199,11 +199,11 @@
     step(S) { const c = this.calc(S); if (S.frameCount % 2 === 0) { S.chart('c').push(S.t, [c.K, c.P, c.K - c.P]); S.chart('t').push(S.t, c.tau); } },
     draw(S) {
       D.clear(S); const p = S.p, c = this.calc(S), st = c.st; const R = p.l * 1.8, V = D.fit(S, [-R, R], [-R, R], 18); D.axes2(S, V, [-R, R], [-R, R], 0.2);
-      if (p.mod === 'one') { const e = [p.l * Math.cos(st.q[0]), p.l * Math.sin(st.q[0])]; D.link(S, V.X(0), V.Y(0), V.X(e[0]), V.Y(e[1]), 14, '#8aa0c6'); D.joint(S, V.X(0), V.Y(0), 9); D.circle(S, V.X(e[0] / 2), V.Y(e[1] / 2), 5, C.amber); D.arrow(S, V.X(e[0] / 2), V.Y(e[1] / 2), V.X(e[0] / 2), V.Y(e[1] / 2) + 40, C.violet, 2); D.text(S, 'mg at l_c = l/2', V.X(e[0] / 2) + 8, V.Y(e[1] / 2) + 40, { size: 11, color: C.violet }); }
+      if (p.mod === 'one') { const e = [p.l * Math.cos(st.q[0]), p.l * Math.sin(st.q[0])]; D.link(S, V.X(0), V.Y(0), V.X(e[0]), V.Y(e[1]), 14, '#9aa4af'); D.joint(S, V.X(0), V.Y(0), 9); D.circle(S, V.X(e[0] / 2), V.Y(e[1] / 2), 5, C.amber); D.arrow(S, V.X(e[0] / 2), V.Y(e[1] / 2), V.X(e[0] / 2), V.Y(e[1] / 2) + 40, C.violet, 2); D.text(S, 'mg at l_c = l/2', V.X(e[0] / 2) + 8, V.Y(e[1] / 2) + 40, { size: 11, color: C.violet }); }
       else { const f = M.planar2R.fk(c.l1, c.l2, ...st.q); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 8 }); D.circle(S, V.X(f.ex), V.Y(f.ey), 9, C.amber); D.circle(S, V.X(f.x), V.Y(f.y), 9, C.amber); }
       S.set('K', c.K); S.set('P', c.P); S.set('L', c.K - c.P); S.set('tau', p.mod === 'one' ? M.fmt(c.tau[0], 4) : `(${M.fmt(c.tau[0], 3)}, ${M.fmt(c.tau[1], 3)})`); S.set('hold', p.mod === 'one' ? M.fmt(c.hold[0], 4) : `(${M.fmt(c.hold[0], 3)}, ${M.fmt(c.hold[1], 3)})`); S.set('in', p.mod === 'one' ? M.fmt(c.inr[0], 4) : `(${M.fmt(c.inr[0], 3)}, ${M.fmt(c.inr[1], 3)})`);
       const html = p.mod === 'one' ? `<div class="mono">q = θ = ${M.fmt(st.q[0] * R2D, 2)}°, θ̇ = ${M.fmt(st.qd[0], 3)} rad/s, θ̈ = ${M.fmt(st.qdd[0], 3)} rad/s²<br>K = ½ I_O θ̇², I_O = ml²/3 = ${M.fmt(c.I, 4)} kg·m² → K = ${M.fmt(c.K, 4)} J<br>P = m g l_c sin θ = ${M.fmt(c.P, 4)} J<br>∂L/∂θ̇ = I_O θ̇ → d/dt = I_O θ̈ = ${M.fmt(c.inr[0], 4)} N·m;  ∂L/∂θ = −m g l_c cos θ<br>τ = I_O θ̈ + m g l_c cos θ = ${M.fmt(c.inr[0], 4)} + ${M.fmt(c.hold[0], 4)} = <b>${M.fmt(c.tau[0], 4)} N·m</b>  (3.30)</div>`
-        : RIL.ui.matrix(c.M, 4, 'M(q) =') + RIL.ui.vec(st.qdd, 3, 'q̈ =') + RIL.ui.vec(c.cq, 4, 'C q̇ =') + RIL.ui.vec(c.hold, 4, 'G =') + RIL.ui.vec(c.tau, 4, 'τ = Mq̈ + Cq̇ + G =') + '<p style="margin:.3em 0 0;color:#8fa3c4">Set A = 0, θ₁ = 0°, θ₂ = 90°, m = 1, l = 0.5 to compare with Example 3.12 (which uses l₂ = 0.3 m and θ̈ = (1, 1)).</p>';
+        : RIL.ui.matrix(c.M, 4, 'M(q) =') + RIL.ui.vec(st.qdd, 3, 'q̈ =') + RIL.ui.vec(c.cq, 4, 'C q̇ =') + RIL.ui.vec(c.hold, 4, 'G =') + RIL.ui.vec(c.tau, 4, 'τ = Mq̈ + Cq̇ + G =') + '<p style="margin:.3em 0 0;color:#57606a">Set A = 0, θ₁ = 0°, θ₂ = 90°, m = 1, l = 0.5 to compare with Example 3.12 (which uses l₂ = 0.3 m and θ̈ = (1, 1)).</p>';
       RIL.setHTML(S.panel('d'), html, S, 'd');
     }
   });
@@ -245,13 +245,13 @@
     draw(S) {
       D.clear(S); const p = S.p;
       if (p.mode === 'pid') {
-        const cx = S.W * 0.3, cy = S.H * 0.55, R = Math.min(130, S.H * 0.35); D.circle(S, cx, cy, R + 14, null, '#3a5384', 1);
-        const ref = (S.ref ? S.ref[0] : 0); D.line(S, cx, cy, cx + Math.cos(-ref) * (R + 10), cy + Math.sin(-ref) * (R + 10), 'rgba(111,227,155,.7)', 2, [6, 4]); D.link(S, cx, cy, cx + Math.cos(-S.q[0]) * R, cy + Math.sin(-S.q[0]) * R, 16, '#8aa0c6'); D.joint(S, cx, cy, 12);
+        const cx = S.W * 0.3, cy = S.H * 0.55, R = Math.min(130, S.H * 0.35); D.circle(S, cx, cy, R + 14, null, '#8c959f', 1);
+        const ref = (S.ref ? S.ref[0] : 0); D.line(S, cx, cy, cx + Math.cos(-ref) * (R + 10), cy + Math.sin(-ref) * (R + 10), 'rgba(26,155,75,.7)', 2, [6, 4]); D.link(S, cx, cy, cx + Math.cos(-S.q[0]) * R, cy + Math.sin(-S.q[0]) * R, 16, '#9aa4af'); D.joint(S, cx, cy, 12);
         D.text(S, 'dashed: desired; link: actual (single joint, motor side)', 14, 22, { size: 11.5, color: C.muted });
         const J = p.J * 1e-4, B = 1e-4, wn = Math.sqrt(p.Kp / J), z = (B + p.Kd) / (2 * Math.sqrt(p.Kp * J)); S.set('wn', wn); S.set('z', z); S.set('e', ((S.ref ? S.ref[0] : 0) - S.q[0]) * R2D); S.set('ess', p.Ki > 0 ? 0 : -p.dist / Math.max(1e-9, p.Kp) * R2D); S.set('mp', S.peak > 0 ? Math.max(0, (S.peak - p.step * D2R) / (p.step * D2R) * 100) : 0); S.set('u', S.u ? S.u[0] : 0);
         D.box(S, S.W * 0.58, 30, Math.min(300, S.W * 0.38), 'Closed loop J ë + (B + K_d) ė + K_p e = τ_d', [['ωₙ', M.fmt(wn, 2) + ' rad/s'], ['ζ', M.fmt(z, 3)], ['2 % settling ≈ 4/(ζωₙ)', M.fmt(4 / (z * wn), 3) + ' s'], ['Steady error (P/PD)', M.fmt(-p.dist / Math.max(1e-9, p.Kp) * R2D, 3) + '°']]);
       } else {
-        const V = armView(S, 0.85), f = M.planar2R.fk(0.5, 0.3, ...S.q); if (S.ref) { const fr = M.planar2R.fk(0.5, 0.3, ...S.ref); D.poly(S, [[V.X(0), V.Y(0)], [V.X(fr.ex), V.Y(fr.ey)], [V.X(fr.x), V.Y(fr.y)]], null, 'rgba(111,227,155,.6)', 3, false); }
+        const V = armView(S, 0.85), f = M.planar2R.fk(0.5, 0.3, ...S.q); if (S.ref) { const fr = M.planar2R.fk(0.5, 0.3, ...S.ref); D.poly(S, [[V.X(0), V.Y(0)], [V.X(fr.ex), V.Y(fr.ey)], [V.X(fr.x), V.Y(fr.y)]], null, 'rgba(26,155,75,.6)', 3, false); }
         D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 }); D.text(S, 'green: desired configuration; arm: actual (full nonlinear dynamics)', 14, 22, { size: 11.5, color: C.muted });
         const Kp = p.Kp * 100, Kd = p.Kd * 100; S.set('wn', Math.sqrt(Kp)); S.set('z', Kd / (2 * Math.sqrt(Kp))); S.set('e', S.ref ? `(${M.fmt((S.ref[0] - S.q[0]) * R2D, 3)}, ${M.fmt((S.ref[1] - S.q[1]) * R2D, 3)})` : '—'); S.set('ess', p.err ? 'non-zero (model error)' : '≈ 0 (exact model)'); S.set('mp', '—'); S.set('u', S.u ? `(${M.fmt(S.u[0], 2)}, ${M.fmt(S.u[1], 2)})` : '—');
       }
@@ -282,8 +282,8 @@
     },
     draw(S) {
       D.clear(S); const p = S.p, V = S.V = armView(S, 0.85), f = M.planar2R.fk(0.5, 0.3, ...S.q);
-      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(242,165,22,.6)', 1.5, false); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
-      D.spring(S, V.X(f.x), V.Y(f.y), V.X(p.tx), V.Y(p.ty), 7, 5, 'rgba(76,194,255,.7)');
+      D.poly(S, S.trail.map(q => [V.X(q[0]), V.Y(q[1])]), null, 'rgba(199,119,0,.6)', 1.5, false); D.arm(S, V, [[0, 0], [f.ex, f.ey], [f.x, f.y]], { w: 12 });
+      D.spring(S, V.X(f.x), V.Y(f.y), V.X(p.tx), V.Y(p.ty), 7, 5, 'rgba(11,127,193,.7)');
       D.circle(S, V.X(p.tx), V.Y(p.ty), 9, null, C.green, 2.5); D.text(S, 'target', V.X(p.tx) + 12, V.Y(p.ty) - 8, { size: 11, color: C.green });
       const reach = Math.hypot(p.tx, p.ty) <= 0.8 && Math.hypot(p.tx, p.ty) >= 0.2; if (!reach) D.text(S, 'Target outside the workspace — the arm stretches towards it (boundary singularity)', 14, 22, { size: 12, color: C.red, weight: 700 });
       S.set('xd', `(${M.fmt(p.tx, 3)}, ${M.fmt(p.ty, 3)})`); S.set('x', `(${M.fmt(f.x, 3)}, ${M.fmt(f.y, 3)})`); S.set('e', Math.hypot(p.tx - f.x, p.ty - f.y) * 1000); S.set('tau', S.tau ? `(${M.fmt(S.tau[0], 2)}, ${M.fmt(S.tau[1], 2)})` : '—'); S.set('F', S.F ? `(${M.fmt(S.F[0], 2)}, ${M.fmt(S.F[1], 2)})` : '—');

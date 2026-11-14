@@ -51,7 +51,7 @@
   requestAnimationFrame(loop);
 
   /* ---------- chart wrapper ---------- */
-  const PALETTE = ['#f2a516', '#4cc2ff', '#6fe39b', '#ff7b7b', '#c4a4ff', '#ffd07a', '#9fb3d1'];
+  const PALETTE = ['#c77700', '#0b7fc1', '#1a9b4b', '#d1242f', '#8250df', '#b07d00', '#a8b1bb'];
   function makeChart(box, spec) {
     const canvas = h('canvas'); box.append(canvas);
     const datasets = spec.series.map((s, i) => ({
@@ -60,10 +60,10 @@
     }));
     const opt = {
       animation: false, responsive: true, maintainAspectRatio: false, parsing: false, normalized: true,
-      plugins: { legend: { display: spec.series.length > 1 || !!spec.legend, labels: { color: '#c9d6ec', boxWidth: 10, font: { size: 10 } } }, tooltip: { enabled: true } },
+      plugins: { legend: { display: spec.series.length > 1 || !!spec.legend, labels: { color: '#424a53', boxWidth: 10, font: { size: 10 } } }, tooltip: { enabled: true } },
       scales: {
-        x: { type: spec.xType || 'linear', title: { display: !!spec.x, text: spec.x, color: '#8fa3c4', font: { size: 10 } }, ticks: { color: '#8fa3c4', font: { size: 10 }, maxTicksLimit: 7 }, grid: { color: 'rgba(143,163,196,.12)' } },
-        y: { type: spec.yType || 'linear', title: { display: !!spec.y, text: spec.y, color: '#8fa3c4', font: { size: 10 } }, ticks: { color: '#8fa3c4', font: { size: 10 }, maxTicksLimit: 6 }, grid: { color: 'rgba(143,163,196,.12)' } }
+        x: { type: spec.xType || 'linear', title: { display: !!spec.x, text: spec.x, color: '#57606a', font: { size: 10 } }, ticks: { color: '#57606a', font: { size: 10 }, maxTicksLimit: 7 }, grid: { color: 'rgba(87,96,106,.12)' } },
+        y: { type: spec.yType || 'linear', title: { display: !!spec.y, text: spec.y, color: '#57606a', font: { size: 10 } }, ticks: { color: '#57606a', font: { size: 10 }, maxTicksLimit: 6 }, grid: { color: 'rgba(87,96,106,.12)' } }
       }
     };
     if (spec.xmin !== undefined) opt.scales.x.min = spec.xmin; if (spec.xmax !== undefined) opt.scales.x.max = spec.xmax;
@@ -288,10 +288,10 @@
   /* ---------- 2D drawing helpers shared by canvas simulations ---------- */
   RIL.draw = {
     clear(S, bg) { const g = S.ctx; g.clearRect(0, 0, S.W, S.H); if (bg) { g.fillStyle = bg; g.fillRect(0, 0, S.W, S.H); } },
-    grid(S, step = 40, color = 'rgba(143,163,196,.08)') { const g = S.ctx; g.strokeStyle = color; g.lineWidth = 1; g.beginPath(); for (let x = 0; x < S.W; x += step) { g.moveTo(x + .5, 0); g.lineTo(x + .5, S.H); } for (let y = 0; y < S.H; y += step) { g.moveTo(0, y + .5); g.lineTo(S.W, y + .5); } g.stroke(); },
-    text(S, txt, x, y, o = {}) { const g = S.ctx; g.font = `${o.weight || 500} ${o.size || 12}px Archivo, system-ui, sans-serif`; g.fillStyle = o.color || '#dbe5f5'; g.textAlign = o.align || 'left'; g.textBaseline = o.base || 'alphabetic'; g.fillText(txt, x, y); },
-    line(S, x1, y1, x2, y2, color = '#dbe5f5', w = 2, dash) { const g = S.ctx; g.strokeStyle = color; g.lineWidth = w; g.setLineDash(dash || []); g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.setLineDash([]); },
-    arrow(S, x1, y1, x2, y2, color = '#f2a516', w = 2, head = 9) {
+    grid(S, step = 40, color = 'rgba(87,96,106,.08)') { const g = S.ctx; g.strokeStyle = color; g.lineWidth = 1; g.beginPath(); for (let x = 0; x < S.W; x += step) { g.moveTo(x + .5, 0); g.lineTo(x + .5, S.H); } for (let y = 0; y < S.H; y += step) { g.moveTo(0, y + .5); g.lineTo(S.W, y + .5); } g.stroke(); },
+    text(S, txt, x, y, o = {}) { const g = S.ctx; g.font = `${o.weight || 500} ${o.size || 12}px Archivo, system-ui, sans-serif`; g.fillStyle = o.color || '#1f2328'; g.textAlign = o.align || 'left'; g.textBaseline = o.base || 'alphabetic'; g.fillText(txt, x, y); },
+    line(S, x1, y1, x2, y2, color = '#1f2328', w = 2, dash) { const g = S.ctx; g.strokeStyle = color; g.lineWidth = w; g.setLineDash(dash || []); g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.setLineDash([]); },
+    arrow(S, x1, y1, x2, y2, color = '#c77700', w = 2, head = 9) {
       const g = S.ctx, a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 1) return;
       g.strokeStyle = color; g.fillStyle = color; g.lineWidth = w; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2 - Math.cos(a) * head * .6, y2 - Math.sin(a) * head * .6); g.stroke();
       g.beginPath(); g.moveTo(x2, y2); g.lineTo(x2 - head * Math.cos(a - .4), y2 - head * Math.sin(a - .4)); g.lineTo(x2 - head * Math.cos(a + .4), y2 - head * Math.sin(a + .4)); g.closePath(); g.fill();
@@ -300,20 +300,20 @@
     rect(S, x, y, w, hh, fill, stroke, lw = 1.5, r = 0) { const g = S.ctx; g.beginPath(); if (r && g.roundRect) g.roundRect(x, y, w, hh, r); else g.rect(x, y, w, hh); if (fill) { g.fillStyle = fill; g.fill(); } if (stroke) { g.strokeStyle = stroke; g.lineWidth = lw; g.stroke(); } },
     poly(S, pts, fill, stroke, w = 2, close = true) { const g = S.ctx; if (!pts.length) return; g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]); if (close) g.closePath(); if (fill) { g.fillStyle = fill; g.fill(); } if (stroke) { g.strokeStyle = stroke; g.lineWidth = w; g.stroke(); } },
     /** link drawn as rounded bar between two points */
-    link(S, x1, y1, x2, y2, w = 14, fill = '#6f86ad', stroke = '#c9d6ec') { const g = S.ctx; g.lineCap = 'round'; g.strokeStyle = stroke; g.lineWidth = w + 3; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.strokeStyle = fill; g.lineWidth = w; g.stroke(); g.lineCap = 'butt'; },
-    joint(S, x, y, r = 9) { RIL.draw.circle(S, x, y, r, '#0e1d38', '#f2a516', 2.5); RIL.draw.circle(S, x, y, 2.5, '#f2a516'); },
-    frame2(S, x, y, ang, len = 34, label) { const c = Math.cos(ang), s = Math.sin(ang); RIL.draw.arrow(S, x, y, x + c * len, y - s * len, '#e5484d', 2, 7); RIL.draw.arrow(S, x, y, x - s * len, y - c * len, '#30a46c', 2, 7); if (label) RIL.draw.text(S, label, x + 6, y + 14, { size: 11, color: '#8fa3c4' }); },
+    link(S, x1, y1, x2, y2, w = 14, fill = '#6e7781', stroke = '#8c959f') { const g = S.ctx; g.lineCap = 'round'; g.strokeStyle = stroke; g.lineWidth = w + 3; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.strokeStyle = fill; g.lineWidth = w; g.stroke(); g.lineCap = 'butt'; },
+    joint(S, x, y, r = 9) { RIL.draw.circle(S, x, y, r, '#2b3440', '#c77700', 2.5); RIL.draw.circle(S, x, y, 2.5, '#c77700'); },
+    frame2(S, x, y, ang, len = 34, label) { const c = Math.cos(ang), s = Math.sin(ang); RIL.draw.arrow(S, x, y, x + c * len, y - s * len, '#e5484d', 2, 7); RIL.draw.arrow(S, x, y, x - s * len, y - c * len, '#30a46c', 2, 7); if (label) RIL.draw.text(S, label, x + 6, y + 14, { size: 11, color: '#57606a' }); },
     /** axes mapping world (metres) to screen; returns {X,Y,s,ox,oy} */
     view(S, cx, cy, scale) { return { s: scale, X: x => cx + x * scale, Y: y => cy - y * scale, inv: (px, py) => [(px - cx) / scale, (cy - py) / scale] }; },
     /** miniature waveform/trace inside the canvas */
-    trace(S, data, x, y, w, hh, color = '#4cc2ff', ymin, ymax, label) {
-      const g = S.ctx; RIL.draw.rect(S, x, y, w, hh, 'rgba(6,14,32,.75)', 'rgba(143,163,196,.3)', 1, 4);
-      if (label) RIL.draw.text(S, label, x + 6, y + 13, { size: 10, color: '#8fa3c4' });
+    trace(S, data, x, y, w, hh, color = '#0b7fc1', ymin, ymax, label) {
+      const g = S.ctx; RIL.draw.rect(S, x, y, w, hh, 'rgba(255,255,255,.9)', 'rgba(87,96,106,.3)', 1, 4);
+      if (label) RIL.draw.text(S, label, x + 6, y + 13, { size: 10, color: '#57606a' });
       if (data.length < 2) return; const lo = ymin ?? Math.min(...data), hi = ymax ?? Math.max(...data); const rg = hi - lo || 1;
       g.strokeStyle = color; g.lineWidth = 1.6; g.beginPath();
       data.forEach((v, i) => { const px = x + 4 + (w - 8) * i / (data.length - 1), py = y + hh - 4 - (hh - 20) * (v - lo) / rg; i ? g.lineTo(px, py) : g.moveTo(px, py); }); g.stroke();
     },
-    spring(S, x1, y1, x2, y2, coils = 8, amp = 8, color = '#c9d6ec') {
+    spring(S, x1, y1, x2, y2, coils = 8, amp = 8, color = '#8c959f') {
       const g = S.ctx, L = Math.hypot(x2 - x1, y2 - y1), a = Math.atan2(y2 - y1, x2 - x1); g.save(); g.translate(x1, y1); g.rotate(a); g.strokeStyle = color; g.lineWidth = 2; g.beginPath(); g.moveTo(0, 0); const n = coils * 2; for (let i = 1; i < n; i++) g.lineTo(L * (0.1 + 0.8 * i / n), (i % 2 ? amp : -amp)); g.lineTo(L, 0); g.stroke(); g.restore();
     }
   };

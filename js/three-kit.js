@@ -7,7 +7,7 @@
   const M = RIL.M;
   if (!window.THREE) { console.warn('THREE not loaded'); return; }
   const T3 = window.THREE;
-  const COL = { x: 0xe5484d, y: 0x30a46c, z: 0x3e7bfa, link: 0x8aa0c6, joint: 0xf2a516, base: 0x3b4f75, dark: 0x22355c, white: 0xe9eef7, amber: 0xf2a516, signal: 0x4cc2ff };
+  const COL = { x: 0xe5484d, y: 0x30a46c, z: 0x3e7bfa, link: 0x9aa4af, joint: 0xf2a516, base: 0x6e7781, dark: 0x57606a, white: 0xe9eef7, amber: 0xf2a516, signal: 0x1f9bd7 };
   const matCache = {};
   const mat = (color, opts = {}) => { const k = color + JSON.stringify(opts); if (!matCache[k]) matCache[k] = new T3.MeshStandardMaterial(Object.assign({ color, metalness: 0.35, roughness: 0.5 }, opts)); return matCache[k]; };
 
@@ -22,11 +22,11 @@
     camera.position.set(...pos);
     const controls = new T3.OrbitControls(camera, renderer.domElement);
     controls.target.set(...tgt); controls.enableDamping = true; controls.dampingFactor = 0.12; controls.update(); controls.saveState();
-    scene.add(new T3.HemisphereLight(0xdfe8ff, 0x1a2540, 0.9));
+    scene.add(new T3.HemisphereLight(0xffffff, 0x9aa3ad, 0.9));
     const d1 = new T3.DirectionalLight(0xffffff, 0.85); d1.position.set(3, -2, 5); scene.add(d1);
-    const d2 = new T3.DirectionalLight(0x9fbfff, 0.35); d2.position.set(-3, 3, 2); scene.add(d2);
+    const d2 = new T3.DirectionalLight(0xffffff, 0.35); d2.position.set(-3, 3, 2); scene.add(d2);
     if (cam.grid !== false) {
-      const grid = new T3.GridHelper(cam.gridSize || 4, cam.gridDiv || 20, 0x3a5384, 0x22355c);
+      const grid = new T3.GridHelper(cam.gridSize || 4, cam.gridDiv || 20, 0xb8c0cc, 0xdde2e8);
       grid.rotation.x = Math.PI / 2; grid.material.transparent = true; grid.material.opacity = 0.55; scene.add(grid);
     }
     const labelLayer = document.createElement('div'); labelLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden';

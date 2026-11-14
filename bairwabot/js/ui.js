@@ -525,45 +525,45 @@
     const wp = (n) => loc(R.nodes[n].getWorldPosition(new T.Vector3()));
     // history
     const now = performance.now() / 1000; if (now - hT > 0.033) { hT = now; hist.push([M.q.LHipPitch, M.q.LKnee, M.q.RHipPitch, M.q.RKnee, O.contacts.L, O.contacts.R, loc(O.eeW.R), loc(O.com)]); if (hist.length > 200) hist.shift(); }
-    x.fillStyle = '#081022'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, H);
     const top = H * 0.64, s = Math.min(W * 0.26, top * 0.5) / 1.0;
     x.font = '600 12px system-ui, sans-serif';
     const panel = (cx, title, proj) => {
       const base = top - 14;
-      x.strokeStyle = '#1e3a5f'; x.lineWidth = 1; x.beginPath(); for (let g = -1.5; g <= 1.5; g += 0.25) { const X = cx + g * s; x.moveTo(X, 20); x.lineTo(X, base); } for (let g = 0; g <= 1.9; g += 0.25) { const Y = base - g * s; x.moveTo(cx - 1.5 * s, Y); x.lineTo(cx + 1.5 * s, Y); } x.stroke();
-      x.strokeStyle = '#38bdf8'; x.beginPath(); x.moveTo(cx - 1.5 * s, base); x.lineTo(cx + 1.5 * s, base); x.stroke();
-      x.fillStyle = '#67e8f9'; x.fillText(title, cx - 1.5 * s + 4, 16);
+      x.strokeStyle = '#e5e8ec'; x.lineWidth = 1; x.beginPath(); for (let g = -1.5; g <= 1.5; g += 0.25) { const X = cx + g * s; x.moveTo(X, 20); x.lineTo(X, base); } for (let g = 0; g <= 1.9; g += 0.25) { const Y = base - g * s; x.moveTo(cx - 1.5 * s, Y); x.lineTo(cx + 1.5 * s, Y); } x.stroke();
+      x.strokeStyle = '#0e7490'; x.beginPath(); x.moveTo(cx - 1.5 * s, base); x.lineTo(cx + 1.5 * s, base); x.stroke();
+      x.fillStyle = '#0e7490'; x.fillText(title, cx - 1.5 * s + 4, 16);
       const P = (p) => [cx + proj(p) * s, base - p.y * s];
       // trajectories
-      if (hist.length > 2) { x.strokeStyle = 'rgba(34,211,238,0.7)'; x.beginPath(); hist.forEach((h, i) => { const q = P(h[6]); i ? x.lineTo(q[0], q[1]) : x.moveTo(q[0], q[1]); }); x.stroke(); x.strokeStyle = 'rgba(250,204,21,0.8)'; x.beginPath(); hist.forEach((h, i) => { const q = P(h[7]); i ? x.lineTo(q[0], q[1]) : x.moveTo(q[0], q[1]); }); x.stroke(); }
+      if (hist.length > 2) { x.strokeStyle = 'rgba(14,116,144,0.7)'; x.beginPath(); hist.forEach((h, i) => { const q = P(h[6]); i ? x.lineTo(q[0], q[1]) : x.moveTo(q[0], q[1]); }); x.stroke(); x.strokeStyle = 'rgba(191,135,0,0.8)'; x.beginPath(); hist.forEach((h, i) => { const q = P(h[7]); i ? x.lineTo(q[0], q[1]) : x.moveTo(q[0], q[1]); }); x.stroke(); }
       // bones
       x.lineWidth = 3; x.lineCap = 'round';
-      for (const [a, b] of BB.world.BONES) { const p1 = P(wp(a)), p2 = P(wp(b)); x.strokeStyle = /L$/.test(b) ? '#93c5fd' : /R$/.test(b) ? '#f9a8d4' : '#e2e8f0'; x.beginPath(); x.moveTo(p1[0], p1[1]); x.lineTo(p2[0], p2[1]); x.stroke(); }
-      for (const S of ['L', 'R']) { const so = R.soles[S], h = P(loc(so.heel.clone().applyMatrix4(so.node.matrixWorld))), t = P(loc(so.toe.clone().applyMatrix4(so.node.matrixWorld))); x.strokeStyle = O.contacts[S] ? '#22c55e' : '#64748b'; x.beginPath(); x.moveTo(h[0], h[1]); x.lineTo(t[0], t[1]); x.stroke(); }
-      const hd = P(loc(new T.Vector3(0, 0.1, 0).applyMatrix4(R.nodes.neck.matrixWorld))); x.strokeStyle = '#e2e8f0'; x.beginPath(); x.arc(hd[0], hd[1], 0.1 * s, 0, 7); x.stroke();
+      for (const [a, b] of BB.world.BONES) { const p1 = P(wp(a)), p2 = P(wp(b)); x.strokeStyle = /L$/.test(b) ? '#0969da' : /R$/.test(b) ? '#bf3989' : '#1f2328'; x.beginPath(); x.moveTo(p1[0], p1[1]); x.lineTo(p2[0], p2[1]); x.stroke(); }
+      for (const S of ['L', 'R']) { const so = R.soles[S], h = P(loc(so.heel.clone().applyMatrix4(so.node.matrixWorld))), t = P(loc(so.toe.clone().applyMatrix4(so.node.matrixWorld))); x.strokeStyle = O.contacts[S] ? '#1a7f37' : '#8c959f'; x.beginPath(); x.moveTo(h[0], h[1]); x.lineTo(t[0], t[1]); x.stroke(); }
+      const hd = P(loc(new T.Vector3(0, 0.1, 0).applyMatrix4(R.nodes.neck.matrixWorld))); x.strokeStyle = '#1f2328'; x.beginPath(); x.arc(hd[0], hd[1], 0.1 * s, 0, 7); x.stroke();
       // joints with DOF counts
       const J = [['neck', 3], ['torso', 3], ['shL', 3], ['shR', 3], ['elL', 2], ['elR', 2], ['wrL', 3], ['wrR', 3], ['hipL', 3], ['hipR', 3], ['kneeL', 1], ['kneeR', 1], ['ankL', 2], ['ankR', 2], ['gripL', 6], ['gripR', 6]];
-      x.font = '10px system-ui'; for (const [n, d] of J) { const q = P(wp(n)); x.fillStyle = '#f59e0b'; x.beginPath(); x.arc(q[0], q[1], 4, 0, 7); x.fill(); x.fillStyle = '#fde68a'; x.fillText(d, q[0] + 5, q[1] - 4); }
+      x.font = '10px system-ui'; for (const [n, d] of J) { const q = P(wp(n)); x.fillStyle = '#bc4c00'; x.beginPath(); x.arc(q[0], q[1], 4, 0, 7); x.fill(); x.fillStyle = '#9a6700'; x.fillText(d, q[0] + 5, q[1] - 4); }
       // sensors
-      for (const sn of R.sensors) { const q = P(loc(sn.anchor.getWorldPosition(new T.Vector3()))); x.fillStyle = '#22d3ee'; x.fillRect(q[0] - 3, q[1] - 3, 6, 6); }
+      for (const sn of R.sensors) { const q = P(loc(sn.anchor.getWorldPosition(new T.Vector3()))); x.fillStyle = '#0e7490'; x.fillRect(q[0] - 3, q[1] - 3, 6, 6); }
       // CoM / CoP
-      const cm = P(loc(O.com)), cp = P(loc(O.cop)); x.fillStyle = '#facc15'; x.beginPath(); x.arc(cm[0], cm[1], 5, 0, 7); x.fill(); x.setLineDash([4, 3]); x.strokeStyle = '#facc15'; x.lineWidth = 1; x.beginPath(); x.moveTo(cm[0], cm[1]); x.lineTo(cm[0], base); x.stroke(); x.setLineDash([]); x.fillStyle = '#ef4444'; x.fillRect(cp[0] - 4, base - 2, 8, 4);
+      const cm = P(loc(O.com)), cp = P(loc(O.cop)); x.fillStyle = '#bf8700'; x.beginPath(); x.arc(cm[0], cm[1], 5, 0, 7); x.fill(); x.setLineDash([4, 3]); x.strokeStyle = '#bf8700'; x.lineWidth = 1; x.beginPath(); x.moveTo(cm[0], cm[1]); x.lineTo(cm[0], base); x.stroke(); x.setLineDash([]); x.fillStyle = '#ef4444'; x.fillRect(cp[0] - 4, base - 2, 8, 4);
     };
     panel(W * 0.27, 'FRONT VIEW (x–y)', (p) => p.l);
     panel(W * 0.73, 'SIDE VIEW (z–y)', (p) => p.f);
     // legend
-    x.font = '11px system-ui'; const lg = [['#f59e0b', 'joint (n = DOF)'], ['#22d3ee', 'sensor'], ['#facc15', 'CoM + trace'], ['#ef4444', 'CoP'], ['#22c55e', 'foot in contact'], ['rgba(34,211,238,0.9)', 'right-hand trajectory']];
-    lg.forEach((l, i) => { x.fillStyle = l[0]; x.fillRect(12 + i * (W / 6.2), top - 6, 9, 9); x.fillStyle = '#cbd5e1'; x.fillText(l[1], 25 + i * (W / 6.2), top + 3); });
+    x.font = '11px system-ui'; const lg = [['#bc4c00', 'joint (n = DOF)'], ['#0e7490', 'sensor'], ['#bf8700', 'CoM + trace'], ['#ef4444', 'CoP'], ['#1a7f37', 'foot in contact'], ['rgba(14,116,144,0.9)', 'right-hand trajectory']];
+    lg.forEach((l, i) => { x.fillStyle = l[0]; x.fillRect(12 + i * (W / 6.2), top - 6, 9, 9); x.fillStyle = '#424a53'; x.fillText(l[1], 25 + i * (W / 6.2), top + 3); });
     // gait diagram
     const gy = top + 18, gh = H - gy - 14; if (gh < 40) return;
-    x.fillStyle = '#0b1730'; x.fillRect(10, gy, W - 20, gh); x.fillStyle = '#67e8f9'; x.font = '600 12px system-ui'; x.fillText('GAIT DIAGRAM – joint angles (last ≈ 6 s) and ground contact', 18, gy + 15);
+    x.fillStyle = '#ffffff'; x.fillRect(10, gy, W - 20, gh); x.fillStyle = '#0e7490'; x.font = '600 12px system-ui'; x.fillText('GAIT DIAGRAM – joint angles (last ≈ 6 s) and ground contact', 18, gy + 15);
     const gx0 = 50, gw = W - 70, map = (v) => gy + 22 + (gh - 44) * (1 - (v + 30) / 160);
-    x.strokeStyle = '#1e3a5f'; x.lineWidth = 1; x.fillStyle = '#64748b'; x.font = '10px system-ui';
+    x.strokeStyle = '#e5e8ec'; x.lineWidth = 1; x.fillStyle = '#8c959f'; x.font = '10px system-ui';
     [-30, 0, 45, 90, 130].forEach(v => { x.beginPath(); x.moveTo(gx0, map(v)); x.lineTo(gx0 + gw, map(v)); x.stroke(); x.fillText(v + '°', 16, map(v) + 3); });
-    const cols = ['#93c5fd', '#3b82f6', '#f9a8d4', '#ec4899'], names = ['L hip', 'L knee', 'R hip', 'R knee'];
+    const cols = ['#0969da', '#3b82f6', '#bf3989', '#ec4899'], names = ['L hip', 'L knee', 'R hip', 'R knee'];
     for (let k = 0; k < 4; k++) { x.strokeStyle = cols[k]; x.lineWidth = 1.6; x.beginPath(); hist.forEach((h, i) => { const X = gx0 + gw * i / 199, Y = map(h[k]); i ? x.lineTo(X, Y) : x.moveTo(X, Y); }); x.stroke(); x.fillStyle = cols[k]; x.fillText(names[k], gx0 + gw - 230 + k * 58, gy + 15); }
-    hist.forEach((h, i) => { const X = gx0 + gw * i / 199; if (h[4]) { x.fillStyle = '#93c5fd'; x.fillRect(X, gy + gh - 18, gw / 199 + 0.5, 5); } if (h[5]) { x.fillStyle = '#f9a8d4'; x.fillRect(X, gy + gh - 11, gw / 199 + 0.5, 5); } });
-    x.fillStyle = '#94a3b8'; x.fillText('contact L / R', gx0 + 4, gy + gh - 20);
+    hist.forEach((h, i) => { const X = gx0 + gw * i / 199; if (h[4]) { x.fillStyle = '#0969da'; x.fillRect(X, gy + gh - 18, gw / 199 + 0.5, 5); } if (h[5]) { x.fillStyle = '#bf3989'; x.fillRect(X, gy + gh - 11, gw / 199 + 0.5, 5); } });
+    x.fillStyle = '#57606a'; x.fillText('contact L / R', gx0 + 4, gy + gh - 20);
   };
 
   /* ================================================================ BOOT ================================================================ */

@@ -90,7 +90,7 @@
       const q = [0.9 * Math.sin(0.35 * t), 0.5 + 0.35 * Math.sin(0.5 * t + 1), -0.4 + 0.45 * Math.sin(0.45 * t), 0.8 * Math.sin(0.6 * t), 0.7 + 0.5 * Math.sin(0.7 * t + 0.5), 1.2 * Math.sin(0.3 * t)];
       const T = rob.update(q); K.applyT(tf, T[6]);
       const p = M.pof(T[6]); trail.push(p); if (trail.length > 260) trail.shift(); if (trail.length > 2) K.updateLine(line, trail);
-      ro.innerHTML = `<div style="color:#dbe5f5;font-weight:650;margin-bottom:4px">Live forward kinematics, 6-DOF arm</div>` + q.map((v, i) => `<div><span>θ<sub>${i + 1}</sub></span><b>${(v * M.R2D).toFixed(1)}°</b></div>`).join('') + `<div><span>TCP x, y, z</span><b>${p.map(v => v.toFixed(3)).join(', ')} m</b></div>`;
+      ro.innerHTML = `<div style="color:var(--ink);font-weight:650;margin-bottom:4px">Live forward kinematics, 6-DOF arm</div>` + q.map((v, i) => `<div><span>θ<sub>${i + 1}</sub></span><b>${(v * M.R2D).toFixed(1)}°</b></div>`).join('') + `<div><span>TCP x, y, z</span><b>${p.map(v => v.toFixed(3)).join(', ')} m</b></div>`;
       tk.render(); requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
@@ -273,7 +273,7 @@
       </div></section>
       <section class="home-section" id="humanoid-lab"><h2>Live lab</h2>
         <p class="muted">Drag to rotate, scroll to zoom, right-drag to pan. Voice commands need microphone permission; for the best experience <a href="${lab}">open the lab full screen</a>.</p>
-        <iframe src="${lab}" title="BAIRWABOT – Humanoid Robotics Virtual Lab" loading="lazy" allow="microphone; autoplay; fullscreen" allowfullscreen style="width:100%;height:min(90vh,860px);border:0;border-radius:12px;background:#070c18;box-shadow:0 6px 30px rgba(0,0,0,.25)"></iframe>
+        <iframe src="${lab}" title="BAIRWABOT – Humanoid Robotics Virtual Lab" loading="lazy" allow="microphone; autoplay; fullscreen" allowfullscreen style="width:100%;height:min(90vh,860px);border:0;border-radius:12px;background:#ffffff;border:1px solid var(--rule);box-shadow:0 6px 30px rgba(0,0,0,.25)"></iframe>
         <p class="muted" style="font-size:.9rem;margin-top:10px">Values marked MODEL are computed from the animated kinematic model; values marked SIM are illustrative. Object recognition and detection confidences are simulated, and locomotion is kinematic rather than a full physics simulation.</p>
       </section>`;
   }
