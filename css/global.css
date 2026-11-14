@@ -30,7 +30,7 @@
   --font-ui: "Archivo", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-read: "Source Serif 4", "Georgia", "Times New Roman", serif;
   --measure: 72ch;
-  --gutter: clamp(16px, 3vw, 32px);
+  --gutter: clamp(10px, 1.2vw, 20px);
 }
 :root[data-theme="dark"] {
   --paper: #0b1427;
@@ -64,7 +64,7 @@ h2 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-stretch: 115%; font-weight: 7
 h3 { font-size: 1.2rem; font-weight: 700; }
 h4 { font-size: 1rem; font-weight: 700; }
 p { margin: 0 0 1em; }
-.wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
+.wrap { max-width: none; width: 100%; margin: 0; padding: 0 var(--gutter); }
 .muted { color: var(--ink-3); }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 .skip { position:absolute; left:-999px; top:8px; background:var(--amber); color:#000; padding:6px 10px; z-index:100; }

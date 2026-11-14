@@ -2,6 +2,7 @@
    Leave a field as an empty string to hide it. No logos are bundled. */
 window.RIL_CONFIG = {
   courseTitle: 'Robotics and Instrumentation',
+  courseCode: 'M26TJS01XX',           // shown on the Course Overview page and in reports; '' uses the syllabus value
   instructor: 'Dr Bansilal Bairwa',
   instructorEmail: 'bansilal.bairwa@reva.edu.in',
   instructorPhoto: 'assets/img/instructor.jpg',   // relative to the site root

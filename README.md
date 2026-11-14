@@ -15,10 +15,6 @@ An interactive, browser-based laboratory for the four-unit course **Robotics and
 
 The site is fully static: no server, database, login or build step is needed to *view* it. All libraries are bundled in `assets/vendor/`, so it also runs offline (web fonts fall back to system fonts).
 
-## Humanoid Robot – BAIRWABOT Virtual Lab
-
-`humanoid-robot.html` (menu: **Humanoid Robot**) introduces and embeds the BAIRWABOT lab, a 3D 46-DOF humanoid with 30 modules (gait, IK, CoM/ZMP balance, perception, voice interaction in English and Hindi, 150 quiz questions). The lab itself is the self-contained folder `bairwabot/` (open `bairwabot/index.html` for full screen); see `bairwabot/README.md` for its details. It does not depend on the rest of the site.
-
 ## Run it locally
 
 Any static web server works, for example:
@@ -102,3 +98,22 @@ Every simulation panel has **Start/Pause/Resume**, **Reset**, **Step**, a **spee
 * Theory and notation follow the course lecture notes (Units I–IV) and the syllabus; equation numbers such as (3.14) refer to the notes. Additional explanations not in the notes are marked **Supplementary**.
 * Teaching models are labelled as such: the 6-axis arm is an educational DH model (not a vendor robot), the robot language is generic, vision classification is rule-based (no trained AI model), illustrative numbers (automation cycle times, noise-coupling magnitudes, smart-factory wear) are flagged in the simulations.
 * See `docs/QUALITY_ASSURANCE_REPORT.md` for what was tested and the known limitations.
+
+## Laboratory modules (added November 2026)
+
+| Page | What it does |
+|---|---|
+| `course.html` | Course information, six COs, CO mapping dashboard, syllabus traceability matrix |
+| `labs.html`, `labs/lab-01…18.html` | 18 practicals: theory, references with page numbers, equations, stations, procedure, observations, 5 MCQs, report |
+| `assembly.html` | Robot Assembly Studio (shared digital twin) |
+| `workcell.html` | Experimental Workcell: teach pendant, tasks, kinematic and dynamic models, live mathematics, graphs |
+| `math.html` | Mathematical Workspace |
+| `analytics.html` | Graphs and metrics of saved runs |
+| `library.html` | Course notes viewer with page map and search; books and courses |
+| `assessment.html`, `notebook.html`, `reports.html`, `dashboard.html` | Scores, notebook, PDF reports, student and faculty views |
+| `flagship.html` | 29-step 6-DOF manipulator practical |
+| `hardware.html` | Optional Web Serial monitor |
+
+Run `node tools/build.js` after editing anything in `js/data/`, `js/sims/` or `js/lab/`. Tests: `node tests/math.test.js`, `node tests/lab.test.js`. See `docs/PROJECT_AUDIT.md`, `docs/ARCHITECTURE.md`, `docs/DOCUMENT_INVENTORY.md`, `docs/DEVELOPMENT_ROADMAP.md`.
+
+To view the site, open `index.html` in Chrome or Edge, or serve the folder (`python -m http.server`) and open `http://localhost:8000`.

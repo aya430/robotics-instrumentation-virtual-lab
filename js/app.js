@@ -31,7 +31,7 @@
   function slidesSection() {
     const N = RIL.notes || []; if (!N.length) return '';
     return `<section class="home-section"><h2>Lecture slides</h2>
-      <p class="muted" style="max-width:70ch">The unit slide decks as a page-turning flipbook. <b>For study purposes only.</b></p>
+      <p class="muted">The unit slide decks as a page-turning flipbook. <b>For study purposes only.</b></p>
       <div class="slides-grid">${N.map(d => { const u = units.find(x => x.n === d.n) || {}; return `<a class="slide-card" href="${notesUrl(d.n)}"><img src="${R}notes/unit-${d.n}/p001.webp" alt="" loading="lazy" width="320" height="180"><span><b>Unit ${u.roman || d.n}</b> ${esc(d.title.replace(/^Unit [IVX]+:\s*/, ''))}<small>${d.pages} pages</small></span></a>`; }).join('')}</div></section>`;
   }
 
@@ -43,15 +43,15 @@
       <div>
         <h1>Robotics &amp; Instrumentation<span>Interactive Virtual Learning Laboratory</span></h1>
         <p class="tagline">Visualize | Simulate | Experiment | Understand</p>
-        <p class="lead">Every topic of the four-unit syllabus is taught here through working models: move a joint and the forward-kinematics numbers change, raise the ADC resolution and the quantisation staircase shrinks, retune a PID gain and the response graph redraws. ${totalTopics} topic modules, ${totalSims} simulations and ${(RIL.experiments || []).length} virtual experiments.</p>
-        <div class="actions"><a class="btn amber" href="${R}units/unit-1/index.html">Start with Unit I</a><a class="btn ghost" href="${R}simulations.html">Browse all simulations</a><a class="btn ghost" href="${R}experiments.html">Virtual experiments</a></div>
+        <p class="lead">Every topic of the four-unit syllabus is taught here through working models: move a joint and the forward-kinematics numbers change, raise the ADC resolution and the quantisation staircase shrinks, retune a PID gain and the response graph redraws. ${totalTopics} topic modules, ${totalSims} simulations and ${(RIL.labs || []).length} laboratory practicals with reports.</p>
+        <div class="actions"><a class="btn amber" href="${R}units/unit-1/index.html">Start with Unit I</a><a class="btn ghost" href="${R}simulations.html">Browse all simulations</a><a class="btn ghost" href="${R}labs.html">18 virtual experiments</a><a class="btn ghost" href="${R}assembly.html">Build a robot</a></div>
         <p class="inst-line">Course: ${esc(RIL_CONFIG.courseTitle)}${RIL_CONFIG.instructor ? ' · Instructor: ' + window.RIL_INSTRUCTOR_HTML() : ''}</p>
       </div>
       <div class="hero-stage" id="hero-stage" aria-label="Live 6-DOF robot with forward kinematics readout"><div class="hero-readout" id="hero-ro"></div></div>
     </div>`;
     main.before(hero);
     main.innerHTML = `<section class="home-section"><h2>Course units</h2>
-      <p class="muted" style="max-width:70ch">The units build on each other: sensing and measurement first, then actuation and signal processing, then the mathematics of manipulator motion, and finally complete automated systems.</p>
+      <p class="muted">The units build on each other: sensing and measurement first, then actuation and signal processing, then the mathematics of manipulator motion, and finally complete automated systems.</p>
       <ol class="units-list">${units.map(u => `<li class="unit-row">
         <div class="unit-num" aria-hidden="true">${u.roman}</div>
         <div><h3><a href="${R}units/unit-${u.n}/index.html" style="color:inherit;text-decoration:none">Unit ${u.roman} – ${esc(u.title)}</a></h3><p>${u.desc}</p>
@@ -65,10 +65,10 @@
         <div><h4>Virtual experiment</h4><p>Record observations into a table, export them as CSV and compare with the theory.</p></div>
         <div><h4>Check yourself</h4><p>Unit quizzes with numerical problems give feedback and explanations only after you submit.</p></div>
       </div></section>
-      <section class="home-section"><h2>Humanoid Robot – BAIRWABOT Virtual Lab</h2>
-        <p class="muted" style="max-width:70ch">A 3D 46-DOF humanoid with 30 modules on gait, inverse kinematics, balance (CoM and ZMP), perception and human-robot interaction, including voice commands in English and Hindi.</p>
-        <div class="actions" style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn amber" href="${R}humanoid-robot.html">Explore the humanoid robot</a><a class="btn ghost" href="${R}bairwabot/index.html">Open the lab full screen</a></div></section>
       ${slidesSection()}
+      <section class="home-section"><h2>Humanoid Robot – BAIRWABOT Virtual Lab</h2>
+        <p class="muted">A 3D 46-DOF humanoid with 30 modules on gait, inverse kinematics, balance (CoM and ZMP), perception and human-robot interaction, including voice commands in English and Hindi.</p>
+        <div class="actions" style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn amber" href="${R}humanoid-robot.html">Explore the humanoid robot</a><a class="btn ghost" href="${R}bairwabot/index.html">Open the lab full screen</a></div></section>
       <section class="home-section">${instructorCard()}</section>`;
     heroRobot();
   }
@@ -190,7 +190,7 @@
   function renderExps() {
     const ex = RIL.experiments || [];
     main.innerHTML = `<div class="crumbs"><a href="${R}index.html">Home</a> / Virtual experiments</div>
-      <header class="page-head"><h1>Virtual experiments</h1><p>${ex.length} experiments mapped to the syllabus. Each has an aim, theory, a live virtual setup, a procedure, an observation table you fill by pressing <b>Record</b> in the simulation, graphs, a conclusion guide and assessment questions.</p></header>
+      <header class="page-head"><h1>Topic experiments</h1><p>The 18 graded laboratory practicals with reports are under <a href="${R}labs.html">Virtual experiments</a>. This page lists ${ex.length} shorter single-topic experiments. Each has an aim, theory, a live virtual setup, a procedure, an observation table you fill by pressing <b>Record</b> in the simulation, graphs, a conclusion guide and assessment questions.</p></header>
       ${units.map(u => `<h2 class="unit-group-h">Unit ${u.roman} – ${esc(u.title)}</h2><div class="catalog">${ex.filter(e => e.unit === u.n).map(expCard).join('')}</div>`).join('')}`;
   }
   function renderExp() {
@@ -231,7 +231,7 @@
       <section><h2>Course objectives</h2><ol>${(C.objectives || []).map(x => `<li>${x}</li>`).join('')}</ol></section>
       <section class="wide"><h2>Course outcomes</h2><div class="table-scroll"><table class="data"><tr><th>CO</th><th>Outcome</th><th>Bloom's level</th></tr>${(C.outcomes || []).map(o => `<tr><td>${o[0]}</td><td>${o[1]}</td><td>${o[2]}</td></tr>`).join('')}</table></div></section>
       <section class="wide"><h2>Course content and where it is taught</h2>
-      ${units.map(u => `<h3>Unit ${u.roman} – ${esc(u.title)}</h3><p style="max-width:80ch">${esc(u.syllabus)}</p><div class="table-scroll"><table class="data"><tr><th>#</th><th>Topic module</th><th>Simulations</th><th>Experiments</th></tr>${u.topics.map(t => `<tr><td>${t.n}</td><td><a href="${topicUrl(u.n, t)}">${esc(t.title)}</a></td><td>${(t.sims || []).map(id => RIL.sims[id] ? `<a href="${simUrl(id)}">${esc(RIL.sims[id].title)}</a>` : id).join('<br>')}</td><td>${(RIL.experiments || []).filter(e => (e.topics || []).includes(t.id)).map(e => `<a href="${expUrl(e)}">${esc(e.title)}</a>`).join('<br>') || '–'}</td></tr>`).join('')}</table></div>`).join('')}</section>
+      ${units.map(u => `<h3>Unit ${u.roman} – ${esc(u.title)}</h3><p>${esc(u.syllabus)}</p><div class="table-scroll"><table class="data"><tr><th>#</th><th>Topic module</th><th>Simulations</th><th>Experiments</th></tr>${u.topics.map(t => `<tr><td>${t.n}</td><td><a href="${topicUrl(u.n, t)}">${esc(t.title)}</a></td><td>${(t.sims || []).map(id => RIL.sims[id] ? `<a href="${simUrl(id)}">${esc(RIL.sims[id].title)}</a>` : id).join('<br>')}</td><td>${(RIL.experiments || []).filter(e => (e.topics || []).includes(t.id)).map(e => `<a href="${expUrl(e)}">${esc(e.title)}</a>`).join('<br>') || '–'}</td></tr>`).join('')}</table></div>`).join('')}</section>
       <section><h2>Text books</h2><ol>${(C.textbooks || []).map(x => `<li>${x}</li>`).join('')}</ol></section>
       <section><h2>Reference books</h2><ol>${(C.references || []).map(x => `<li>${x}</li>`).join('')}</ol></section>
       <section><h2>NPTEL courses</h2><ol>${(C.nptel || []).map(x => `<li>${x}</li>`).join('')}</ol></section>
@@ -258,6 +258,7 @@
       <div class="theory">${RIL.aboutHtml || ''}</div>`;
   }
 
+  const P = RIL.pages || {};
   /* ---------------- HUMANOID ROBOT (BAIRWABOT lab, self-contained in bairwabot/) ---------------- */
   function renderHumanoid() {
     const lab = R + 'bairwabot/index.html';
@@ -271,13 +272,13 @@
         <div><h4>Talk to the robot</h4><p>Text-to-speech and voice commands in English and Hindi. Where speech recognition is unavailable, commands can be typed or clicked.</p></div>
       </div></section>
       <section class="home-section" id="humanoid-lab"><h2>Live lab</h2>
-        <p class="muted" style="max-width:70ch">Drag to rotate, scroll to zoom, right-drag to pan. Voice commands need microphone permission; for the best experience <a href="${lab}">open the lab full screen</a>.</p>
+        <p class="muted">Drag to rotate, scroll to zoom, right-drag to pan. Voice commands need microphone permission; for the best experience <a href="${lab}">open the lab full screen</a>.</p>
         <iframe src="${lab}" title="BAIRWABOT – Humanoid Robotics Virtual Lab" loading="lazy" allow="microphone; autoplay; fullscreen" allowfullscreen style="width:100%;height:min(90vh,860px);border:0;border-radius:12px;background:#070c18;box-shadow:0 6px 30px rgba(0,0,0,.25)"></iframe>
         <p class="muted" style="font-size:.9rem;margin-top:10px">Values marked MODEL are computed from the animated kinematic model; values marked SIM are illustrative. Object recognition and detection confidences are simulated, and locomotion is kinematic rather than a full physics simulation.</p>
       </section>`;
   }
 
-  const routes = { home: renderHome, unit: renderUnit, topic: renderTopic, sims: renderSims, sim: renderSim, exps: renderExps, exp: renderExp, syllabus: renderSyllabus, practice: renderPractice, about: renderAbout, humanoid: renderHumanoid, notes: () => RIL.flipbook && RIL.flipbook(main) };
+  const routes = { course: () => P.course(main), concepts: () => P.concepts(main), labs: () => P.labs(main), lab: () => P.lab(main), assembly: () => P.assembly(main), workcell: () => P.workcell(main), math: () => P.math(main), analytics: () => P.analytics(main), library: () => P.library(main), assessment: () => P.assessment(main), notebook: () => P.notebook(main), reports: () => P.reports(main), dashboard: () => P.dashboard(main), flagship: () => P.flagship(main), hardware: () => P.hardware(main), home: () => { renderHome(); if (P.homeExtra) P.homeExtra(main); }, unit: renderUnit, topic: renderTopic, sims: renderSims, sim: renderSim, exps: renderExps, exp: renderExp, syllabus: renderSyllabus, practice: renderPractice, about: renderAbout, humanoid: renderHumanoid, notes: () => RIL.flipbook && RIL.flipbook(main) };
   try { (routes[page] || (() => { }))(); } catch (err) { console.error(err); main.insertAdjacentHTML('afterbegin', '<div class="callout">This page failed to render: ' + esc(err.message) + '</div>'); }
   if (window.gsap && page !== 'home' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.from('.page-head', { opacity: 0, y: 8, duration: .35, ease: 'power1.out' });
   typeset();
